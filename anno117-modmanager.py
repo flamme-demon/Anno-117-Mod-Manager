@@ -40,6 +40,127 @@ try:
 except ImportError:
     HAS_DND = False
 
+
+class ValueSlider(tk.Canvas):
+    """A Canvas-based slider that displays the current value inside the thumb, matching the style shown in the UI mockup (min ──[value]── max)."""
+
+    TRACK_H    = 6
+    THUMB_W    = 46
+    THUMB_H    = 22
+    TRACK_COL  = "#3a3a3a"
+    FILL_COL   = "#f1c40f"
+    THUMB_COL  = "#2a2a2a"
+    THUMB_OUT  = "#f1c40f"
+    TEXT_COL   = "#ffffff"
+
+    def __init__(self, parent, from_, to, resolution=1.0, initial=None, command=None, width=300, **kw):
+        h = self.THUMB_H + 8
+        super().__init__(parent, width=width, height=h, bg=BG_SECTION, highlightthickness=0, **kw)
+        self._from      = float(from_)
+        self._to        = float(to)
+        self._step      = float(resolution)
+        self._value     = float(initial) if initial is not None else float(from_)
+        self._command   = command
+        self._width     = width
+        self._dragging  = False
+
+        self.bind("<Configure>",       self._on_configure)
+        self.bind("<ButtonPress-1>",   self._on_press)
+        self.bind("<B1-Motion>",       self._on_drag)
+        self.bind("<ButtonRelease-1>", self._on_release)
+        self.after_idle(self._draw)
+
+    # ── geometry helpers ──────────────────────────────────────────────────────
+    def _track_x0(self):  return self.THUMB_W // 2
+    def _track_x1(self):  return int(self.winfo_width()) - self.THUMB_W // 2
+    def _track_y(self):   return int(self.winfo_height()) // 2
+
+    def _val_to_x(self, v):
+        span = self._to - self._from
+        if span == 0: return self._track_x0()
+        frac = (v - self._from) / span
+        return self._track_x0() + frac * (self._track_x1() - self._track_x0())
+
+    def _x_to_val(self, x):
+        x = max(self._track_x0(), min(self._track_x1(), x))
+        frac = (x - self._track_x0()) / max(1, self._track_x1() - self._track_x0())
+        raw = self._from + frac * (self._to - self._from)
+        stepped = round(round(raw / self._step) * self._step, 10)
+        return max(self._from, min(self._to, stepped))
+
+    # ── drawing ───────────────────────────────────────────────────────────────
+    def _draw(self):
+        self.delete("all")
+        w  = self.winfo_width()  or self._width
+        h  = self.winfo_height() or (self.THUMB_H + 8)
+        ty = h // 2
+        x0 = self._track_x0()
+        x1 = self._track_x1()
+        tx = self._val_to_x(self._value)
+
+        # Track background
+        self._round_rect(x0, ty - self.TRACK_H//2, x1, ty + self.TRACK_H//2, r=3, fill=self.TRACK_COL, outline="")
+        # Filled portion
+        self._round_rect(x0, ty - self.TRACK_H//2, max(x0, tx), ty + self.TRACK_H//2, r=3, fill=self.FILL_COL, outline="")
+        # Thumb — fill first, then outline on top as a separate pass
+        tw, th = self.THUMB_W, self.THUMB_H
+        self._round_rect(tx - tw//2, ty - th//2, tx + tw//2, ty + th//2, r=5, fill=self.THUMB_COL, outline="")
+        self._round_rect(tx - tw//2, ty - th//2, tx + tw//2, ty + th//2, r=5, fill="", outline=self.THUMB_OUT, width=2)
+        # Value label inside thumb
+        label = f"{self._value:g}"
+        self.create_text(tx, ty, text=label, fill=self.TEXT_COL, font=FONT_SMALL)
+
+    def _round_rect(self, x0, y0, x1, y1, r=6, fill="", outline="", width=1):
+        """Draws a filled rounded rectangle using a smooth polygon — no inner seam lines."""
+        # For outline-only pass, just draw four arcs and four lines
+        points = [
+            x0+r, y0,
+            x1-r, y0,
+            x1, y0,
+            x1, y0+r,
+            x1, y1-r,
+            x1, y1,
+            x1-r, y1,
+            x0+r, y1,
+            x0, y1,
+            x0, y1-r,
+            x0, y0+r,
+            x0, y0,
+        ]
+        if fill:
+            self.create_polygon(points, fill=fill, outline="", smooth=True)
+        if outline:
+            self.create_polygon(points, fill="", outline=outline, width=width, smooth=True)
+
+    # ── interaction ───────────────────────────────────────────────────────────
+    def _on_configure(self, e):
+        self._draw()
+
+    def _on_press(self, e):
+        self._dragging = True
+        self._set(self._x_to_val(e.x))
+
+    def _on_drag(self, e):
+        if self._dragging:
+            self._set(self._x_to_val(e.x))
+
+    def _on_release(self, e):
+        self._dragging = False
+
+    def _set(self, v):
+        self._value = v
+        self._draw()
+        if self._command:
+            self._command(v)
+
+    def get(self):
+        return self._value
+
+    def set(self, v):
+        self._value = max(self._from, min(self._to, float(v)))
+        self._draw()
+
+
 # --- Visual Styles & Fonts ---
 BG_MAIN = "#0b192c"
 BG_SECTION = "#162a45"
@@ -6723,8 +6844,9 @@ class AnnoModManagerApp(TkinterDnD.Tk):
             input_container.pack(anchor="w", fill="x")
 
             # Shared Insight Updater
-            _ico_tweak_desc = load_icon("tweak_description", (14, 14))
+            _ico_tweak_desc = load_icon("tweak_description", (18, 18))
             insight_lbl = tk.Label(inner_padding, text="", font=FONT_SMALL, bg=BG_SECTION, fg=FG_GOLD, justify="left", wraplength=400)
+            _insight_row_ref = [None, None]  # [frame, last_text] — rebuild only when text changes
 
             def update_insight(current_val, details=opt_details, lbl=insight_lbl):
                 """Updates the sub-label based on the current selection."""
@@ -6740,17 +6862,28 @@ class AnnoModManagerApp(TkinterDnD.Tk):
                     # Toggle logic: Index 0 is True, Index 1 is False
                     idx = 0 if str(current_val).lower() == "true" else 1
                     if idx < len(labels): text = labels[idx]
-                elif o_type == "text" and labels:
+                elif o_type in ("text", "slider") and labels:
                     # For text types, we usually just show the first label as a hint
                     text = labels[0]
 
                 if text.strip():
-                    lbl.config(text=f"  {text}", image=_ico_tweak_desc or "", compound="left" if _ico_tweak_desc else "none")
-                    if _ico_tweak_desc: lbl.image = _ico_tweak_desc
-                    # Pack only if there is text to show
-                    lbl.pack(anchor="w", pady=(2, 0), padx=10)
+                    lbl.pack_forget()
+                    # Only rebuild the row if the text has changed — avoids flickering on slider drag where the label stays the same
+                    if (_insight_row_ref[0] is None
+                            or not _insight_row_ref[0].winfo_exists()
+                            or _insight_row_ref[1] != text):
+                        if _insight_row_ref[0] and _insight_row_ref[0].winfo_exists():
+                            _insight_row_ref[0].destroy()
+                        insight_row = tk.Frame(inner_padding, bg=BG_SECTION)
+                        insight_row.pack(anchor="w", pady=(2, 0), padx=10, fill="x")
+                        _insight_row_ref[0] = insight_row
+                        _insight_row_ref[1] = text
+                        if _ico_tweak_desc:
+                            ico_lbl = tk.Label(insight_row, image=_ico_tweak_desc, bg=BG_SECTION)
+                            ico_lbl.image = _ico_tweak_desc
+                            ico_lbl.pack(side="left", anchor="w", padx=(0, 2))
+                        tk.Label(insight_row, text=text, font=FONT_SMALL, bg=BG_SECTION, fg=FG_GOLD, wraplength=300, justify="left").pack(side="left", anchor="nw")
                 else:
-                    # Hide completely so it takes 0 pixels
                     lbl.pack_forget()
 
             # Render Inputs
@@ -6766,6 +6899,36 @@ class AnnoModManagerApp(TkinterDnD.Tk):
                         update_insight(v.get()) # Update the text immediately
                     ]
                 combo.bind("<<ComboboxSelected>>", make_combo_callback())
+
+            elif opt_type == "slider":
+                raw_vals = opt_details.get('values', [])
+                try:
+                    sl_min  = float(raw_vals[0]) if len(raw_vals) > 0 else 0.0
+                    sl_max  = float(raw_vals[1]) if len(raw_vals) > 1 else 100.0
+                    sl_step = float(raw_vals[2]) if len(raw_vals) > 2 else 1.0
+                except (ValueError, TypeError):
+                    sl_min, sl_max, sl_step = 0.0, 100.0, 1.0
+                try:
+                    sl_init = max(sl_min, min(sl_max, float(current_val)))
+                except (ValueError, TypeError):
+                    sl_init = sl_min
+
+                sl_frame = tk.Frame(inner_padding, bg=BG_SECTION)
+                sl_frame.pack(anchor="w", fill="x", pady=(4, 0))
+
+                sl_var = tk.DoubleVar(value=sl_init)
+
+                def make_slider_callback(k=opt_key, lbl=sl_var, step=sl_step):
+                    def _cb(raw):
+                        stepped = round(round(float(raw) / step) * step, 10)
+                        self._save_single_option(mod['id'], k, str(stepped))
+                        update_insight(str(stepped))
+                    return _cb
+
+                tk.Label(sl_frame, text=f"{sl_min:g}", font=FONT_XSMALL, bg=BG_SECTION, fg=FG_DIM).pack(side="left", padx=(0, 6))
+                slider = ValueSlider(sl_frame, from_=sl_min, to=sl_max, resolution=sl_step, initial=sl_init, width=280, command=make_slider_callback())
+                slider.pack(side="left")
+                tk.Label(sl_frame, text=f"{sl_max:g}", font=FONT_XSMALL, bg=BG_SECTION, fg=FG_DIM).pack(side="left", padx=(6, 10))
 
             elif opt_type == "toggle":
                 is_on = current_val.lower() == "true"
