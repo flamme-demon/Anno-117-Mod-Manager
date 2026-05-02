@@ -428,7 +428,16 @@ class AnnoModManagerApp(TkinterDnD.Tk):
         """Initialises the main application window, sets up all state variables, loads settings and metadata, builds the UI and schedules the language-picker / first-run sequence."""
         super().__init__()
         self.title("Anno 117 Mod Manager" + f' v{_version.__VERSION__}')
-        self.iconbitmap(resource_path("data/ui/anno117_mod_manager.ico"))
+        try:
+            if IS_WINDOWS:
+                self.iconbitmap(resource_path("data/ui/anno117_mod_manager.ico"))
+            else:
+                # Tk on Linux/macOS only accepts XBM via iconbitmap; use iconphoto with the PNG asset
+                _icon_img = tk.PhotoImage(file=resource_path("data/ui/anno117_mod_manager.png"))
+                self.iconphoto(True, _icon_img)
+                self._app_icon_img = _icon_img  # keep a reference so it isn't garbage-collected
+        except Exception as e:
+            print(f"[icon] Could not set window icon: {e}")
         self.geometry("1440x900")
         self.configure(bg=BG_MAIN)
 
