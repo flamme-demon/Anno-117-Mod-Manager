@@ -1714,8 +1714,45 @@ class AnnoModManagerApp(TkinterDnD.Tk):
 
         self.update_idletasks()
 
+    def _spawn_game(self):
+        """Platform-aware launch. On Windows, exec the .exe directly. On Linux, prefer the
+        Steam URI when the game lives inside a Steam-managed Proton prefix (compatdata/<appid>/),
+        so Steam sets up Proton and chains the launcher properly — execing the .exe directly
+        would just hand a Windows binary to the kernel."""
+        if IS_WINDOWS:
+            subprocess.Popen([self.game_exe_path], creationflags=subprocess.CREATE_NO_WINDOW)
+            return
+        if IS_LINUX:
+            # Match the standard layout: ".../steamapps/compatdata/<appid>/pfx/..."
+            m = re.search(r'/steamapps/compatdata/(\d+)/pfx/', self.game_exe_path)
+            if m:
+                appid = m.group(1)
+                # Real Steam apps publish an appmanifest_<appid>.acf and accept the bare 32-bit
+                # appid in rungameid. Non-Steam shortcuts (e.g. user-added Ubisoft Connect)
+                # have no manifest and need the full 64-bit GameID: (shortcut_appid << 32) | 0x02000000.
+                # Passing the bare appid for a shortcut returns "Unknown GameID type" in Steam logs.
+                steam_root = self._steam_root_for_path(self.game_exe_path)
+                manifest = os.path.join(steam_root, 'steamapps', f'appmanifest_{appid}.acf') if steam_root else ''
+                if manifest and os.path.exists(manifest):
+                    target = appid
+                else:
+                    target = str((int(appid) << 32) | 0x02000000)
+                subprocess.Popen(['xdg-open', f'steam://rungameid/{target}'])
+                return
+        # Non-Steam install (Lutris/Heroic/Bottles/raw Wine): hand the path off and let
+        # whatever launcher is registered for .exe handle it.
+        subprocess.Popen([self.game_exe_path])
+
+    @staticmethod
+    def _steam_root_for_path(path):
+        """Returns the Steam library root containing the given path (the directory holding
+        steamapps/), or '' if the path isn't inside a recognisable Steam layout."""
+        marker = '/steamapps/'
+        idx = path.find(marker)
+        return path[:idx] if idx != -1 else ''
+
     def launch_game(self):
-        """Checks for a valid game executable and missing required mod dependencies, then launches Anno117.exe via subprocess. Schedules a UI refresh after launch."""
+        """Checks for a valid game executable and missing required mod dependencies, then launches the game. Schedules a UI refresh after launch."""
         if not self.game_exe_path or not os.path.exists(self.game_exe_path):
             self._imperial_alert(T(1999101189), T(1999101232), is_error=True)
             return
@@ -1737,14 +1774,14 @@ class AnnoModManagerApp(TkinterDnD.Tk):
                     self.render_activation_tab()
                 # Dependencies are now active - proceed with launch
                 try:
-                    subprocess.Popen([self.game_exe_path], creationflags=subprocess.CREATE_NO_WINDOW if IS_WINDOWS else 0)
+                    self._spawn_game()
                     self.after(2000, self.refresh_ui_after_launch)
                 except Exception as e:
                     self._imperial_alert(T(1999101207), T(1999101394, e), is_error=True)
                 return
 
         try:
-            subprocess.Popen([self.game_exe_path], creationflags=subprocess.CREATE_NO_WINDOW if IS_WINDOWS else 0)
+            self._spawn_game()
             self.after(2000, self.refresh_ui_after_launch)
         except Exception as e:
             self._imperial_alert(T(1999101207), T(1999101394, e), is_error=True)
