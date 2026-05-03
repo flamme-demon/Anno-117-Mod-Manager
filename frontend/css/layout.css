@@ -1,0 +1,373 @@
+/* Three-zone layout: top title bar, full-width content, bottom HUD pill.
+   The bottom toolbar mirrors the in-game build menu: a single gold-rimmed
+   rounded pill sitting on a darker backdrop, containing the icon buttons. */
+
+.title-bar {
+  height: 44px;
+  background: linear-gradient(to bottom, var(--navy-dark), var(--navy-darkest));
+  border-bottom: 1px solid var(--gold-dim);
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  gap: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  position: relative;
+  z-index: 10;
+}
+
+.title-bar__brand {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-weight: normal;
+}
+.title-bar__roman {
+  font-family: var(--font-title);
+  font-size: 18px;
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+}
+.title-bar__sub {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--cream-dim);
+  letter-spacing: 0.05em;
+}
+.title-bar__version {
+  margin-left: auto;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--cream-dim);
+  padding: 2px 8px;
+  border: 1px solid var(--gold-dim);
+  border-radius: 10px;
+}
+
+.layout {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  height: calc(100% - 44px);
+}
+
+/* ── Main content (full width) ───────────────────────────────────────────── */
+
+.main {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--navy-darkest);
+}
+
+.main > div {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+.placeholder__inner {
+  text-align: center;
+  color: var(--cream-dim);
+  font-family: var(--font-body);
+  font-size: 15px;
+  max-width: 480px;
+}
+.placeholder__inner .ornament {
+  margin-bottom: 16px;
+}
+.placeholder__hint {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--cream-dim);
+  font-style: italic;
+}
+
+/* ── Bottom HUD ──────────────────────────────────────────────────────────── */
+
+/* Outer dark backdrop the pill floats on. Slightly deeper than the main bg
+   so the pill's gold rim and bevel actually pop. */
+.toolbar {
+  background:
+    linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.35) 35%),
+    var(--navy-darkest);
+  border-top: 1px solid #1a2940;
+  /* No bottom padding — the HUD pill (and its cups) sits flush against the
+     bottom of the viewport, like the in-game build menu. */
+  padding: 12px 18px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  z-index: 10;
+}
+
+/* The composite HUD pill — single dark teal frame containing both internal
+   rows. Inset highlights + drop shadow give the carved metal look; the
+   border is a 1px dark outline plus a faint inset gold lining (not a stark
+   gold edge). The bottom of the pill is darkened to mimic the heavier rim
+   visible under the buttons in the in-game HUD. */
+.toolbar__hud {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  /* Pill background = annolayouts' rgb(38,47,64) with a subtle vertical
+     gradient for depth. */
+  background: linear-gradient(to bottom, #2c3850 0%, #262f40 60%, #1f2734 100%);
+  border: 1px solid #181c26;
+  border-bottom: none;
+  /* Top corners rounded, bottom flat so the pill snaps to the toolbar
+     (and viewport) bottom edge — matches annolayouts' HUD silhouette. */
+  border-radius: 40px 40px 0 0;
+  box-shadow:
+    inset 0 1px 0 rgba(148, 178, 236, 0.06),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.25),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.3),
+    inset 0 -8px 14px rgba(0, 0, 0, 0.35),
+    0 -2px 8px rgba(0, 0, 0, 0.45);
+  overflow: visible;
+  position: relative;
+}
+
+/* Internal rows — share the pill's frame, separated by a single inset rule
+   that reads as a carved seam between the build-menu tier and the utility
+   tier (mirrors the in-game HUD's two-row construction). */
+.toolbar__hud-row {
+  display: flex;
+  align-items: center;
+}
+
+.toolbar__hud-row--top {
+  height: 76px;
+  padding: 8px 22px;
+  gap: 6px;
+  justify-content: center;
+  /* dark inset rule on the bottom + 1px highlight under it → carved seam */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.55);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* Bottom row — cups dock at the bottom edge of the row so their flat-bottom
+   sides sit flush with the HUD bottom (which is itself flush with the
+   viewport bottom). Search bar self-aligns to centre to stay readable. */
+.toolbar__hud-row--bottom {
+  height: 54px;
+  padding: 6px 14px 0;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.toolbar__hud-row--bottom .toolbar__search {
+  align-self: center;
+}
+
+.toolbar__group--utility {
+  /* Adjacent cups touch edge-to-edge so their flat sides merge into one
+     continuous dark block, with the rounded tops creating a wavy scallop
+     profile (dome / valley / dome). Mirrors annolayouts' merged button
+     wrapper. */
+  gap: 0;
+  /* Drop shadow on the WHOLE merged group rather than per-cup so the seams
+     don't show. */
+  filter:
+    drop-shadow(0 0 4px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 8px rgba(0, 0, 0, 0.35));
+}
+
+.toolbar__bottom-spacer {
+  flex: 1;
+}
+
+/* Search wrapper — squared-off rectangle (no border-radius), background the
+   same colour as the pill so it reads as a recessed slot, with a hard 2px
+   black border + signature pale-blue inset highlight matching the disc
+   buttons. Mirrors annolayouts' search pattern exactly. */
+.toolbar__search {
+  flex: 1;
+  max-width: 260px;
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  margin: 0 24px;
+  background: #262f40;
+  border: 2px solid #000;
+  /* deliberately no border-radius — square corners */
+  box-shadow: inset 0 0 2px 0 #94b2ec;
+  color: #adadad;
+}
+.toolbar__search-icon {
+  width: 22px;
+  height: 22px;
+  margin-right: 8px;
+  color: #adadad;
+  flex-shrink: 0;
+}
+.toolbar__search-input {
+  flex: 1;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #c8c8c8;
+  font-family: var(--font-body);
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  padding: 0;
+  min-width: 0;
+}
+.toolbar__search-input::placeholder {
+  color: #adadad;
+  font-style: italic;
+}
+
+.toolbar__group {
+  display: flex;
+  gap: 4px;
+}
+
+/* Subtle vertical rule between toolbar groups — short and faint, matching
+   the inset trough look of the pill rather than a stark gold bar. */
+.toolbar__divider {
+  width: 1px;
+  height: 38px;
+  margin: 0 6px;
+  background: linear-gradient(to bottom, transparent 8%, rgba(0, 0, 0, 0.55) 50%, transparent 92%);
+  box-shadow: 1px 0 0 rgba(255, 255, 255, 0.04);
+}
+
+/* Tab button inside the pill — annolayouts' tile palette (#323e53→#49566a). */
+.toolbar__tab {
+  width: 56px;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom, #49566a 0%, #323e53 70%);
+  border: 1px solid #181c26;
+  border-radius: 7px;
+  color: var(--cream);
+  box-shadow:
+    inset 0 0 2px 0 #94b2ec,
+    inset 0 -1px 2px rgba(0, 0, 0, 0.35);
+  transition: filter 80ms ease, background 80ms ease;
+  position: relative;
+}
+.toolbar__tab:not(:disabled):hover {
+  filter: brightness(1.15);
+}
+.toolbar__tab.is-active {
+  /* Active tab rises above the pill — burgundy palette matching annolayouts'
+     selected entry (rgb(160,87,121) → rgb(80,31,54)). */
+  width: 60px;
+  height: 68px;
+  margin-top: -8px;
+  margin-bottom: -2px;
+  background: radial-gradient(circle, #a05779 0%, #501f36 70%);
+  border-radius: 9px;
+  box-shadow:
+    inset 0 0 2px 0 #94b2ec,
+    inset 0 -1px 2px rgba(0, 0, 0, 0.4),
+    0 4px 8px rgba(0, 0, 0, 0.55);
+  z-index: 2;
+}
+.toolbar__tab.is-active .toolbar__icon {
+  width: 34px;
+  height: 34px;
+}
+
+/* Circular button — used in the bottom pill for utility actions (refresh,
+   launch). The asymmetric box-shadow ring extends mostly downward and to the
+   sides (offset-y > spread), drawing the dark "wave" silhouette below the
+   pill that the in-game HUD produces under each utility button.
+   Box-shadow avoids the pseudo-element z-index trap where ::before would
+   render behind the pill's background. */
+/* Dark "cup" wrapper around each round button — top corners are fully
+   rounded (forming an arch above the button), bottom stays square so it
+   merges with the rim of the pill. Asymmetric padding (lots above the
+   button, tight below) makes the arch shape unmistakable and matches the
+   in-game HUD silhouette where the dark niche dominates the top of each
+   utility button. */
+/* Cup wrapper — matches annolayouts' style-2056 geometry: uniform 10px
+   padding, dome top via 50% top corner radii, dark fill #191d26. The
+   negative margin-top pulls the dome UP into the row above so the arch
+   reaches well above the cup's natural row position. The cup docks against
+   the bottom edge of the row (parent uses align-items: flex-end). */
+.toolbar__cup {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background: #191d26;
+  border-top-left-radius: 50%;
+  border-top-right-radius: 50%;
+  margin-top: -20px;
+  margin-bottom: 0;
+  position: relative;
+  z-index: 2;
+}
+
+/* Subsequent cups slide left over the previous one (same -12px overlap as
+   annolayouts' style-2059) so the dark backgrounds merge into one
+   continuous block with a wavy top profile. */
+.toolbar__cup + .toolbar__cup {
+  margin-left: -12px;
+}
+
+.toolbar__round {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #181c26;
+  border-radius: 50%;
+  /* Stacked: glossy top highlight (semi-transparent white fading down) on
+     top of the radial teal — gives the disc the 3D dome look the in-game
+     buttons have. */
+  background:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.16) 0%, transparent 55%),
+    radial-gradient(circle, #49566a 0%, #323e53 70%);
+  box-shadow: inset 0 0 2px 0 #94b2ec;
+  transition: filter 80ms ease, background 80ms ease;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.toolbar__round:hover {
+  filter: brightness(1.15);
+}
+/* Launch variant — exact same geometry, border, inset highlight and hover
+   behaviour as the regular round buttons (cf. annolayouts' shared button
+   styling). Only the radial fill swaps to burgundy to mark the CTA. */
+.toolbar__round--launch {
+  background:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.16) 0%, transparent 55%),
+    radial-gradient(circle, #a05779 0%, #501f36 70%);
+}
+.toolbar__round-icon {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.7));
+  pointer-events: none;
+}
+
+.toolbar__icon {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  /* Icons ship as white-on-transparent PNGs already; the soft drop shadow
+     gives them the same depth the in-game HUD glyphs have. */
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6));
+  pointer-events: none;
+}
+.toolbar__tab.is-active .toolbar__icon {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 4px rgba(255, 220, 200, 0.4));
+}
+

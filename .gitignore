@@ -37,3 +37,6 @@ build/
 # anno rda reference file -- too large to track
 config.rda/
 
+# Local stash of reference screenshots (not tracked)
+screen/
+
