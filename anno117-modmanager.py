@@ -438,6 +438,13 @@ class AnnoModManagerApp(TkinterDnD.Tk):
                 self._app_icon_img = _icon_img  # keep a reference so it isn't garbage-collected
         except Exception as e:
             print(f"[icon] Could not set window icon: {e}")
+        if IS_LINUX:
+            # Tk on X11 emits Button-4/Button-5 for the mouse wheel instead of <MouseWheel>.
+            # Re-emit a synthetic MouseWheel event on the widget under the cursor so every
+            # existing <MouseWheel> binding (canvases, scrollable lists, etc.) keeps working
+            # without having to add Linux-specific bindings at each call site.
+            self.bind_all("<Button-4>", lambda e: e.widget.event_generate("<MouseWheel>", delta=120))
+            self.bind_all("<Button-5>", lambda e: e.widget.event_generate("<MouseWheel>", delta=-120))
         self.geometry("1440x900")
         self.configure(bg=BG_MAIN)
 
