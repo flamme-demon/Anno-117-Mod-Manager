@@ -27,10 +27,11 @@
   <div class="layout">
 
     <main class="main">
-      <!-- POC: only Activation is rendered. Other tabs come in phase 2. -->
-      <div x-show="currentTab === 'activation'">
-        <div x-html="activationTemplate()"></div>
-      </div>
+      <!-- POC: only Activation is rendered. Other tabs come in phase 2.
+           The x-html sits directly on the .main > div so it inherits the
+           flex:1 + overflow:hidden constraint — without that, .activation's
+           height:100% has no reference and the list spills under the HUD. -->
+      <div x-show="currentTab === 'activation'" x-html="activationTemplate()"></div>
       <div x-show="currentTab !== 'activation'" class="placeholder">
         <div class="placeholder__inner">
           <div class="ornament">───── ◆ ─────</div>
@@ -110,6 +111,13 @@
           </div>
 
           <div class="toolbar__group toolbar__group--utility">
+            <div class="toolbar__cup">
+              <button class="toolbar__round"
+                      @click="openModsFolder()"
+                      title="Ouvrir le dossier des mods">
+                <img class="toolbar__round-icon" src="icons/folder.png" alt="Ouvrir le dossier des mods" />
+              </button>
+            </div>
             <div class="toolbar__cup">
               <button class="toolbar__round toolbar__round--launch"
                       @click="launchGame()"

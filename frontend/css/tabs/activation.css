@@ -80,40 +80,217 @@
   color: var(--gold);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  margin-left: auto;
   padding: 7px 16px;
   border: 1px solid var(--gold-dim);
   border-radius: 16px;
   background: rgba(0, 0, 0, 0.35);
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 }
+/* The total/active size sits next to the count, slightly less prominent so
+   the active count stays the headline figure. */
+.activation__count--size {
+  color: var(--cream-dim);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  border-color: rgba(200, 169, 77, 0.3);
+}
+.activation__count + .activation__count {
+  margin-left: 4px;
+}
+
+/* Toolbar action buttons (Activer tout / Tout désactiver / etc.) — share
+   the dark-disc vocabulary of the HUD, rectangular pill shape. */
+.activation__btn {
+  margin-left: 12px;
+  padding: 7px 16px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #e6e8ee;
+  background: linear-gradient(to bottom, #49566a 0%, #323e53 70%);
+  border: 2px solid #181c26;
+  border-radius: 16px;
+  box-shadow: inset 0 0 2px 0 #94b2ec, inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  cursor: pointer;
+  transition: filter 80ms ease;
+}
+.activation__btn:hover {
+  filter: brightness(1.15);
+}
+.activation__btn--accent {
+  background: linear-gradient(to bottom, #6b8a52 0%, #3d5a30 70%);
+}
+.activation__btn--danger {
+  background: linear-gradient(to bottom, #a05779 0%, #501f36 70%);
+}
+.activation__btn + .activation__count {
+  margin-left: auto;
+}
+
+/* Segmented mode toggle (Gestion / Ordre de chargement) — pill-shaped pair
+   with the active half lit in burgundy. Sits flush so the whole thing reads
+   as a single switch, not two separate buttons. */
+.activation__mode {
+  margin-left: 18px;
+  display: inline-flex;
+  border: 2px solid #181c26;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: inset 0 0 2px 0 #94b2ec;
+}
+.activation__mode-btn {
+  padding: 7px 14px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #c4c6d0;
+  background: linear-gradient(to bottom, #49566a 0%, #323e53 70%);
+  border: 0;
+  cursor: pointer;
+  transition: filter 80ms ease, background 80ms ease;
+}
+.activation__mode-btn:hover {
+  filter: brightness(1.15);
+}
+.activation__mode-btn.is-active {
+  background: linear-gradient(to bottom, #a05779 0%, #501f36 70%);
+  color: #f8eee6;
+}
+.activation__mode-btn + .activation__mode-btn {
+  border-left: 1px solid #181c26;
+}
+
+/* Sort headers go grey + non-clickable in load-order mode. */
+.mod-row__head.is-disabled {
+  color: #6f7689;
+  cursor: not-allowed;
+}
+.mod-row__head.is-disabled:hover {
+  color: #6f7689;
+}
+
+/* Draggable rows in Load Order mode — grab cursor + tighter visual hint
+   that the row itself is the drag handle (medallion shows ⋮⋮ instead of
+   the category initials in this mode). */
+.mod-row--draggable {
+  cursor: grab;
+}
+.mod-row--draggable:active {
+  cursor: grabbing;
+}
+.mod-row--draggable .mod-row__medallion {
+  font-family: var(--font-body);
+  font-size: 14px;
+  letter-spacing: -0.05em;
+  color: var(--gold);
+  background: rgba(0, 0, 0, 0.35);
+}
 
 /* ── Mod table (dark, like al-data-table) ──────────────────────────────── */
+
+/* Wraps the sortable header strip + the scrollable list so they live in the
+   same grid cell but the header stays pinned while the list scrolls. */
+.activation__list-wrap {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: linear-gradient(180deg, #252a33 0%, #1e2128 100%);
+  border: 1px solid #3a4150;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow:
+    inset 0 1px 0 rgba(148, 178, 236, 0.06),
+    0 4px 14px rgba(0, 0, 0, 0.25);
+}
 
 .activation__list {
   overflow-y: auto;
   margin: 0;
   padding: 0;
   list-style: none;
-  background: linear-gradient(180deg, #252a33 0%, #1e2128 100%);
-  border: 1px solid #3a4150;
-  border-radius: 12px;
-  /* annolayouts' subtle glow / inset highlight */
-  box-shadow:
-    inset 0 1px 0 rgba(148, 178, 236, 0.06),
-    0 4px 14px rgba(0, 0, 0, 0.25);
+  flex: 1;
+  min-height: 0;
 }
 
-/* Row inside the table — flex layout: checkbox · medallion · name · version · status */
+/* Sortable column header row — same grid as data rows, gold text, no hover. */
+.mod-row--head {
+  cursor: default;
+  background: linear-gradient(180deg, #3d4a5c 0%, #2f3a4a 100%);
+  border-bottom: 2px solid #4a5568;
+  padding: 10px 18px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.mod-row--head:hover {
+  background: linear-gradient(180deg, #3d4a5c 0%, #2f3a4a 100%);
+}
+.mod-row__head {
+  font-family: var(--font-title);
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--gold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  user-select: none;
+  cursor: pointer;
+  padding: 0;
+}
+.mod-row__head:hover {
+  color: var(--gold-light);
+}
+
+/* Row inside the table:
+   checkbox · medallion · category · name(+version below) · size · status */
 .mod-row {
   display: grid;
-  grid-template-columns: 24px 36px 1fr auto auto;
+  grid-template-columns: 24px 36px 140px 1fr 80px 70px;
   align-items: center;
   gap: 14px;
   padding: 10px 18px;
   border-bottom: 1px solid #2a2e36;
   cursor: pointer;
   transition: background 80ms ease;
+}
+.mod-row__category-cell {
+  font-family: var(--font-title);
+  font-size: 10px;
+  color: #adb4c2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+/* Sub-mod indent — the loader treats nested mods as children of the parent
+   folder, so the UI shows them indented + with a faint left bar. */
+.mod-row--sub {
+  padding-left: 48px;
+  background: rgba(0, 0, 0, 0.18);
+}
+.mod-row--sub::before {
+  content: '';
+  position: absolute;
+  left: 30px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(148, 178, 236, 0.18);
+}
+.mod-row {
+  position: relative;
+}
+.mod-row__text {
+  min-width: 0;
+}
+.mod-row__size {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: #6f7689;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
 }
 .mod-row:last-child {
   border-bottom: none;
@@ -147,6 +324,37 @@
 .mod-row__check.is-on::after {
   content: '✔';
   color: #94b2ec;
+}
+
+/* Tri-state checkbox sitting in the header row — clicking it toggles every
+   mod's active state at once (replaces the old "Activer tout"/"Tout
+   désactiver" buttons that cluttered the toolbar). */
+.mod-row__check--head {
+  cursor: pointer;
+  border-color: var(--gold-dim);
+  transition: filter 80ms ease;
+}
+.mod-row__check--head:hover {
+  filter: brightness(1.25);
+}
+.mod-row__check--all {
+  background: #2a3a52;
+  border-color: #94b2ec;
+}
+.mod-row__check--all::after {
+  content: '✔';
+  color: #94b2ec;
+}
+.mod-row__check--partial {
+  background: #2a3a52;
+  border-color: #94b2ec;
+}
+.mod-row__check--partial::after {
+  content: '–';
+  color: #94b2ec;
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: -2px;
 }
 
 /* Circular gold-rimmed medallion for category icon */
@@ -183,11 +391,15 @@
   margin-top: 2px;
 }
 
+/* Version caption sits under the name in the text cell — small, faint, italic
+   so it doesn't compete with the mod title. */
 .mod-row__version {
   font-family: var(--font-body);
-  font-size: 12px;
-  color: #8a91a0;
-  letter-spacing: 0.04em;
+  font-size: 11px;
+  color: #6f7689;
+  font-style: italic;
+  letter-spacing: 0.03em;
+  margin-top: 2px;
 }
 
 /* Status pill — uses the toolbar's burgundy / teal vocabulary */
@@ -227,20 +439,40 @@
     0 4px 14px rgba(0, 0, 0, 0.25);
 }
 
+/* Banner image at the very top of the right panel — full width, fixed
+   aspect, the mod's local banner.png/jpg if present, otherwise a placeholder
+   parchment-style block. */
+.mod-detail__banner {
+  display: block;
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-bottom: 1px solid #2a2e36;
+  background: linear-gradient(180deg, #3d4a5c 0%, #2f3a4a 100%);
+}
+.mod-detail__banner--placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #6f7689;
+  font-style: italic;
+  font-size: 12px;
+  padding: 24px;
+}
+.mod-detail__banner--placeholder .ornament {
+  margin: 0 0 10px;
+  width: 60%;
+}
+
 .mod-detail__header {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 10px;
-  padding: 22px 18px 14px;
+  gap: 6px;
+  padding: 18px 18px 14px;
   border-bottom: 1px solid #2a2e36;
-  background: linear-gradient(180deg, #3d4a5c 0%, #2f3a4a 100%);
-}
-.mod-detail__header .mod-row__medallion {
-  width: 56px;
-  height: 56px;
-  font-size: 18px;
 }
 .mod-detail__title {
   font-family: var(--font-title);
@@ -301,6 +533,41 @@
   text-align: center;
   color: #8a91a0;
   font-style: italic;
+}
+
+/* Action button row at the bottom of the detail card — pinned to bottom via
+   margin-top:auto on the row, mirrors the in-game footer toolbar. */
+.mod-detail__actions {
+  margin-top: auto;
+  display: flex;
+  gap: 10px;
+  padding: 14px 18px 18px;
+  border-top: 1px solid #2a2e36;
+  background: rgba(0, 0, 0, 0.2);
+}
+.mod-detail__btn {
+  flex: 1;
+  padding: 9px 12px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #e6e8ee;
+  background: linear-gradient(to bottom, #49566a 0%, #323e53 70%);
+  border: 2px solid #181c26;
+  border-radius: 6px;
+  box-shadow:
+    inset 0 0 2px 0 #94b2ec,
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  cursor: pointer;
+  transition: filter 80ms ease;
+}
+.mod-detail__btn:hover {
+  filter: brightness(1.15);
+}
+.mod-detail__btn--danger {
+  background: linear-gradient(to bottom, #a05779 0%, #501f36 70%);
 }
 
 /* Override the older parchment ornament colour for the dark surface */

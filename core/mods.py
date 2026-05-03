@@ -1,22 +1,17 @@
-"""Minimal mod scanner extracted from the Tk app for the pywebview POC.
-
-Phase 2 will pull more of the original anno117-modmanager.py logic into here
-(mod.io, presets, dependency resolution, etc.). For now we only do enough to
-populate the Activation tab.
-"""
+"""Mod scanner. Reads modinfo.json[c] under the configured mod roots and
+returns enriched dicts the JS bridge can consume directly."""
 from __future__ import annotations
 
 import json
 import os
-import platform
 import re
 from dataclasses import dataclass, field, asdict
-from typing import Iterable
 
-IS_WINDOWS = platform.system() == 'Windows'
+from . import files as files_module
+from . import paths as paths_module
 
-# Mirrors the language map used by the Tk version so existing modinfo.json
-# entries surface in the chosen UI language.
+# Maps the app's UI-language keys to the language keys modinfo.json uses
+# (Portugese / Chinese / Taiwanese — yes, with those exact spellings).
 _MODINFO_LANG_MAP = {
     'english': 'English',
     'german': 'German',
@@ -48,10 +43,12 @@ class Mod:
     difficulty: str = 'Normal'
     deps_require: list[str] = field(default_factory=list)
     deps_incompatible: list[str] = field(default_factory=list)
+    folder: str = ''            # basename of `path` for convenience on the JS side
+    size_bytes: int = 0
+    banner: str = ''            # filename of the local banner if found, else ''
 
 
 def _strip_jsonc_comments(text: str) -> str:
-    """Strips // line and /* block */ comments from a JSONC string."""
     text = re.sub(r'/\*.*?\*/', '', text, flags=re.DOTALL)
     text = re.sub(r'(?<!:)//.*', '', text)
     return text
@@ -85,7 +82,8 @@ def _scan_one(path: str, lang_key: str, parent_path: str = '') -> Mod | None:
     mid = data.get('ModID')
     if not mid:
         return None
-    deps = data.get('Dependencies') if isinstance(data.get('Dependencies'), dict) else {}
+    deps_raw = data.get('Dependencies')
+    deps = deps_raw if isinstance(deps_raw, dict) else {}
     return Mod(
         id=str(mid),
         name=_localized(data.get('ModName'), lang_key, default=str(mid)),
@@ -102,55 +100,15 @@ def _scan_one(path: str, lang_key: str, parent_path: str = '') -> Mod | None:
     )
 
 
-def _proton_documents_root() -> str | None:
-    """Find the Anno 117 Documents folder inside any Proton compatdata prefix."""
-    home = os.path.expanduser('~')
-    compat_roots = [
-        os.path.join(home, '.steam', 'steam', 'steamapps', 'compatdata'),
-        os.path.join(home, '.local', 'share', 'Steam', 'steamapps', 'compatdata'),
-    ]
-    for root in compat_roots:
-        if not os.path.isdir(root):
-            continue
-        try:
-            for appid in os.listdir(root):
-                docs = os.path.join(root, appid, 'pfx', 'drive_c', 'users', 'steamuser', 'Documents')
-                if os.path.isdir(os.path.join(docs, 'Anno 117 - Pax Romana')):
-                    return docs
-        except OSError:
-            continue
-    return None
-
-
-def documents_mods_root(custom_docs: str = '') -> str:
-    """Returns the Anno 117 mods folder inside the user's Documents directory."""
-    if custom_docs:
-        base = custom_docs
-    elif IS_WINDOWS:
-        base = os.path.expanduser('~/Documents')
-    else:
-        base = _proton_documents_root() or os.path.join(os.path.expanduser('~'), 'Documents')
-    return os.path.join(base, 'Anno 117 - Pax Romana', 'mods')
-
-
-def game_mods_root(game_exe_path: str) -> str | None:
-    if not game_exe_path:
-        return None
-    game_root = os.path.dirname(os.path.dirname(os.path.dirname(game_exe_path)))
-    candidate = os.path.join(game_root, 'mods')
-    return candidate if os.path.isdir(candidate) else None
-
-
 def list_mods(game_exe_path: str = '', custom_docs: str = '', lang: str = 'english') -> list[dict]:
-    """Scan the configured mod roots and return a flat list of mods as plain dicts.
-
-    Each top-level mod folder is parsed once; nested sub-mods become entries with a
-    populated ``parent_path``. Folder names starting with '-' are treated as disabled
-    (ignored) — same convention the Tk version uses.
-    """
+    """Scan the configured mod roots and return a flat list of enriched mod
+    dicts. Each top-level mod folder is parsed once; nested sub-mods become
+    entries with a populated ``parent_path``. Folder names starting with '-'
+    are treated as disabled (ignored) — same convention the Tk version uses."""
     lang_key = _MODINFO_LANG_MAP.get(lang, 'English')
     roots: list[str] = []
-    for r in (documents_mods_root(custom_docs), game_mods_root(game_exe_path)):
+    for r in (paths_module.documents_mods_root(custom_docs),
+              paths_module.game_mods_root(game_exe_path)):
         if r and os.path.isdir(r) and r not in roots:
             roots.append(r)
 
@@ -178,21 +136,10 @@ def list_mods(game_exe_path: str = '', custom_docs: str = '', lang: str = 'engli
                     pass
         except OSError:
             continue
+
+    # Enrich with folder name, size and banner before serialising
+    for m in out:
+        m.folder = os.path.basename(m.path)
+        m.size_bytes = files_module.dir_size_bytes(m.path)
+        m.banner = files_module.find_banner(m.path)
     return [asdict(m) for m in out]
-
-
-def parse_active_profile(active_profile_path: str) -> set[str]:
-    """Reads active-profile.txt and returns the set of enabled mod folder names."""
-    if not os.path.exists(active_profile_path):
-        return set()
-    enabled: set[str] = set()
-    try:
-        for line in open(active_profile_path, 'r', encoding='utf-8'):
-            line = line.strip()
-            if not line or line.startswith('#'):
-                continue
-            # Profile lines list folder names, optionally with arguments
-            enabled.add(line.split()[0])
-    except OSError:
-        pass
-    return enabled
