@@ -1,0 +1,290 @@
+/* Tweaking tab — left list of tweakable mods + right form built dynamically
+   from each mod's Options schema (enum/slider/toggle/text). */
+
+.tweak {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 18px;
+  height: 100%;
+  padding: 24px 28px;
+  overflow: hidden;
+}
+
+/* ── Left list ──────────────────────────────────────────────────────────── */
+
+.tweak-list {
+  background: linear-gradient(180deg, #252a33 0%, #1e2128 100%);
+  border: 1px solid #3a4150;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow:
+    inset 0 1px 0 rgba(148, 178, 236, 0.06),
+    0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+.tweak-list__header {
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 1px solid #2a2e36;
+  background: linear-gradient(180deg, #3d4a5c 0%, #2f3a4a 100%);
+  font-family: var(--font-title);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.tweak-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.tweak-list__item {
+  padding: 12px 14px;
+  border-bottom: 1px solid #2a2e36;
+  cursor: pointer;
+  transition: background 80ms ease;
+}
+.tweak-list__item:hover {
+  background: rgba(100, 130, 170, 0.10);
+}
+.tweak-list__item.is-selected {
+  background: rgba(160, 87, 121, 0.18);
+  box-shadow: inset 4px 0 0 #a05779;
+}
+
+.tweak-list__name {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: #e6e8ee;
+  font-style: italic;
+}
+.tweak-list__meta {
+  margin-top: 2px;
+  font-family: var(--font-title);
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: #8a91a0;
+}
+.tweak-list__empty {
+  padding: 40px 18px;
+  text-align: center;
+  color: #6f7689;
+  font-style: italic;
+  font-size: 12px;
+}
+
+/* ── Right form ─────────────────────────────────────────────────────────── */
+
+.tweak-form {
+  background: linear-gradient(180deg, #252a33 0%, #1e2128 100%);
+  border: 1px solid #3a4150;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    inset 0 1px 0 rgba(148, 178, 236, 0.06),
+    0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+.tweak-form__header {
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #2a2e36;
+  background: linear-gradient(180deg, #3d4a5c 0%, #2f3a4a 100%);
+}
+
+.tweak-form__title {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 16px;
+  letter-spacing: 0.06em;
+  color: #e6e8ee;
+}
+
+.tweak-form__rows {
+  padding: 14px 18px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.tweak-form__empty {
+  padding: 80px 24px;
+  text-align: center;
+  color: #6f7689;
+  font-style: italic;
+}
+.tweak-form__empty .ornament {
+  margin-bottom: 14px;
+  color: var(--gold);
+}
+
+/* ── Per-row option ─────────────────────────────────────────────────────── */
+
+.tweak-row {
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid #2a2e36;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 200ms ease;
+}
+.tweak-row.is-saving {
+  /* Brief flash when the value just got persisted to the .jsonc */
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--gold), 0 0 8px rgba(200, 169, 77, 0.25);
+}
+
+.tweak-row__label {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: bold;
+  color: #d0d5dd;
+  letter-spacing: 0.02em;
+}
+
+.tweak-row__hint {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--gold-dim);
+  font-style: italic;
+  letter-spacing: 0.02em;
+}
+
+/* Generic select / text input shared between enum + text rows */
+.tweak-control {
+  background: #1a1d24;
+  border: 1px solid #3a4150;
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: #d0d5dd;
+  min-width: 0;
+  width: fit-content;
+  max-width: 100%;
+}
+.tweak-control:focus {
+  outline: 1px solid var(--gold);
+}
+
+/* Slider with value label and bounds */
+.tweak-slider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: monospace;
+  font-size: 11px;
+  color: #8a91a0;
+}
+.tweak-slider input[type="range"] {
+  flex: 1;
+  appearance: none;
+  -webkit-appearance: none;
+  height: 6px;
+  background: linear-gradient(to right, #4a5568 0%, #4a5568 100%);
+  border-radius: 3px;
+  outline: none;
+}
+.tweak-slider input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #a05779, #501f36 70%);
+  border: 2px solid #181c26;
+  box-shadow: inset 0 0 2px 0 #94b2ec;
+  cursor: grab;
+}
+.tweak-slider input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #a05779, #501f36 70%);
+  border: 2px solid #181c26;
+  box-shadow: inset 0 0 2px 0 #94b2ec;
+  cursor: grab;
+}
+.tweak-slider__bound {
+  min-width: 30px;
+  text-align: center;
+}
+.tweak-slider__value {
+  min-width: 50px;
+  text-align: center;
+  color: var(--gold);
+  font-weight: bold;
+  padding: 2px 8px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--gold-dim);
+  border-radius: 10px;
+}
+
+/* Toggle pill — modern iOS-style switch */
+.tweak-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+.tweak-toggle input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.tweak-toggle__pill {
+  width: 44px;
+  height: 22px;
+  border-radius: 11px;
+  background: #2a2e36;
+  border: 2px solid #181c26;
+  position: relative;
+  transition: background 120ms ease;
+}
+.tweak-toggle__pill.is-on {
+  background: linear-gradient(to bottom, #6e9659, #3d5a30);
+}
+.tweak-toggle__dot {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #d0d5dd;
+  transition: transform 120ms ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+.tweak-toggle__pill.is-on .tweak-toggle__dot {
+  transform: translateX(22px);
+  background: #f8eee6;
+}
+.tweak-toggle__text {
+  font-family: var(--font-title);
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+}

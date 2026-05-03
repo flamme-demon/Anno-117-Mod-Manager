@@ -107,6 +107,22 @@ const TRANSLATIONS = {
     'install.notZip':               'Only .zip archives are supported.',
     'install.overwriteConfirm':     'A mod folder named "{name}" already exists. Replace it?',
     'install.dropFailed':           'The drop did not deliver a file (your file manager may not support drag-drop into the webview). Use the Browse button instead.',
+    'tweak.listHeader':             'Tweakable mods',
+    'tweak.optionWord':             'options',
+    'tweak.noTweakable':            'None of your installed mods exposes options.',
+    'tweak.pickHint':                'Select a mod on the left to tweak its options.',
+    'tweak.noOptions':              'This mod has no configurable options.',
+    'tweak.resetMod':               'Reset this mod',
+    'tweak.resetAll':               'Reset all',
+    'tweak.resetModConfirm':        'Reset all options for this mod to their defaults?',
+    'tweak.resetAllConfirm':        'Reset every mod’s options? The active-options.jsonc file will be deleted.',
+    'news.refresh':                 '↻ Refresh',
+    'news.loading':                 'Fetching latest posts…',
+    'news.empty':                   'No news to display.',
+    'news.error':                   'Could not fetch news: {err}',
+    'news.cached':                  'cached (10 min)',
+    'news.includeReddit':           'Include r/anno posts',
+    'news.visitUnion':              'Open Anno Union ↗',
   },
   french: {
     'profile.label':           'Profil',
@@ -210,6 +226,22 @@ const TRANSLATIONS = {
     'install.notZip':               'Seules les archives .zip sont supportées.',
     'install.overwriteConfirm':     'Un dossier de mod nommé « {name} » existe déjà. Le remplacer ?',
     'install.dropFailed':           'Le drop n’a livré aucun fichier (votre gestionnaire de fichiers ne supporte peut-être pas le drag-drop dans le webview). Utilisez le bouton Parcourir à la place.',
+    'tweak.listHeader':             'Mods configurables',
+    'tweak.optionWord':             'options',
+    'tweak.noTweakable':            'Aucun de vos mods installés n’expose d’options.',
+    'tweak.pickHint':                'Sélectionnez un mod à gauche pour ajuster ses options.',
+    'tweak.noOptions':              'Ce mod n’a pas d’options configurables.',
+    'tweak.resetMod':               'Réinitialiser ce mod',
+    'tweak.resetAll':               'Tout réinitialiser',
+    'tweak.resetModConfirm':        'Réinitialiser toutes les options de ce mod aux valeurs par défaut ?',
+    'tweak.resetAllConfirm':        'Réinitialiser les options de tous les mods ? Le fichier active-options.jsonc sera supprimé.',
+    'news.refresh':                 '↻ Rafraîchir',
+    'news.loading':                 'Récupération des dernières actualités…',
+    'news.empty':                   'Aucune actualité à afficher.',
+    'news.error':                   'Échec de la récupération : {err}',
+    'news.cached':                  'en cache (10 min)',
+    'news.includeReddit':           'Inclure les posts r/anno',
+    'news.visitUnion':              'Ouvrir Anno Union ↗',
   },
 };
 
@@ -240,6 +272,15 @@ window.annoApp = function () {
     install: { busy: false, message: '', error: false, dragOver: false },
     _dragDepth: 0,              // dragenter counter — kills the flicker that
                                 // happens when the cursor crosses child nodes
+    tweak: {
+      mods: [],                 // [{id, name, category, folder, option_count}, ...]
+      selectedId: null,
+      schema: {},               // current selected mod's options schema
+      values: {},               // current values (saved or default per option)
+      saving: '',               // key being saved (lights up the row briefly)
+    },
+    news: { items: [], loading: false, error: '', cached: false, loaded: false },
+    _newsTimer: null,           // background poll started on first News open
 
     // Sidebar tab definitions (icons stay text-glyph for the POC; phase 2 will
     // swap them for the data/ui/4k icon set the Tk version already uses).
@@ -289,6 +330,8 @@ window.annoApp = function () {
       // they navigate away.
       this.$watch('currentTab', (next, prev) => {
         if (next === 'settings') this.refreshSettings();
+        if (next === 'tweak')    this.refreshTweakable();
+        if (next === 'news' && !this.news.loaded) this.refreshNews(false);
         if (next === 'log') {
           this.refreshLog();
           this._stopLogPolling();
@@ -298,6 +341,35 @@ window.annoApp = function () {
           this._stopLogPolling();
         }
       });
+    },
+
+    async refreshNews(force) {
+      this.news = { ...this.news, loading: true, error: '' };
+      try {
+        const res = await window.pywebview.api.fetch_news(!!force);
+        if (res && res.ok) {
+          this.news = {
+            items: res.items || [],
+            cached: !!res.cached,
+            loading: false,
+            loaded: true,
+            error: '',
+          };
+        } else {
+          this.news = { ...this.news, loading: false, loaded: true,
+                        error: (res && res.error) || 'fetch failed' };
+        }
+      } catch (e) {
+        console.error('fetch_news threw:', e);
+        this.news = { ...this.news, loading: false, loaded: true, error: String(e) };
+      }
+      // First time we fetch, kick off a 5-minute background poll so the
+      // feed stays fresh even when the user is on another tab. Subsequent
+      // fetches reuse the same timer (TTL on the Python cache prevents
+      // hammering when force=false).
+      if (!this._newsTimer) {
+        this._newsTimer = setInterval(() => this.refreshNews(true), 5 * 60 * 1000);
+      }
     },
 
     _stopLogPolling() {
@@ -589,6 +661,77 @@ window.annoApp = function () {
         reader.onerror = () => reject(reader.error || new Error('read failed'));
         reader.readAsDataURL(file);
       });
+    },
+
+    // ── Tweaking ────────────────────────────────────────────────────────────
+    async refreshTweakable() {
+      try {
+        this.tweak.mods = await window.pywebview.api.list_tweakable_mods();
+      } catch (e) {
+        console.error('list_tweakable_mods failed:', e);
+        this.tweak.mods = [];
+      }
+      // If nothing is selected and we have at least one mod, auto-select it
+      if (!this.tweak.selectedId && this.tweak.mods.length) {
+        await this.selectTweakMod(this.tweak.mods[0].id);
+      } else if (this.tweak.selectedId) {
+        // Refresh the schema/values for the currently selected mod
+        await this.selectTweakMod(this.tweak.selectedId);
+      }
+    },
+
+    async selectTweakMod(id) {
+      this.tweak.selectedId = id;
+      try {
+        const res = await window.pywebview.api.get_mod_options(id);
+        if (res && res.ok) {
+          this.tweak.schema = res.schema || {};
+          this.tweak.values = res.values || {};
+        } else {
+          this.tweak.schema = {};
+          this.tweak.values = {};
+        }
+      } catch (e) {
+        console.error('get_mod_options failed:', e);
+      }
+    },
+
+    async setTweakOption(key, value) {
+      const id = this.tweak.selectedId;
+      if (!id) return;
+      // Optimistic local update + brief saving indicator on the row
+      this.tweak.values[key] = value;
+      this.tweak.saving = key;
+      try {
+        await window.pywebview.api.set_mod_option(id, key, value);
+      } catch (e) {
+        console.error('set_mod_option failed:', e);
+      } finally {
+        // Clear the saving flag after a short tick so the visual cue is visible
+        setTimeout(() => { if (this.tweak.saving === key) this.tweak.saving = ''; }, 300);
+      }
+    },
+
+    async resetTweakMod() {
+      const id = this.tweak.selectedId;
+      if (!id) return;
+      if (!confirm(this.t('tweak.resetModConfirm'))) return;
+      try {
+        await window.pywebview.api.reset_mod_options(id);
+        await this.selectTweakMod(id);  // re-fetch defaults
+      } catch (e) {
+        console.error('reset_mod_options failed:', e);
+      }
+    },
+
+    async resetAllTweaks() {
+      if (!confirm(this.t('tweak.resetAllConfirm'))) return;
+      try {
+        await window.pywebview.api.reset_all_options();
+        if (this.tweak.selectedId) await this.selectTweakMod(this.tweak.selectedId);
+      } catch (e) {
+        console.error('reset_all_options failed:', e);
+      }
     },
 
     async openExternalUrl(url) {
@@ -977,6 +1120,8 @@ window.annoApp = function () {
         case 'settings':   return this.settingsTemplate();
         case 'log':        return this.logTemplate();
         case 'install':    return this.installTemplate();
+        case 'tweak':      return this.tweakingTemplate();
+        case 'news':       return this.newsTemplate();
         default:           return this.placeholderTemplate(tab);
       }
     },
@@ -989,6 +1134,182 @@ window.annoApp = function () {
             <p>${escapeHtml(this.t('tab.placeholder'))}</p>
             <p class="placeholder__hint">${escapeHtml(this.t('tab.placeholderHint', { tab: this.t('tab.activation') }))}</p>
           </div>
+        </div>`;
+    },
+
+    newsTemplate() {
+      const n = this.news;
+
+      const toolbar = `
+        <div class="news__toolbar">
+          <button class="settings__btn"
+                  ${n.loading ? 'disabled' : ''}
+                  onclick="annoRoot().refreshNews(true)">
+            ${escapeHtml(this.t(n.loading ? 'news.loading' : 'news.refresh'))}
+          </button>
+          <label class="news__toggle">
+            <input type="checkbox" ${this.settings.show_reddit_news ? 'checked' : ''}
+                   onchange="annoRoot().setSetting('show_reddit_news', this.checked).then(() => annoRoot().refreshNews(true))" />
+            <span>${escapeHtml(this.t('news.includeReddit'))}</span>
+          </label>
+          <button class="settings__btn"
+                  onclick="annoRoot().openExternalUrl('https://www.anno-union.com/en/blogs/')">
+            ${escapeHtml(this.t('news.visitUnion'))}
+          </button>
+          ${n.cached ? `<span class="news__cached">${escapeHtml(this.t('news.cached'))}</span>` : ''}
+        </div>`;
+
+      let body;
+      if (n.loading && !n.items.length) {
+        body = `<div class="news__empty">${escapeHtml(this.t('news.loading'))}</div>`;
+      } else if (n.error) {
+        body = `<div class="news__empty news__empty--error">${escapeHtml(this.t('news.error', { err: n.error }))}</div>`;
+      } else if (!n.items.length) {
+        body = `<div class="news__empty">${escapeHtml(this.t('news.empty'))}</div>`;
+      } else {
+        body = `<div class="news__grid">${n.items.map((item) => `
+          <article class="news-card"
+                   onclick="annoRoot().openExternalUrl('${escapeAttr(item.url || '')}')">
+            ${item.img_url
+                ? `<div class="news-card__media"><img src="${escapeAttr(item.img_url)}" alt="" loading="lazy" /></div>`
+                : `<div class="news-card__media news-card__media--placeholder"><span>📜</span></div>`}
+            <div class="news-card__body">
+              <div class="news-card__meta">
+                <span class="news-card__badge"
+                      style="background: ${escapeAttr(item.badge_color || '#444')}">${escapeHtml(item.badge_text || '?')}</span>
+                <span class="news-card__date">${escapeHtml(item.date || '')}</span>
+              </div>
+              <h3 class="news-card__title">${escapeHtml(item.title || '')}</h3>
+              ${item.excerpt
+                  ? `<p class="news-card__excerpt">${escapeHtml(item.excerpt)}</p>`
+                  : ''}
+            </div>
+          </article>`).join('')}</div>`;
+      }
+
+      return `
+        <div class="news">
+          ${toolbar}
+          <div class="news__body">${body}</div>
+        </div>`;
+    },
+
+    tweakingTemplate() {
+      const t = this.tweak;
+      const selected = t.mods.find((m) => m.id === t.selectedId) || null;
+
+      // Left list of tweakable mods
+      const list = t.mods.length ? t.mods.map((m) => `
+        <li class="tweak-list__item ${m.id === t.selectedId ? 'is-selected' : ''}"
+            onclick="annoRoot().selectTweakMod('${escapeAttr(m.id)}')">
+          <div class="tweak-list__name">${escapeHtml(m.name)}</div>
+          <div class="tweak-list__meta">${escapeHtml(m.category || '—')} · ${m.option_count} ${escapeHtml(this.t('tweak.optionWord'))}</div>
+        </li>`).join('') : `<li class="tweak-list__empty">${escapeHtml(this.t('tweak.noTweakable'))}</li>`;
+
+      // Right panel: dynamic form built from the schema
+      let form;
+      if (!selected) {
+        form = `<div class="tweak-form__empty">
+                  <div class="ornament">───── ◆ ─────</div>
+                  ${escapeHtml(this.t('tweak.pickHint'))}
+                </div>`;
+      } else if (!Object.keys(t.schema).length) {
+        form = `<div class="tweak-form__empty">${escapeHtml(this.t('tweak.noOptions'))}</div>`;
+      } else {
+        const rows = Object.entries(t.schema).map(([key, spec]) => {
+          if (!spec || typeof spec !== 'object') return '';
+          const label = spec.label || key;
+          const type = (spec.type || 'text').toLowerCase();
+          const labels = Array.isArray(spec.labels) ? spec.labels : [];
+          const values = Array.isArray(spec.values) ? spec.values : [];
+          const current = t.values[key] !== undefined ? String(t.values[key]) : String(spec.default ?? '');
+          const savingCls = t.saving === key ? 'is-saving' : '';
+          let control = '';
+          let hint = '';
+
+          if (type === 'enum') {
+            control = `
+              <select class="tweak-control"
+                      onchange="annoRoot().setTweakOption('${escapeAttr(key)}', this.value)">
+                ${values.map((v, i) => {
+                  const sel = String(v) === current ? ' selected' : '';
+                  const lbl = labels[i] || v;
+                  return `<option value="${escapeAttr(String(v))}"${sel}>${escapeHtml(String(lbl))}</option>`;
+                }).join('')}
+              </select>`;
+            const idx = values.indexOf(current) >= 0 ? values.indexOf(current) : values.findIndex((v) => String(v) === current);
+            if (idx >= 0 && labels[idx]) hint = String(labels[idx]);
+
+          } else if (type === 'slider') {
+            const min = parseFloat(values[0]) || 0;
+            const max = parseFloat(values[1]) || 100;
+            const step = parseFloat(values[2]) || 1;
+            const num = parseFloat(current);
+            const safe = isFinite(num) ? Math.max(min, Math.min(max, num)) : min;
+            control = `
+              <div class="tweak-slider">
+                <span class="tweak-slider__bound">${min}</span>
+                <input type="range"
+                       min="${min}" max="${max}" step="${step}"
+                       value="${safe}"
+                       oninput="this.nextElementSibling.textContent = this.value"
+                       onchange="annoRoot().setTweakOption('${escapeAttr(key)}', this.value)" />
+                <span class="tweak-slider__value">${safe}</span>
+                <span class="tweak-slider__bound">${max}</span>
+              </div>`;
+            if (labels.length) hint = String(labels[0]);
+
+          } else if (type === 'toggle') {
+            const isOn = String(current).toLowerCase() === 'true';
+            control = `
+              <label class="tweak-toggle">
+                <input type="checkbox" ${isOn ? 'checked' : ''}
+                       onchange="annoRoot().setTweakOption('${escapeAttr(key)}', this.checked ? 'true' : 'false')" />
+                <span class="tweak-toggle__pill ${isOn ? 'is-on' : ''}">
+                  <span class="tweak-toggle__dot"></span>
+                </span>
+                <span class="tweak-toggle__text">${isOn ? 'ON' : 'OFF'}</span>
+              </label>`;
+            const lbl = labels[isOn ? 0 : 1];
+            if (lbl) hint = String(lbl);
+
+          } else { // text fallback
+            control = `
+              <input class="tweak-control" type="text"
+                     value="${escapeAttr(current)}"
+                     onchange="annoRoot().setTweakOption('${escapeAttr(key)}', this.value)" />`;
+            if (labels.length) hint = String(labels[0]);
+          }
+
+          return `
+            <div class="tweak-row ${savingCls}">
+              <div class="tweak-row__label">${escapeHtml(label)}</div>
+              ${control}
+              ${hint ? `<div class="tweak-row__hint">${escapeHtml(hint)}</div>` : ''}
+            </div>`;
+        }).join('');
+
+        form = `
+          <div class="tweak-form__header">
+            <h3 class="tweak-form__title">${escapeHtml(selected.name)}</h3>
+            <button class="settings__btn settings__btn--danger settings__btn--small"
+                    onclick="annoRoot().resetTweakMod()">${escapeHtml(this.t('tweak.resetMod'))}</button>
+          </div>
+          <div class="tweak-form__rows">${rows}</div>`;
+      }
+
+      return `
+        <div class="tweak">
+          <aside class="tweak-list">
+            <div class="tweak-list__header">
+              <span>${escapeHtml(this.t('tweak.listHeader'))}</span>
+              <button class="settings__btn settings__btn--small"
+                      ${t.mods.length ? '' : 'disabled'}
+                      onclick="annoRoot().resetAllTweaks()">${escapeHtml(this.t('tweak.resetAll'))}</button>
+            </div>
+            <ul>${list}</ul>
+          </aside>
+          <section class="tweak-form">${form}</section>
         </div>`;
     },
 

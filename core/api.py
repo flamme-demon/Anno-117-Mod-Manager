@@ -23,6 +23,8 @@ from . import i18n as i18n_module
 from . import installer as installer_module
 from . import launcher as launcher_module
 from . import mods as mods_module
+from . import news as news_module
+from . import options as options_module
 from . import paths as paths_module
 from . import profile as profile_module
 
@@ -45,6 +47,8 @@ class Api:
         self.settings: dict[str, Any] = self._load_settings()
         # Set by app.py once the window exists; needed for create_file_dialog.
         self.window: Any = None
+        # In-memory news cache so repeated tab opens don't re-fetch.
+        self._news_cache: dict[str, Any] = {'items': [], 'fetched_at': 0.0, 'reddit': None}
 
     # ── settings ──────────────────────────────────────────────────────────────
     def _load_settings(self) -> dict[str, Any]:
@@ -79,6 +83,7 @@ class Api:
             'selected_language', 'jump_to_activation', 'show_tooltips',
             'show_reddit_news', 'use_mod_browser', 'enable_new_mods',
             'mod_location_mode', 'modio_api_key', 'modio_declined',
+            'last_seen_news_ts',
         }
         if key not in allowed:
             return {'ok': False, 'error': f'setting not writable from UI: {key}'}
@@ -263,7 +268,19 @@ class Api:
         return {'ok': False, 'error': f'folder not found: {folder}'}
 
     def open_path(self, path: str) -> dict:
-        """Open a file or folder in the OS default file manager."""
+        """Open a file, folder or URL. URLs go through Python's webbrowser
+        module (more reliable than xdg-open for https://) so news cards
+        always land in the user's default browser; local paths still use
+        the xdg-open / startfile / open chain."""
+        if not path:
+            return {'ok': False, 'error': 'path missing'}
+        if path.startswith(('http://', 'https://')):
+            try:
+                import webbrowser
+                webbrowser.open_new_tab(path)
+                return {'ok': True}
+            except Exception as e:
+                return {'ok': False, 'error': str(e)}
         ok, err = files_module.open_path(path)
         return {'ok': ok, 'error': err}
 
@@ -297,6 +314,80 @@ class Api:
             except OSError as e:
                 return {'ok': False, 'error': str(e)}
         return {'ok': False, 'error': 'mod not found'}
+
+    # ── news ──────────────────────────────────────────────────────────────────
+    def fetch_news(self, force_refresh: bool = False) -> dict:
+        """Return the merged news feed. Cached for 10 minutes per (reddit-on/off)
+        combination — pass ``force_refresh=True`` to bypass the cache."""
+        import time
+        include_reddit = bool(self.settings.get('show_reddit_news', False))
+        cache = self._news_cache
+        ttl_ok = (time.time() - cache.get('fetched_at', 0.0)) < 600
+        if (not force_refresh
+                and ttl_ok
+                and cache.get('reddit') == include_reddit
+                and cache.get('items')):
+            return {'ok': True, 'items': cache['items'], 'cached': True}
+        items = news_module.fetch_all(include_reddit=include_reddit, parallel=True)
+        self._news_cache = {
+            'items': items,
+            'fetched_at': time.time(),
+            'reddit': include_reddit,
+        }
+        return {'ok': True, 'items': items, 'cached': False}
+
+    # ── tweaking (mod options) ────────────────────────────────────────────────
+    def list_tweakable_mods(self) -> list[dict]:
+        """Return only the installed mods that expose an Options block —
+        what the Tweaking tab should populate its left list with."""
+        out = []
+        for m in self.list_mods():
+            schema = options_module.get_options_schema(m['path'])
+            if schema:
+                out.append({
+                    'id': m['id'],
+                    'name': m['name'],
+                    'category': m['category'],
+                    'folder': m.get('folder', ''),
+                    'option_count': len(schema),
+                })
+        return out
+
+    def get_mod_options(self, mod_id: str) -> dict:
+        """Return the schema + the user's saved values for a mod. Caller
+        renders the form from this; the schema is the source of truth for
+        types/labels/defaults, the values dict carries the current selection."""
+        for m in self.list_mods():
+            if m['id'] != mod_id:
+                continue
+            schema = options_module.get_options_schema(m['path'])
+            active_all = options_module.load_active_options(self._options_path())
+            mod_active = active_all.get(mod_id, {}) if isinstance(active_all.get(mod_id), dict) else {}
+            return {
+                'ok': True,
+                'mod_id': mod_id,
+                'name': m['name'],
+                'schema': schema,
+                'values': options_module.merged_values(schema, mod_active),
+            }
+        return {'ok': False, 'error': 'mod not found'}
+
+    def set_mod_option(self, mod_id: str, key: str, value) -> dict:
+        ok, err = options_module.set_option(self._options_path(), mod_id, key, value)
+        return {'ok': ok, 'error': err}
+
+    def reset_mod_options(self, mod_id: str) -> dict:
+        ok, err = options_module.reset_mod(self._options_path(), mod_id)
+        return {'ok': ok, 'error': err}
+
+    def reset_all_options(self) -> dict:
+        ok, err = options_module.reset_all(self._options_path())
+        return {'ok': ok, 'error': err}
+
+    def _options_path(self) -> str:
+        custom_docs = self.settings.get('custom_docs_path', '')
+        docs_mods = paths_module.documents_mods_root(custom_docs)
+        return os.path.join(docs_mods, 'active-options.jsonc') if docs_mods else ''
 
     # ── manual install ────────────────────────────────────────────────────────
     def install_zip_from_path(self, zip_path: str, allow_overwrite: bool = False) -> dict:
