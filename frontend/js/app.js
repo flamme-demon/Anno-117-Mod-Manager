@@ -1,6 +1,218 @@
 // Anno 117 Mod Manager — pywebview frontend bootstrap.
 // Defines the Alpine root component used by index.html.
 
+// UI strings keyed by stable id; English is the canonical source so any key
+// missing in another language falls back to en. Add more languages by
+// dropping a {key: 'localized text'} entry into the TRANSLATIONS map below.
+const TRANSLATIONS = {
+  english: {
+    'profile.label':           'Profile',
+    'profile.new':             '＋ New',
+    'profile.delete':          '🗑 Delete',
+    'profile.deleteConfirm':   'Delete preset "{name}"?',
+    'profile.cantDeleteReserved': 'The "Default" and "Vanilla" profiles cannot be deleted.',
+    'profile.promptName':      'Name of the new preset:',
+    'mode.manage':             'Manage',
+    'mode.order':              'Load order',
+    'mode.manage.title':       'Sort and toggle mods on/off',
+    'mode.order.title':        'Reorder load order via drag-and-drop',
+    'list.head.toggleAll':     'Activate / deactivate all',
+    'list.head.category':      'Category',
+    'list.head.name':          'Mod name',
+    'list.head.size':          'Size',
+    'list.head.status':        'Status',
+    'list.empty':              'No mods detected in the configured folders.',
+    'count.active':            '{n} / {total} active',
+    'pill.active':             'ON',
+    'pill.off':                'OFF',
+    'detail.empty':            'Select a mod from the list to view its sheet.',
+    'detail.banner.empty':     'No banner provided for this mod.',
+    'detail.description':      'Description',
+    'detail.noDescription':    'No description provided.',
+    'detail.details':          'Details',
+    'detail.meta.category':    'Category',
+    'detail.meta.difficulty':  'Difficulty',
+    'detail.meta.size':        'Size',
+    'detail.meta.folder':      'Folder',
+    'detail.creator':          'by {name} · v{version}',
+    'detail.openFolder':       'Open folder',
+    'detail.uninstall':        'Uninstall',
+    'detail.uninstallConfirm': 'Uninstall mod "{name}"?\n\nThe folder will be deleted from disk.',
+    'tab.placeholder':         'This tab will be ported in phase 2 of the migration.',
+    'tab.placeholderHint':     'pywebview POC in progress — only the {tab} tab works for now.',
+    'launch.title':            'Launch Anno 117',
+    'launch.error':            'Could not launch the game: {err}',
+    'mods.openFolder.title':   'Open the mods folder',
+    'tab.news':                'News',
+    'tab.activation':          'Activation',
+    'tab.browser':             'Mod Browser',
+    'tab.collections':         'Collections',
+    'tab.install':             'Manual Install',
+    'tab.log':                 'Modloader Log',
+    'tab.tweak':               'Tweaking',
+    'tab.settings':            'Settings',
+    'settings.section.paths':       'Paths',
+    'settings.section.behaviour':   'Behaviour',
+    'settings.section.advanced':    'Advanced',
+    'settings.gamePath':            'Anno 117 executable',
+    'settings.gamePath.empty':      'Not configured — set the path to Anno117.exe',
+    'settings.docsPath':            'Documents folder override',
+    'settings.docsPath.empty':      'Auto-detected (uses ~/Documents or the Proton prefix)',
+    'settings.browseFile':          'Browse file…',
+    'settings.browseFolder':        'Browse folder…',
+    'settings.autoDetect':          'Auto-detect',
+    'settings.clear':               'Clear',
+    'settings.open':                'Open',
+    'settings.modLocation':         'Mod storage location',
+    'settings.modLocation.documents': 'Documents folder (recommended)',
+    'settings.modLocation.game':      'Game install folder',
+    'settings.enableNewMods':       'Newly installed mods',
+    'settings.enableNewMods.on':    'Always activate them',
+    'settings.enableNewMods.off':   'Never activate them',
+    'settings.enableNewMods.keep':  'Keep their previous state',
+    'settings.derived.docsMods':    'Documents mods folder',
+    'settings.derived.gameMods':    'Game install mods folder',
+    'settings.derived.profile':     'active-profile.txt',
+    'settings.derived.appdata':     'AppData',
+    'settings.derived.presets':     'Presets',
+    'settings.pathError':           'Path could not be saved: {err}',
+    'settings.detectError':         'Could not auto-detect: {err}',
+    'settings.section.modio':       'mod.io integration',
+    'settings.modio.hint':          'Enter your personal mod.io API key to enable the Mod Browser and Collections tabs. Generate one at',
+    'settings.modio.apiKey':        'API key',
+    'settings.modio.apiKeyPlaceholder': 'Paste your mod.io API key here',
+    'settings.modio.save':          'Save',
+    'settings.modio.disconnect':    'Disconnect',
+    'settings.modio.disconnectConfirm': 'Remove the saved mod.io API key?',
+    'settings.modio.emptyKey':      'API key is empty.',
+    'settings.modio.connected':     'Connected',
+    'settings.modio.notConnected':  'Not connected',
+    'log.refresh':                  '↻ Refresh',
+    'log.copy':                     '⧉ Copy',
+    'log.openFile':                 'Open file',
+    'log.loading':                  'Loading…',
+    'log.empty':                    'mod-loader.log is empty.',
+    'log.notFound':                 'mod-loader.log not found at:\n{path}',
+    'log.truncated':                'Log truncated to last 2 MB',
+    'install.title':                'Manual install',
+    'install.hint':                 'Drop a mod ZIP here, or click to browse. The archive must contain a modinfo.json (or .jsonc) file.',
+    'install.drop':                 'Drop a .zip mod here',
+    'install.or':                   '— or —',
+    'install.browse':               'Browse a ZIP file…',
+    'install.targetLabel':          'Install destination:',
+    'install.installing':           'Installing {name}…',
+    'install.uploading':            'Uploading {name}…',
+    'install.success':              '{name} installed.',
+    'install.cancelled':            'Cancelled.',
+    'install.notZip':               'Only .zip archives are supported.',
+    'install.overwriteConfirm':     'A mod folder named "{name}" already exists. Replace it?',
+    'install.dropFailed':           'The drop did not deliver a file (your file manager may not support drag-drop into the webview). Use the Browse button instead.',
+  },
+  french: {
+    'profile.label':           'Profil',
+    'profile.new':             '＋ Nouveau',
+    'profile.delete':          '🗑 Supprimer',
+    'profile.deleteConfirm':   'Supprimer le preset « {name} » ?',
+    'profile.cantDeleteReserved': 'Les profils « Default » et « Vanilla » ne peuvent pas être supprimés.',
+    'profile.promptName':      'Nom du nouveau preset :',
+    'mode.manage':             'Gestion',
+    'mode.order':              'Ordre de chargement',
+    'mode.manage.title':       'Trier et activer/désactiver les mods',
+    'mode.order.title':        'Réorganiser l’ordre de chargement par drag-and-drop',
+    'list.head.toggleAll':     'Tout activer / désactiver',
+    'list.head.category':      'Catégorie',
+    'list.head.name':          'Nom du mod',
+    'list.head.size':          'Taille',
+    'list.head.status':        'Statut',
+    'list.empty':              'Aucun mod détecté dans les dossiers configurés.',
+    'count.active':            '{n} / {total} actifs',
+    'pill.active':             'ACTIF',
+    'pill.off':                'OFF',
+    'detail.empty':            'Choisissez un mod dans la liste pour consulter sa fiche.',
+    'detail.banner.empty':     'Aucune bannière fournie pour ce mod.',
+    'detail.description':      'Description',
+    'detail.noDescription':    'Aucune description fournie.',
+    'detail.details':          'Détails',
+    'detail.meta.category':    'Catégorie',
+    'detail.meta.difficulty':  'Difficulté',
+    'detail.meta.size':        'Taille',
+    'detail.meta.folder':      'Dossier',
+    'detail.creator':          'par {name} · v{version}',
+    'detail.openFolder':       'Ouvrir le dossier',
+    'detail.uninstall':        'Désinstaller',
+    'detail.uninstallConfirm': 'Désinstaller le mod « {name} » ?\n\nLe dossier sera supprimé du disque.',
+    'tab.placeholder':         'Cet onglet sera porté en phase 2 de la migration.',
+    'tab.placeholderHint':     'POC pywebview en cours — seul l’onglet {tab} est fonctionnel pour l’instant.',
+    'launch.title':            'Lancer Anno 117',
+    'launch.error':            'Impossible de lancer le jeu : {err}',
+    'mods.openFolder.title':   'Ouvrir le dossier des mods',
+    'tab.news':                'Actualités',
+    'tab.activation':          'Activation',
+    'tab.browser':             'Mod Browser',
+    'tab.collections':         'Collections',
+    'tab.install':             'Installation manuelle',
+    'tab.log':                 'Journal du Modloader',
+    'tab.tweak':               'Ajustement',
+    'tab.settings':            'Paramètres',
+    'settings.section.paths':       'Chemins',
+    'settings.section.behaviour':   'Comportement',
+    'settings.section.advanced':    'Avancé',
+    'settings.gamePath':            'Exécutable Anno 117',
+    'settings.gamePath.empty':      'Non configuré — indiquez le chemin de Anno117.exe',
+    'settings.docsPath':            'Dossier Documents personnalisé',
+    'settings.docsPath.empty':      'Auto-détecté (utilise ~/Documents ou le préfixe Proton)',
+    'settings.browseFile':          'Parcourir un fichier…',
+    'settings.browseFolder':        'Parcourir un dossier…',
+    'settings.autoDetect':          'Auto-détecter',
+    'settings.clear':               'Effacer',
+    'settings.open':                'Ouvrir',
+    'settings.modLocation':         'Emplacement de stockage des mods',
+    'settings.modLocation.documents': 'Dossier Documents (recommandé)',
+    'settings.modLocation.game':      'Dossier d’installation du jeu',
+    'settings.enableNewMods':       'Mods nouvellement installés',
+    'settings.enableNewMods.on':    'Toujours les activer',
+    'settings.enableNewMods.off':   'Ne jamais les activer',
+    'settings.enableNewMods.keep':  'Conserver leur état précédent',
+    'settings.derived.docsMods':    'Dossier mods (Documents)',
+    'settings.derived.gameMods':    'Dossier mods (jeu)',
+    'settings.derived.profile':     'active-profile.txt',
+    'settings.derived.appdata':     'AppData',
+    'settings.derived.presets':     'Presets',
+    'settings.pathError':           'Le chemin n’a pas pu être sauvegardé : {err}',
+    'settings.detectError':         'Auto-détection échouée : {err}',
+    'settings.section.modio':       'Intégration mod.io',
+    'settings.modio.hint':          'Saisissez votre clé API mod.io personnelle pour activer les onglets Mod Browser et Collections. Générez-en une sur',
+    'settings.modio.apiKey':        'Clé API',
+    'settings.modio.apiKeyPlaceholder': 'Collez ici votre clé API mod.io',
+    'settings.modio.save':          'Sauvegarder',
+    'settings.modio.disconnect':    'Déconnecter',
+    'settings.modio.disconnectConfirm': 'Supprimer la clé API mod.io enregistrée ?',
+    'settings.modio.emptyKey':      'La clé API est vide.',
+    'settings.modio.connected':     'Connecté',
+    'settings.modio.notConnected':  'Non connecté',
+    'log.refresh':                  '↻ Rafraîchir',
+    'log.copy':                     '⧉ Copier',
+    'log.openFile':                 'Ouvrir le fichier',
+    'log.loading':                  'Chargement…',
+    'log.empty':                    'mod-loader.log est vide.',
+    'log.notFound':                 'mod-loader.log introuvable à :\n{path}',
+    'log.truncated':                'Log tronqué aux 2 derniers Mo',
+    'install.title':                'Installation manuelle',
+    'install.hint':                 'Déposez un ZIP de mod ici, ou cliquez pour parcourir. L’archive doit contenir un fichier modinfo.json (ou .jsonc).',
+    'install.drop':                 'Déposez un mod .zip ici',
+    'install.or':                   '— ou —',
+    'install.browse':               'Parcourir un fichier ZIP…',
+    'install.targetLabel':          'Destination d’installation :',
+    'install.installing':           'Installation de {name}…',
+    'install.uploading':            'Transfert de {name}…',
+    'install.success':              '{name} installé.',
+    'install.cancelled':            'Annulé.',
+    'install.notZip':               'Seules les archives .zip sont supportées.',
+    'install.overwriteConfirm':     'Un dossier de mod nommé « {name} » existe déjà. Le remplacer ?',
+    'install.dropFailed':           'Le drop n’a livré aucun fichier (votre gestionnaire de fichiers ne supporte peut-être pas le drag-drop dans le webview). Utilisez le bouton Parcourir à la place.',
+  },
+};
+
 window.annoApp = function () {
   return {
     // ── State ──────────────────────────────────────────────────────────────
@@ -18,31 +230,375 @@ window.annoApp = function () {
     mode: 'manage',             // 'manage' | 'order'
     profileOrder: [],           // mod ids in active-profile.txt order (Load Order view)
     _dragId: null,              // id of the row currently being dragged
+    languages: [],              // [{key, name, flag}, ...] from the backend
+    currentLang: 'english',     // selected language key
+    langOpen: false,            // popover open state
+    settings: {},               // mirror of the persisted settings.json
+    pathsInfo: {},              // resolved paths from the backend (Settings tab)
+    log: { content: '', path: '', exists: false, truncated: false, loaded: false },
+    _logTimer: null,            // setInterval id while the Log tab is open
+    install: { busy: false, message: '', error: false, dragOver: false },
+    _dragDepth: 0,              // dragenter counter — kills the flicker that
+                                // happens when the cursor crosses child nodes
 
     // Sidebar tab definitions (icons stay text-glyph for the POC; phase 2 will
     // swap them for the data/ui/4k icon set the Tk version already uses).
-    tabs: [
-      // Mod-management cluster (left side of the top row)
-      { id: 'activation',   label: 'Activation',           img: 'icons/activation.png', group: 'mods' },
-      { id: 'browser',      label: 'Mod Browser',          img: 'icons/browser.png',    group: 'mods', disabled: true },
-      { id: 'collections',  label: 'Collections',          img: 'icons/collections.png', group: 'mods', disabled: true },
-      { id: 'install',      label: 'Installation manuelle', img: 'icons/install.png',   group: 'mods' },
-      // Tools / utilities cluster (right side of the top row)
-      { id: 'news',         label: 'Actualités',           img: 'icons/news.png',       group: 'tools' },
-      { id: 'log',          label: 'Journal du Modloader', img: 'icons/log.png',        group: 'tools' },
-      { id: 'tweak',        label: 'Ajustement',           img: 'icons/tweak.png',      group: 'tools' },
-      // Settings is intentionally NOT in the top row — it lives on the bottom
-      // row as a circular utility button, mirroring annolayouts' gear-icon
-      // placement to the left of the search field.
+    // Static tab metadata; the human-readable label is computed live from the
+    // translation table so the labels swap when the language changes.
+    _tabsRaw: [
+      { id: 'activation',   key: 'tab.activation',   img: 'icons/activation.png',  group: 'mods' },
+      { id: 'browser',      key: 'tab.browser',      img: 'icons/browser.png',     group: 'mods', disabled: true },
+      { id: 'collections',  key: 'tab.collections',  img: 'icons/collections.png', group: 'mods', disabled: true },
+      { id: 'install',      key: 'tab.install',      img: 'icons/install.png',     group: 'mods' },
+      { id: 'news',         key: 'tab.news',         img: 'icons/news.png',        group: 'tools' },
+      { id: 'log',          key: 'tab.log',          img: 'icons/log.png',         group: 'tools' },
+      { id: 'tweak',        key: 'tab.tweak',        img: 'icons/tweak.png',       group: 'tools' },
+      // Settings lives in the bottom HUD row (gear circle), not the tab pill.
     ],
+    get tabs() {
+      return this._tabsRaw.map((t) => ({ ...t, label: this.t(t.key) }));
+    },
 
     // ── Lifecycle ──────────────────────────────────────────────────────────
     async init() {
+      // Stop the webview from navigating to a file when the user drops it
+      // outside the install zone — without this, dropping a .zip anywhere on
+      // the page makes WebKit2GTK try to open the file as a new document.
+      document.addEventListener('dragover', (e) => { e.preventDefault(); }, false);
+      document.addEventListener('drop', (e) => {
+        // If the drop happened on the install zone, its own handler runs
+        // first and we already preventDefault'd there. This catches drops
+        // anywhere else.
+        e.preventDefault();
+      }, false);
+
       // pywebview injects window.pywebview.api asynchronously; wait for it.
       await this.waitForApi();
       const info = await window.pywebview.api.app_info();
       this.version = info.version;
+      try {
+        this.languages = await window.pywebview.api.get_languages();
+        this.currentLang = await window.pywebview.api.get_language();
+      } catch (e) {
+        console.error('language init failed:', e);
+      }
       await this.refreshMods();
+      // Refresh contextual data each time the user opens a tab that needs it.
+      // For the log we also kick off a 2-second poll so the user sees new
+      // entries land while the game is running, and stop the poll the moment
+      // they navigate away.
+      this.$watch('currentTab', (next, prev) => {
+        if (next === 'settings') this.refreshSettings();
+        if (next === 'log') {
+          this.refreshLog();
+          this._stopLogPolling();
+          this._logTimer = setInterval(() => this.refreshLog(), 2000);
+        }
+        if (prev === 'log' && next !== 'log') {
+          this._stopLogPolling();
+        }
+      });
+    },
+
+    _stopLogPolling() {
+      if (this._logTimer) {
+        clearInterval(this._logTimer);
+        this._logTimer = null;
+      }
+    },
+
+    async refreshLog() {
+      try {
+        const res = await window.pywebview.api.read_modloader_log();
+        this.log = {
+          content: (res && res.content) || '',
+          path:    (res && res.path) || '',
+          exists:  !!(res && res.exists),
+          truncated: !!(res && res.truncated),
+          loaded:  true,
+        };
+      } catch (e) {
+        console.error('read_modloader_log failed:', e);
+        this.log = { content: '', path: '', exists: false, truncated: false, loaded: true };
+      }
+    },
+
+    async copyLogToClipboard() {
+      try {
+        await navigator.clipboard.writeText(this.log.content || '');
+      } catch (e) {
+        // Older webkit2gtk fallback — drop into a textarea + execCommand.
+        const ta = document.createElement('textarea');
+        ta.value = this.log.content || '';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (_) {}
+        document.body.removeChild(ta);
+      }
+    },
+
+    get currentLanguage() {
+      return this.languages.find((l) => l.key === this.currentLang) || null;
+    },
+
+    /** Localised string lookup. Falls back to English if the active language
+     *  doesn't have the key, and finally to the key itself so missing
+     *  translations surface visibly. ``vars`` interpolates {placeholder}
+     *  tokens. */
+    t(key, vars) {
+      const en = TRANSLATIONS.english[key];
+      const localized = (TRANSLATIONS[this.currentLang] && TRANSLATIONS[this.currentLang][key]) || en || key;
+      if (!vars) return localized;
+      return localized.replace(/\{(\w+)\}/g, (_, name) =>
+        (vars[name] !== undefined ? String(vars[name]) : `{${name}}`));
+    },
+
+    async selectLanguage(key) {
+      this.langOpen = false;
+      if (key === this.currentLang) return;
+      this.currentLang = key;
+      try {
+        const res = await window.pywebview.api.set_language(key);
+        if (!res || !res.ok) {
+          console.error('set_language failed:', res && res.error);
+        }
+      } catch (e) {
+        console.error('set_language threw:', e);
+      }
+    },
+
+    // ── Settings ────────────────────────────────────────────────────────────
+    async refreshSettings() {
+      try {
+        this.settings = (await window.pywebview.api.get_settings()) || {};
+        this.pathsInfo = (await window.pywebview.api.get_paths_info()) || {};
+      } catch (e) {
+        console.error('refresh settings failed:', e);
+      }
+    },
+
+    async setSetting(key, value) {
+      try {
+        const res = await window.pywebview.api.update_setting(key, value);
+        if (!res || !res.ok) {
+          console.error('update_setting failed:', res && res.error);
+          return;
+        }
+        this.settings[key] = value;
+      } catch (e) {
+        console.error('update_setting threw:', e);
+      }
+    },
+
+    async pickGamePath(asFile) {
+      try {
+        const path = asFile
+          ? await window.pywebview.api.pick_file('Sélectionner Anno117.exe',
+              ['Anno executable (Anno117.exe;*.exe)'])
+          : await window.pywebview.api.pick_folder('Sélectionner le dossier d\'installation');
+        if (!path) return;
+        const res = await window.pywebview.api.set_game_path(path);
+        if (!res || !res.ok) {
+          alert(this.t('settings.pathError', { err: (res && res.error) || '?' }));
+          return;
+        }
+        await this.refreshSettings();
+        await this.refreshMods();
+      } catch (e) {
+        console.error('pickGamePath threw:', e);
+      }
+    },
+
+    async detectGamePath() {
+      try {
+        const res = await window.pywebview.api.detect_game_path();
+        if (!res || !res.ok) {
+          alert(this.t('settings.detectError', { err: (res && res.error) || '?' }));
+          return;
+        }
+        await this.refreshSettings();
+        await this.refreshMods();
+      } catch (e) {
+        console.error('detect_game_path threw:', e);
+      }
+    },
+
+    async pickDocsPath() {
+      try {
+        const path = await window.pywebview.api.pick_folder('Sélectionner le dossier Documents');
+        if (!path) return;
+        const res = await window.pywebview.api.set_custom_docs_path(path);
+        if (!res || !res.ok) {
+          alert(this.t('settings.pathError', { err: (res && res.error) || '?' }));
+          return;
+        }
+        await this.refreshSettings();
+        await this.refreshMods();
+      } catch (e) {
+        console.error('pickDocsPath threw:', e);
+      }
+    },
+
+    async clearDocsPath() {
+      try {
+        await window.pywebview.api.set_custom_docs_path('');
+        await this.refreshSettings();
+        await this.refreshMods();
+      } catch (e) {
+        console.error('clearDocsPath threw:', e);
+      }
+    },
+
+    async saveModioKey(value) {
+      const trimmed = (value || '').trim();
+      if (!trimmed) {
+        alert(this.t('settings.modio.emptyKey'));
+        return;
+      }
+      await this.setSetting('modio_api_key', trimmed);
+      await this.refreshSettings();
+    },
+
+    async clearModioKey() {
+      if (!confirm(this.t('settings.modio.disconnectConfirm'))) return;
+      await this.setSetting('modio_api_key', '');
+      await this.refreshSettings();
+    },
+
+    // ── Manual install ──────────────────────────────────────────────────────
+    async pickAndInstall() {
+      try {
+        const path = await window.pywebview.api.pick_file(
+          'Sélectionner le fichier ZIP du mod',
+          ['ZIP archive (*.zip)']);
+        if (!path) return;
+        const display = path.split(/[\\/]/).pop();
+        await this._performInstall(
+          (allow) => window.pywebview.api.install_zip_from_path(path, allow),
+          display);
+      } catch (e) {
+        console.error('pickAndInstall threw:', e);
+      }
+    },
+
+    onZipDragEnter(ev) {
+      ev.preventDefault();
+      this._dragDepth += 1;
+      this.install.dragOver = true;
+      console.log('[install] dragenter, depth=', this._dragDepth,
+                  'types=', ev.dataTransfer && Array.from(ev.dataTransfer.types || []));
+    },
+
+    onZipDragOver(ev) {
+      ev.preventDefault();
+      // dropEffect must be set on every dragover for the cursor to show "+"
+      if (ev.dataTransfer) ev.dataTransfer.dropEffect = 'copy';
+    },
+
+    onZipDragLeave(ev) {
+      this._dragDepth = Math.max(0, this._dragDepth - 1);
+      if (this._dragDepth === 0) this.install.dragOver = false;
+    },
+
+    onZipDrop(ev) {
+      // The actual install happens in app.py via pywebview's DOM event
+      // bridge (see _on_native_drop). Here we just reset the drag visual.
+      // ev.preventDefault is enforced at document level by the Python handler.
+      this._dragDepth = 0;
+      this.install.dragOver = false;
+    },
+
+    /** Called from Python (via window.evaluate_js) when a native file drop
+     *  is detected anywhere in the app. We switch to the Install tab so the
+     *  status banner is visible, then mark the install as busy. */
+    onNativeDropStart(name) {
+      this.currentTab = 'install';
+      this.install = { ...this.install, busy: true, error: false,
+                       message: this.t('install.installing', { name }) };
+    },
+
+    /** Called from Python with the install result and the source ZIP path.
+     *  Handles the overwrite-confirm round-trip back through the JS API. */
+    async onNativeDropResult(res, path) {
+      const display = (path || '').split(/[\\/]/).pop() || '';
+      if (res && !res.ok && res.exists_already) {
+        this.install.busy = false;
+        if (!confirm(this.t('install.overwriteConfirm', { name: res.folder || display }))) {
+          this._setInstallStatus(this.t('install.cancelled'), true);
+          return;
+        }
+        this.install.busy = true;
+        try {
+          res = await window.pywebview.api.install_zip_from_path(path, true);
+        } catch (e) {
+          this._setInstallStatus(String(e), true);
+          return;
+        }
+      }
+      if (!res || !res.ok) {
+        this._setInstallStatus((res && res.error) || 'unknown error', true);
+        return;
+      }
+      this._setInstallStatus(this.t('install.success', { name: res.folder || display }), false);
+      await this.refreshMods();
+    },
+
+    /** ``callFactory`` is invoked with a boolean ``allow_overwrite`` so we can
+     *  retry the same operation cleanly when the user agrees to overwrite an
+     *  existing mod folder. */
+    async _performInstall(callFactory, displayName) {
+      this.install = { ...this.install, busy: true, error: false,
+                       message: this.t('install.installing', { name: displayName }) };
+      try {
+        let res = await callFactory(false);
+        if (res && !res.ok && res.exists_already) {
+          this.install.busy = false;
+          if (!confirm(this.t('install.overwriteConfirm', { name: res.folder || displayName }))) {
+            this._setInstallStatus(this.t('install.cancelled'), true);
+            return;
+          }
+          this.install.busy = true;
+          res = await callFactory(true);
+        }
+        if (!res || !res.ok) {
+          this._setInstallStatus((res && res.error) || 'unknown error', true);
+          return;
+        }
+        this._setInstallStatus(this.t('install.success', { name: res.folder || displayName }), false);
+        await this.refreshMods();
+      } catch (e) {
+        this._setInstallStatus(String(e), true);
+      } finally {
+        this.install.busy = false;
+      }
+    },
+
+    _setInstallStatus(message, isError) {
+      this.install = { ...this.install, message, error: !!isError, busy: false };
+    },
+
+    _fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          // dataURL prefix → "data:<mime>;base64,<payload>" — strip the head
+          const s = String(reader.result || '');
+          const comma = s.indexOf(',');
+          resolve(comma === -1 ? s : s.slice(comma + 1));
+        };
+        reader.onerror = () => reject(reader.error || new Error('read failed'));
+        reader.readAsDataURL(file);
+      });
+    },
+
+    async openExternalUrl(url) {
+      // open_path delegates to xdg-open / startfile / open which all handle
+      // https:// URLs in addition to local paths.
+      try {
+        await window.pywebview.api.open_path(url);
+      } catch (e) {
+        console.error('openExternalUrl threw:', e);
+      }
     },
 
     waitForApi() {
@@ -84,7 +640,7 @@ window.annoApp = function () {
     },
 
     async createPreset() {
-      const name = prompt('Nom du nouveau preset :');
+      const name = prompt(this.t('profile.promptName'));
       if (!name) return;
       const trimmed = name.trim();
       if (!trimmed) return;
@@ -104,10 +660,10 @@ window.annoApp = function () {
     async deletePreset() {
       const name = this.profileName;
       if (!name || name === 'Default' || name === 'Vanilla') {
-        alert('Les profils "Default" et "Vanilla" ne peuvent pas être supprimés.');
+        alert(this.t('profile.cantDeleteReserved'));
         return;
       }
-      if (!confirm(`Supprimer le preset "${name}" ?`)) return;
+      if (!confirm(this.t('profile.deleteConfirm', { name }))) return;
       try {
         const res = await window.pywebview.api.delete_preset(name);
         if (!res || !res.ok) {
@@ -360,7 +916,7 @@ window.annoApp = function () {
 
     async uninstallMod(folder, name) {
       if (!folder) return;
-      if (!confirm(`Désinstaller le mod "${name}" ?\n\nLe dossier sera supprimé du disque.`)) return;
+      if (!confirm(this.t('detail.uninstallConfirm', { name }))) return;
       try {
         const res = await window.pywebview.api.uninstall_mod(folder);
         if (!res || !res.ok) {
@@ -407,7 +963,7 @@ window.annoApp = function () {
         const res = await window.pywebview.api.launch_game();
         if (!res || !res.ok) {
           console.error('launch_game failed:', res && res.error);
-          alert('Impossible de lancer le jeu : ' + ((res && res.error) || 'erreur inconnue'));
+          alert(this.t('launch.error', { err: (res && res.error) || '?' }));
         }
       } catch (e) {
         console.error('launch_game threw:', e);
@@ -415,6 +971,247 @@ window.annoApp = function () {
     },
 
     // ── Templates ──────────────────────────────────────────────────────────
+    renderTab(tab) {
+      switch (tab) {
+        case 'activation': return this.activationTemplate();
+        case 'settings':   return this.settingsTemplate();
+        case 'log':        return this.logTemplate();
+        case 'install':    return this.installTemplate();
+        default:           return this.placeholderTemplate(tab);
+      }
+    },
+
+    placeholderTemplate(tab) {
+      return `
+        <div class="placeholder">
+          <div class="placeholder__inner">
+            <div class="ornament">───── ◆ ─────</div>
+            <p>${escapeHtml(this.t('tab.placeholder'))}</p>
+            <p class="placeholder__hint">${escapeHtml(this.t('tab.placeholderHint', { tab: this.t('tab.activation') }))}</p>
+          </div>
+        </div>`;
+    },
+
+    installTemplate() {
+      const i = this.install;
+      const dropClasses = ['install__drop'];
+      if (i.dragOver) dropClasses.push('is-over');
+      if (i.busy)     dropClasses.push('is-busy');
+
+      const status = i.message
+        ? `<div class="install__status ${i.error ? 'is-error' : 'is-ok'}">${escapeHtml(i.message)}</div>`
+        : '';
+
+      return `
+        <div class="install">
+          <div class="install__inner">
+            <h2 class="install__title">${escapeHtml(this.t('install.title'))}</h2>
+            <p class="install__hint">${escapeHtml(this.t('install.hint'))}</p>
+
+            <div class="${dropClasses.join(' ')}"
+                 ondragenter="annoRoot().onZipDragEnter(event)"
+                 ondragover="annoRoot().onZipDragOver(event)"
+                 ondragleave="annoRoot().onZipDragLeave(event)"
+                 ondrop="annoRoot().onZipDrop(event)"
+                 onclick="annoRoot().pickAndInstall()">
+              <div class="install__drop-icon">⤓</div>
+              <div class="install__drop-line">${escapeHtml(this.t('install.drop'))}</div>
+              <div class="install__drop-sub">${escapeHtml(this.t('install.or'))}</div>
+              <button class="settings__btn settings__btn--accent install__pick"
+                      onclick="event.stopPropagation(); annoRoot().pickAndInstall()">
+                ${escapeHtml(this.t('install.browse'))}
+              </button>
+            </div>
+
+            ${status}
+
+            <div class="install__targets">
+              <div><span>${escapeHtml(this.t('install.targetLabel'))}</span>
+                <code>${escapeHtml(this.pathsInfo.documents_mods_root || (this.settings.mod_location_mode === 'GameDirectory'
+                  ? (this.pathsInfo.game_mods_root || '—') : '—'))}</code>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    },
+
+    logTemplate() {
+      const log = this.log;
+      // Colour each line based on its severity token. Stays close to the Tk
+      // version's choices (red for error, amber for warn).
+      const renderLines = (text) => {
+        if (!text) return '';
+        return text.split('\n').map((raw) => {
+          const upper = raw.toUpperCase();
+          let cls = '';
+          if (upper.includes('[ERRO') || upper.includes('ERROR')) cls = 'log-line--error';
+          else if (upper.includes('WARN')) cls = 'log-line--warn';
+          else if (upper.includes('[INFO]')) cls = 'log-line--info';
+          return `<div class="log-line ${cls}">${escapeHtml(raw) || '&nbsp;'}</div>`;
+        }).join('');
+      };
+
+      let body;
+      if (!log.loaded) {
+        body = `<div class="log-view__empty">${escapeHtml(this.t('log.loading'))}</div>`;
+      } else if (!log.exists) {
+        body = `<div class="log-view__empty">${escapeHtml(this.t('log.notFound', { path: log.path || '?' }))}</div>`;
+      } else if (!log.content) {
+        body = `<div class="log-view__empty">${escapeHtml(this.t('log.empty'))}</div>`;
+      } else {
+        body = renderLines(log.content);
+      }
+
+      return `
+        <div class="log-view">
+          <div class="log-view__toolbar">
+            <button class="settings__btn" onclick="annoRoot().refreshLog()">${escapeHtml(this.t('log.refresh'))}</button>
+            <button class="settings__btn" onclick="annoRoot().copyLogToClipboard()"
+                    ${log.exists && log.content ? '' : 'disabled'}>${escapeHtml(this.t('log.copy'))}</button>
+            <button class="settings__btn"
+                    ${log.path ? '' : 'disabled'}
+                    onclick="annoRoot().openModFolder('${escapeAttr(log.path || '')}')">${escapeHtml(this.t('log.openFile'))}</button>
+            <span class="log-view__path" title="${escapeAttr(log.path || '')}">${escapeHtml(log.path || '—')}</span>
+            ${log.truncated ? `<span class="log-view__warn">${escapeHtml(this.t('log.truncated'))}</span>` : ''}
+          </div>
+          <div class="log-view__body">${body}</div>
+        </div>`;
+    },
+
+    settingsTemplate() {
+      const p = this.pathsInfo || {};
+      const gameSet = !!(p.game_path && p.game_path_exists);
+      const docsSet = !!(p.custom_docs_path && p.custom_docs_path_exists);
+      const modLoc = this.settings.mod_location_mode || 'Documents';
+      const enableNew = this.settings.enable_new_mods || 'on';
+      return `
+        <div class="settings">
+          <div class="settings__inner">
+
+            <section class="settings__card">
+              <h3 class="settings__title">${escapeHtml(this.t('settings.section.paths'))}</h3>
+
+              <div class="settings__row">
+                <label class="settings__label">${escapeHtml(this.t('settings.gamePath'))}</label>
+                <div class="settings__field">
+                  <input class="settings__input" type="text" readonly
+                         value="${escapeAttr(p.game_path || '')}"
+                         placeholder="${escapeAttr(this.t('settings.gamePath.empty'))}" />
+                  <span class="settings__status ${gameSet ? 'is-ok' : 'is-bad'}">${gameSet ? '✓' : '✕'}</span>
+                </div>
+                <div class="settings__actions">
+                  <button class="settings__btn" onclick="annoRoot().pickGamePath(true)">${escapeHtml(this.t('settings.browseFile'))}</button>
+                  <button class="settings__btn" onclick="annoRoot().pickGamePath(false)">${escapeHtml(this.t('settings.browseFolder'))}</button>
+                  <button class="settings__btn settings__btn--accent" onclick="annoRoot().detectGamePath()">${escapeHtml(this.t('settings.autoDetect'))}</button>
+                </div>
+              </div>
+
+              <div class="settings__row">
+                <label class="settings__label">${escapeHtml(this.t('settings.docsPath'))}</label>
+                <div class="settings__field">
+                  <input class="settings__input" type="text" readonly
+                         value="${escapeAttr(p.custom_docs_path || '')}"
+                         placeholder="${escapeAttr(this.t('settings.docsPath.empty'))}" />
+                  <span class="settings__status ${docsSet ? 'is-ok' : ''}">${docsSet ? '✓' : '–'}</span>
+                </div>
+                <div class="settings__actions">
+                  <button class="settings__btn" onclick="annoRoot().pickDocsPath()">${escapeHtml(this.t('settings.browseFolder'))}</button>
+                  <button class="settings__btn settings__btn--danger"
+                          ${docsSet ? '' : 'disabled'}
+                          onclick="annoRoot().clearDocsPath()">${escapeHtml(this.t('settings.clear'))}</button>
+                </div>
+              </div>
+
+              <div class="settings__derived">
+                <div><span>${escapeHtml(this.t('settings.derived.docsMods'))}</span><code>${escapeHtml(p.documents_mods_root || '—')}</code></div>
+                <div><span>${escapeHtml(this.t('settings.derived.gameMods'))}</span><code>${escapeHtml(p.game_mods_root || '—')}</code></div>
+                <div><span>${escapeHtml(this.t('settings.derived.profile'))}</span><code>${escapeHtml(p.active_profile_path || '—')}</code></div>
+              </div>
+            </section>
+
+            <section class="settings__card">
+              <h3 class="settings__title">${escapeHtml(this.t('settings.section.behaviour'))}</h3>
+
+              <div class="settings__row settings__row--inline">
+                <label class="settings__label">${escapeHtml(this.t('settings.modLocation'))}</label>
+                <div class="settings__radio-group">
+                  <label class="settings__radio">
+                    <input type="radio" name="mod_location_mode" value="Documents"
+                           ${modLoc === 'Documents' ? 'checked' : ''}
+                           onchange="annoRoot().setSetting('mod_location_mode','Documents')" />
+                    <span>${escapeHtml(this.t('settings.modLocation.documents'))}</span>
+                  </label>
+                  <label class="settings__radio">
+                    <input type="radio" name="mod_location_mode" value="GameDirectory"
+                           ${modLoc === 'GameDirectory' ? 'checked' : ''}
+                           onchange="annoRoot().setSetting('mod_location_mode','GameDirectory')" />
+                    <span>${escapeHtml(this.t('settings.modLocation.game'))}</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="settings__row settings__row--inline">
+                <label class="settings__label">${escapeHtml(this.t('settings.enableNewMods'))}</label>
+                <select class="activation__profile"
+                        onchange="annoRoot().setSetting('enable_new_mods', this.value)">
+                  <option value="on" ${enableNew === 'on' ? 'selected' : ''}>${escapeHtml(this.t('settings.enableNewMods.on'))}</option>
+                  <option value="off" ${enableNew === 'off' ? 'selected' : ''}>${escapeHtml(this.t('settings.enableNewMods.off'))}</option>
+                  <option value="keep" ${enableNew === 'keep' ? 'selected' : ''}>${escapeHtml(this.t('settings.enableNewMods.keep'))}</option>
+                </select>
+              </div>
+            </section>
+
+            <section class="settings__card">
+              <h3 class="settings__title settings__title--with-logo">
+                <img class="settings__logo" src="icons/modio.png" alt="mod.io" />
+                <span>${escapeHtml(this.t('settings.section.modio'))}</span>
+                <span class="settings__badge ${this.settings.modio_api_key ? 'is-on' : 'is-off'}">
+                  ${escapeHtml(this.settings.modio_api_key ? this.t('settings.modio.connected') : this.t('settings.modio.notConnected'))}
+                </span>
+              </h3>
+              <p class="settings__hint">${escapeHtml(this.t('settings.modio.hint'))}
+                <a class="settings__link" href="https://mod.io/me/access"
+                   onclick="event.preventDefault(); annoRoot().openExternalUrl('https://mod.io/me/access')">https://mod.io/me/access</a>
+              </p>
+              <div class="settings__row">
+                <label class="settings__label">${escapeHtml(this.t('settings.modio.apiKey'))}</label>
+                <div class="settings__field">
+                  <input class="settings__input" type="password"
+                         x-ref="modioKey"
+                         value="${escapeAttr(this.settings.modio_api_key || '')}"
+                         placeholder="${escapeAttr(this.t('settings.modio.apiKeyPlaceholder'))}" />
+                  <span class="settings__status ${this.settings.modio_api_key ? 'is-ok' : ''}">${this.settings.modio_api_key ? '✓' : '–'}</span>
+                </div>
+                <div class="settings__actions">
+                  <button class="settings__btn settings__btn--accent"
+                          onclick="annoRoot().saveModioKey($refs.modioKey.value)">${escapeHtml(this.t('settings.modio.save'))}</button>
+                  <button class="settings__btn settings__btn--danger"
+                          ${this.settings.modio_api_key ? '' : 'disabled'}
+                          onclick="annoRoot().clearModioKey()">${escapeHtml(this.t('settings.modio.disconnect'))}</button>
+                </div>
+              </div>
+            </section>
+
+            <section class="settings__card">
+              <h3 class="settings__title">${escapeHtml(this.t('settings.section.advanced'))}</h3>
+              <div class="settings__derived">
+                <div><span>${escapeHtml(this.t('settings.derived.appdata'))}</span>
+                  <code>${escapeHtml(p.appdata_dir || '—')}</code>
+                  <button class="settings__btn settings__btn--small"
+                          onclick="annoRoot().openModFolder('${escapeAttr(p.appdata_dir || '')}')">${escapeHtml(this.t('settings.open'))}</button>
+                </div>
+                <div><span>${escapeHtml(this.t('settings.derived.presets'))}</span>
+                  <code>${escapeHtml(p.presets_dir || '—')}</code>
+                  <button class="settings__btn settings__btn--small"
+                          onclick="annoRoot().openModFolder('${escapeAttr(p.presets_dir || '')}')">${escapeHtml(this.t('settings.open'))}</button>
+                </div>
+              </div>
+            </section>
+
+          </div>
+        </div>`;
+    },
+
     activationTemplate() {
       // Returned as a single HTML string and injected via x-html so the POC
       // stays in one file. Phase 2 will split this into Alpine components or
@@ -446,7 +1243,7 @@ window.annoApp = function () {
               <div class="mod-row__version">v${escapeHtml(m.version)}</div>
             </div>
             <span class="mod-row__size">${this.formatSize(m.size_bytes)}</span>
-            <span class="pill ${m.active ? '' : 'pill--ghost'}">${m.active ? 'ACTIF' : 'OFF'}</span>
+            <span class="pill ${m.active ? '' : 'pill--ghost'}">${escapeHtml(m.active ? this.t('pill.active') : this.t('pill.off'))}</span>
           </li>`;
       };
 
@@ -464,43 +1261,43 @@ window.annoApp = function () {
         ? `<img class="mod-detail__banner" src="${this.selectedBannerUrl}" alt="" />`
         : `<div class="mod-detail__banner mod-detail__banner--placeholder">
              <div class="ornament">───── ◆ ─────</div>
-             ${sel ? 'Aucune bannière fournie pour ce mod.' : ''}
+             ${sel ? escapeHtml(this.t('detail.banner.empty')) : ''}
            </div>`;
 
       const detail = sel ? `
         ${banner}
         <div class="mod-detail__header">
           <h3 class="mod-detail__title">${escapeHtml(sel.name)}</h3>
-          <div class="mod-detail__creator">par ${escapeHtml(sel.creator || 'inconnu')} · v${escapeHtml(sel.version)}</div>
+          <div class="mod-detail__creator">${escapeHtml(this.t('detail.creator', { name: sel.creator || '?', version: sel.version }))}</div>
         </div>
         ${sel.description ? `
         <div class="mod-detail__section">
-          <h4>Description</h4>
+          <h4>${escapeHtml(this.t('detail.description'))}</h4>
           <p>${escapeHtml(sel.description)}</p>
         </div>` : ''}
         <div class="mod-detail__section">
-          <h4>Détails</h4>
+          <h4>${escapeHtml(this.t('detail.details'))}</h4>
           <dl class="mod-detail__meta">
-            <dt>Catégorie</dt><dd>${escapeHtml(sel.category || '—')}</dd>
-            <dt>Difficulté</dt><dd>${escapeHtml(sel.difficulty)}</dd>
-            <dt>Taille</dt><dd>${this.formatSize(sel.size_bytes)}</dd>
-            <dt>Dossier</dt><dd>${escapeHtml(sel.folder || basename(sel.path))}</dd>
+            <dt>${escapeHtml(this.t('detail.meta.category'))}</dt><dd>${escapeHtml(sel.category || '—')}</dd>
+            <dt>${escapeHtml(this.t('detail.meta.difficulty'))}</dt><dd>${escapeHtml(sel.difficulty)}</dd>
+            <dt>${escapeHtml(this.t('detail.meta.size'))}</dt><dd>${this.formatSize(sel.size_bytes)}</dd>
+            <dt>${escapeHtml(this.t('detail.meta.folder'))}</dt><dd>${escapeHtml(sel.folder || basename(sel.path))}</dd>
           </dl>
         </div>
         <div class="mod-detail__actions">
           <button class="mod-detail__btn"
                   onclick="annoRoot().openModFolder('${escapeAttr(sel.path)}')">
-            Ouvrir le dossier
+            ${escapeHtml(this.t('detail.openFolder'))}
           </button>
           ${sel.parent_path ? '' : `
           <button class="mod-detail__btn mod-detail__btn--danger"
                   onclick="annoRoot().uninstallMod('${escapeAttr(sel.folder)}', '${escapeAttr(sel.name)}')">
-            Désinstaller
+            ${escapeHtml(this.t('detail.uninstall'))}
           </button>`}
         </div>` : `
         <div class="mod-detail__empty">
           <div class="ornament">───── ◆ ─────</div>
-          Choisissez un mod dans la liste pour consulter sa fiche.
+          ${escapeHtml(this.t('detail.empty'))}
         </div>`;
 
       const totalSize = this.formatSize(this.totalSizeBytes);
@@ -516,29 +1313,27 @@ window.annoApp = function () {
       return `
         <div class="activation">
           <div class="activation__toolbar">
-            <label>Profil</label>
+            <label>${escapeHtml(this.t('profile.label'))}</label>
             <select class="activation__profile"
                     onchange="annoRoot().switchProfile(this.value)">
               ${profileOpts}
             </select>
             <button class="activation__btn"
-                    onclick="annoRoot().createPreset()"
-                    title="Sauvegarder l'état actuel comme nouveau preset">＋ Nouveau</button>
+                    onclick="annoRoot().createPreset()">${escapeHtml(this.t('profile.new'))}</button>
             <button class="activation__btn activation__btn--danger"
                     onclick="annoRoot().deletePreset()"
-                    ${isReserved ? 'disabled' : ''}
-                    title="Supprimer ce preset">🗑 Supprimer</button>
+                    ${isReserved ? 'disabled' : ''}>${escapeHtml(this.t('profile.delete'))}</button>
 
             <div class="activation__mode">
               <button class="activation__mode-btn ${this.mode === 'manage' ? 'is-active' : ''}"
                       onclick="annoRoot().setMode('manage')"
-                      title="Trier et activer/désactiver les mods">Gestion</button>
+                      title="${escapeAttr(this.t('mode.manage.title'))}">${escapeHtml(this.t('mode.manage'))}</button>
               <button class="activation__mode-btn ${this.mode === 'order' ? 'is-active' : ''}"
                       onclick="annoRoot().setMode('order')"
-                      title="Réorganiser l'ordre de chargement par drag-and-drop">Ordre de chargement</button>
+                      title="${escapeAttr(this.t('mode.order.title'))}">${escapeHtml(this.t('mode.order'))}</button>
             </div>
 
-            <span class="activation__count">${this.activeCount} / ${this.topLevelMods.length} actifs</span>
+            <span class="activation__count">${escapeHtml(this.t('count.active', { n: this.activeCount, total: this.topLevelMods.length }))}</span>
             <span class="activation__count activation__count--size">${activeSize} / ${totalSize}</span>
           </div>
 
@@ -546,18 +1341,18 @@ window.annoApp = function () {
             <div class="mod-row mod-row--head">
               <span class="mod-row__check mod-row__check--head mod-row__check--${this.headerSelectionState}"
                     onclick="annoRoot().toggleAllFromHeader()"
-                    title="Tout activer / désactiver"></span>
+                    title="${escapeAttr(this.t('list.head.toggleAll'))}"></span>
               <span></span>
               <span class="mod-row__head ${orderMode ? 'is-disabled' : ''}"
-                    ${orderMode ? '' : `onclick="annoRoot().setSort('category')"`}>Catégorie ${orderMode ? '' : this.sortIndicator('category')}</span>
+                    ${orderMode ? '' : `onclick="annoRoot().setSort('category')"`}>${escapeHtml(this.t('list.head.category'))} ${orderMode ? '' : this.sortIndicator('category')}</span>
               <span class="mod-row__head ${orderMode ? 'is-disabled' : ''}"
-                    ${orderMode ? '' : `onclick="annoRoot().setSort('name')"`}>Nom du mod ${orderMode ? '' : this.sortIndicator('name')}</span>
-              <span class="mod-row__head">Taille</span>
+                    ${orderMode ? '' : `onclick="annoRoot().setSort('name')"`}>${escapeHtml(this.t('list.head.name'))} ${orderMode ? '' : this.sortIndicator('name')}</span>
+              <span class="mod-row__head">${escapeHtml(this.t('list.head.size'))}</span>
               <span class="mod-row__head ${orderMode ? 'is-disabled' : ''}"
-                    ${orderMode ? '' : `onclick="annoRoot().setSort('status')"`}>Statut ${orderMode ? '' : this.sortIndicator('status')}</span>
+                    ${orderMode ? '' : `onclick="annoRoot().setSort('status')"`}>${escapeHtml(this.t('list.head.status'))} ${orderMode ? '' : this.sortIndicator('status')}</span>
             </div>
             <ul class="activation__list">
-              ${this.topLevelMods.length ? rows : '<li class="mod-detail__empty">Aucun mod détecté dans les dossiers configurés.</li>'}
+              ${this.topLevelMods.length ? rows : `<li class="mod-detail__empty">${escapeHtml(this.t('list.empty'))}</li>`}
             </ul>
           </div>
 

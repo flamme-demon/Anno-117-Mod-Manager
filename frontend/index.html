@@ -8,6 +8,9 @@
   <link rel="stylesheet" href="css/parchment.css" />
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/tabs/activation.css" />
+  <link rel="stylesheet" href="css/tabs/settings.css" />
+  <link rel="stylesheet" href="css/tabs/log.css" />
+  <link rel="stylesheet" href="css/tabs/install.css" />
   <!-- Load order matters: app.js must define annoApp() *before* alpine.min.js
        calls Alpine.start() on DOMContentLoaded, otherwise x-data="annoApp()"
        resolves to undefined and the whole tree silently fails to render. -->
@@ -22,23 +25,35 @@
       <span class="title-bar__sub">Mod Manager</span>
     </h1>
     <span class="title-bar__version" x-text="version ? 'v' + version : ''"></span>
+
+    <!-- Round flag button + popover for the language picker. -->
+    <div class="lang-picker" @click.outside="langOpen = false">
+      <button class="lang-picker__btn"
+              @click="langOpen = !langOpen"
+              :title="currentLanguage ? currentLanguage.name : 'Langue'">
+        <span class="lang-picker__flag" x-text="currentLanguage ? currentLanguage.flag : '🌐'"></span>
+      </button>
+      <div class="lang-picker__menu" x-show="langOpen" x-cloak>
+        <template x-for="l in languages" :key="l.key">
+          <button class="lang-picker__item"
+                  :class="{ 'is-active': l.key === currentLang }"
+                  @click="selectLanguage(l.key)">
+            <span class="lang-picker__item-flag" x-text="l.flag"></span>
+            <span class="lang-picker__item-name" x-text="l.name"></span>
+          </button>
+        </template>
+      </div>
+    </div>
   </header>
 
   <div class="layout">
 
     <main class="main">
-      <!-- POC: only Activation is rendered. Other tabs come in phase 2.
-           The x-html sits directly on the .main > div so it inherits the
-           flex:1 + overflow:hidden constraint — without that, .activation's
-           height:100% has no reference and the list spills under the HUD. -->
-      <div x-show="currentTab === 'activation'" x-html="activationTemplate()"></div>
-      <div x-show="currentTab !== 'activation'" class="placeholder">
-        <div class="placeholder__inner">
-          <div class="ornament">───── ◆ ─────</div>
-          <p>Cet onglet sera porté en phase 2 de la migration.</p>
-          <p class="placeholder__hint">POC pywebview en cours — seul l'onglet <strong>Activation</strong> est fonctionnel pour l'instant.</p>
-        </div>
-      </div>
+      <!-- Single dispatcher: each render*() returns the HTML string for the
+           active tab. Sits directly on the .main > div so it inherits
+           flex:1 + overflow:hidden — without that, height:100% inside the
+           tab has no reference and content spills under the HUD bar. -->
+      <div x-html="renderTab(currentTab)"></div>
     </main>
 
     <footer class="toolbar">
@@ -50,27 +65,25 @@
         <!-- Row 1 — main tabs (rounded square buttons) -->
         <div class="toolbar__hud-row toolbar__hud-row--top">
           <div class="toolbar__group">
-            <template x-for="t in tabs.filter(t => t.group === 'mods')" :key="t.id">
+            <template x-for="tab in tabs.filter(x => x.group === 'mods')" :key="tab.id">
               <button
                 class="toolbar__tab"
-                :class="{ 'is-active': currentTab === t.id, 'is-disabled': t.disabled }"
-                :disabled="t.disabled"
-                :title="t.label"
-                @click="!t.disabled && (currentTab = t.id)">
-                <img class="toolbar__icon" :src="t.img" :alt="t.label" />
+                :class="{ 'is-active': currentTab === tab.id, 'is-disabled': tab.disabled }"
+                :title="tab.label"
+                @click="!tab.disabled && (currentTab = tab.id)">
+                <img class="toolbar__icon" :src="tab.img" :alt="tab.label" />
               </button>
             </template>
           </div>
           <div class="toolbar__divider"></div>
           <div class="toolbar__group">
-            <template x-for="t in tabs.filter(t => t.group === 'tools')" :key="t.id">
+            <template x-for="tab in tabs.filter(x => x.group === 'tools')" :key="tab.id">
               <button
                 class="toolbar__tab"
-                :class="{ 'is-active': currentTab === t.id, 'is-disabled': t.disabled }"
-                :disabled="t.disabled"
-                :title="t.label"
-                @click="!t.disabled && (currentTab = t.id)">
-                <img class="toolbar__icon" :src="t.img" :alt="t.label" />
+                :class="{ 'is-active': currentTab === tab.id, 'is-disabled': tab.disabled }"
+                :title="tab.label"
+                @click="!tab.disabled && (currentTab = tab.id)">
+                <img class="toolbar__icon" :src="tab.img" :alt="tab.label" />
               </button>
             </template>
           </div>
@@ -88,7 +101,8 @@
                 <img class="toolbar__round-icon" src="icons/settings.png" alt="Paramètres" />
               </button>
             </div>
-            <div class="toolbar__cup">
+            <!-- Refresh only makes sense when there's a mod list visible -->
+            <div class="toolbar__cup" x-show="currentTab === 'activation'">
               <button class="toolbar__round"
                       @click="refreshMods()"
                       title="Rafraîchir la liste des mods">
@@ -97,7 +111,8 @@
             </div>
           </div>
 
-          <div class="toolbar__search">
+          <!-- Search filters the activation list, hide it elsewhere -->
+          <div class="toolbar__search" x-show="currentTab === 'activation'">
             <svg class="toolbar__search-icon" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="2"
                  stroke-linecap="round" stroke-linejoin="round">
@@ -109,20 +124,22 @@
                    placeholder="Rechercher un mod…"
                    x-model="search" />
           </div>
+          <!-- Spacer to keep the launch button anchored right when the search is hidden -->
+          <div class="toolbar__bottom-spacer" x-show="currentTab !== 'activation'"></div>
 
           <div class="toolbar__group toolbar__group--utility">
             <div class="toolbar__cup">
               <button class="toolbar__round"
                       @click="openModsFolder()"
-                      title="Ouvrir le dossier des mods">
-                <img class="toolbar__round-icon" src="icons/folder.png" alt="Ouvrir le dossier des mods" />
+                      :title="t('mods.openFolder.title')">
+                <img class="toolbar__round-icon" src="icons/folder.png" :alt="t('mods.openFolder.title')" />
               </button>
             </div>
             <div class="toolbar__cup">
               <button class="toolbar__round toolbar__round--launch"
                       @click="launchGame()"
-                      title="Lancer Anno 117">
-                <img class="toolbar__round-icon" src="icons/launch.png" alt="Lancer le jeu" />
+                      :title="t('launch.title')">
+                <img class="toolbar__round-icon" src="icons/launch.png" :alt="t('launch.title')" />
               </button>
             </div>
           </div>
