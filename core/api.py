@@ -49,7 +49,7 @@ class Api:
         # Set by app.py once the window exists; needed for create_file_dialog.
         self.window: Any = None
         # In-memory news cache so repeated tab opens don't re-fetch.
-        self._news_cache: dict[str, Any] = {'items': [], 'fetched_at': 0.0, 'reddit': None}
+        self._news_cache: dict[str, Any] = {'items': [], 'fetched_at': 0.0, 'key': None}
 
     # ── settings ──────────────────────────────────────────────────────────────
     def _load_settings(self) -> dict[str, Any]:
@@ -80,11 +80,13 @@ class Api:
         endpoints (toggle_mod, save_preset, etc.)."""
         # Whitelist what JS can write so a stray bridge call can't pollute
         # arbitrary keys (game_path stays managed by browse_game_path etc.).
+        # Only what the new pywebview UI actually writes — the legacy Tk
+        # whitelist had a handful of settings (jump_to_activation,
+        # show_tooltips, use_mod_browser, modio_declined, last_seen_news_ts)
+        # that nothing in frontend/ ever calls update_setting() with.
         allowed = {
-            'selected_language', 'jump_to_activation', 'show_tooltips',
-            'show_reddit_news', 'use_mod_browser', 'enable_new_mods',
-            'mod_location_mode', 'modio_api_key', 'modio_declined',
-            'last_seen_news_ts', 'active_profile_name',
+            'selected_language', 'show_reddit_news', 'enable_new_mods',
+            'mod_location_mode', 'modio_api_key', 'active_profile_name',
         }
         if key not in allowed:
             return {'ok': False, 'error': f'setting not writable from UI: {key}'}
@@ -363,7 +365,7 @@ class Api:
         self._save_settings()
         # Drop the news cache so the next refresh picks up the mod.io feeds
         # that previously needed a token to work.
-        self._news_cache = {'items': [], 'fetched_at': 0.0, 'reddit': None}
+        self._news_cache = {'items': [], 'fetched_at': 0.0, 'key': None}
         return {'ok': True, 'expires_ts': res['date_expires']}
 
     def modio_disconnect(self) -> dict:
@@ -802,8 +804,6 @@ class Api:
             'items': items,
             'fetched_at': time.time(),
             'key': cache_key,
-            # Legacy field kept for the old reset path below; can be dropped later.
-            'reddit': include_reddit,
         }
         return {'ok': True, 'items': items, 'cached': False}
 

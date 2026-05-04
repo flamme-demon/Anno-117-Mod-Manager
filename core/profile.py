@@ -356,35 +356,3 @@ def write_set_all(profile_path: str, mod_ids: list[str], active: bool) -> tuple[
         return False, str(e)
 
 
-def set_enable_new_mods(profile_path: str, enabled: bool) -> tuple[bool, str]:
-    """Comment / uncomment the EnableNewMods directive in place. Adds the
-    directive if missing."""
-    if not profile_path:
-        return False, 'no profile path'
-    try:
-        os.makedirs(os.path.dirname(profile_path), exist_ok=True)
-        if not os.path.exists(profile_path):
-            with open(profile_path, 'w', encoding='utf-8') as f:
-                prefix = '' if enabled else '# '
-                f.write('# Anno 117 Active Profile\n' + prefix + 'EnableNewMods\n')
-            return True, ''
-
-        with open(profile_path, 'r', encoding='utf-8') as f:
-            lines = f.readlines()
-        updated: list[str] = []
-        found = False
-        for line in lines:
-            if 'EnableNewMods' in line:
-                found = True
-                prefix = '' if enabled else '# '
-                updated.append(f'{prefix}EnableNewMods\n')
-            else:
-                updated.append(line)
-        if not found:
-            prefix = '' if enabled else '# '
-            updated.append(f'{prefix}EnableNewMods\n')
-        with open(profile_path, 'w', encoding='utf-8') as f:
-            f.writelines(updated)
-        return True, ''
-    except OSError as e:
-        return False, str(e)
