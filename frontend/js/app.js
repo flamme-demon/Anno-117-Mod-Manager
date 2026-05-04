@@ -5017,10 +5017,10 @@ window.annoApp = function () {
               ondragend="annoRoot().onDragEnd()"` : '';
         return `
           <li class="mod-row ${selected} ${subClass} ${dragClass}"
-              onclick="annoRoot().selectMod('${m.id}')"
+              onclick="annoRoot().selectMod('${escapeAttr(m.id)}')"
               ${dragAttrs}>
             <span class="mod-row__check ${active}"
-                  onclick="event.stopPropagation(); annoRoot().toggleMod('${m.id}')"></span>
+                  onclick="event.stopPropagation(); annoRoot().toggleMod('${escapeAttr(m.id)}')"></span>
             <span class="mod-row__medallion">${orderMode && !isSubMod ? '⋮⋮' : initials}</span>
             <span class="mod-row__category-cell">${escapeHtml(category)}</span>
             <div class="mod-row__text">
@@ -5174,8 +5174,27 @@ const _SAFE_HTML_TAGS = new Set([
   'h1','h2','h3','h4','h5','h6','p','ul','ol','li','strong','b','em','i',
   'br','blockquote','code','pre','hr','a','div','span',
 ]);
+// Memoise sanitiser output. Alpine re-runs renderTab on every reactive
+// tick (e.g. every keystroke in any bound input), and DOMParser + walk
+// on a long mod description is non-trivial. Key on the raw HTML so a
+// switch to another mod naturally misses. Cap at 10 entries.
+const _sanitizeCache = new Map();
 function sanitizeModioHtml(html) {
   if (!html) return '';
+  if (_sanitizeCache.has(html)) {
+    const v = _sanitizeCache.get(html);
+    _sanitizeCache.delete(html);
+    _sanitizeCache.set(html, v); // LRU touch
+    return v;
+  }
+  const out = _sanitizeModioHtmlImpl(html);
+  _sanitizeCache.set(html, out);
+  while (_sanitizeCache.size > 10) {
+    _sanitizeCache.delete(_sanitizeCache.keys().next().value);
+  }
+  return out;
+}
+function _sanitizeModioHtmlImpl(html) {
   let doc;
   try {
     doc = new DOMParser().parseFromString(`<div id="root">${html}</div>`, 'text/html');

@@ -136,17 +136,18 @@ def parse_enabled_ids(profile_path: str) -> set[str]:
         return set()
     enabled: set[str] = set()
     try:
-        for line in open(profile_path, 'r', encoding='utf-8'):
-            clean = line.strip()
-            if not clean or clean.startswith('#'):
-                continue
-            token = clean.split('#', 1)[0].strip().split()
-            if not token:
-                continue
-            tok = token[0]
-            if tok == 'EnableNewMods':
-                continue
-            enabled.add(tok)
+        with open(profile_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                clean = line.strip()
+                if not clean or clean.startswith('#'):
+                    continue
+                token = clean.split('#', 1)[0].strip().split()
+                if not token:
+                    continue
+                tok = token[0]
+                if tok == 'EnableNewMods':
+                    continue
+                enabled.add(tok)
     except OSError:
         pass
     return enabled
@@ -159,10 +160,11 @@ def is_enable_new_mods(profile_path: str) -> bool:
         # Default behaviour when no profile exists: include new mods.
         return True
     try:
-        for line in open(profile_path, 'r', encoding='utf-8'):
-            clean = line.strip()
-            if 'EnableNewMods' in clean:
-                return not clean.startswith('#')
+        with open(profile_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                clean = line.strip()
+                if 'EnableNewMods' in clean:
+                    return not clean.startswith('#')
     except OSError:
         pass
     return False
@@ -174,11 +176,12 @@ def mod_id_appears(profile_path: str, mod_id: str) -> bool:
     if not profile_path or not os.path.exists(profile_path):
         return False
     try:
-        for line in open(profile_path, 'r', encoding='utf-8'):
-            clean = line.strip().lstrip('#').strip()
-            tokens = clean.split('#', 1)[0].strip().split()
-            if tokens and tokens[0] == mod_id:
-                return True
+        with open(profile_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                clean = line.strip().lstrip('#').strip()
+                tokens = clean.split('#', 1)[0].strip().split()
+                if tokens and tokens[0] == mod_id:
+                    return True
     except OSError:
         pass
     return False
@@ -239,20 +242,21 @@ def parse_profile_order(profile_path: str) -> list[str]:
     out: list[str] = []
     seen: set[str] = set()
     try:
-        for line in open(profile_path, 'r', encoding='utf-8'):
-            clean = line.strip().lstrip('#').strip()
-            if not clean:
-                continue
-            tokens = clean.split('#', 1)[0].strip().split()
-            if not tokens:
-                continue
-            mid = tokens[0]
-            if mid == 'EnableNewMods' or mid.startswith('Anno'):
-                continue
-            if mid in seen:
-                continue
-            seen.add(mid)
-            out.append(mid)
+        with open(profile_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                clean = line.strip().lstrip('#').strip()
+                if not clean:
+                    continue
+                tokens = clean.split('#', 1)[0].strip().split()
+                if not tokens:
+                    continue
+                mid = tokens[0]
+                if mid == 'EnableNewMods' or mid.startswith('Anno'):
+                    continue
+                if mid in seen:
+                    continue
+                seen.add(mid)
+                out.append(mid)
     except OSError:
         pass
     return out

@@ -499,7 +499,6 @@ class Api:
 
         Returns:
           {ok, profile_name, profile_removed, mods_removed: [folders]}"""
-        import re as _re
         token = self._modio_token()
         if not token:
             return {'ok': False, 'error': 'not authenticated'}
@@ -510,9 +509,7 @@ class Api:
             return coll_res
         coll = coll_res.get('mod') or {}
         collection_name = (coll.get('name') or '').strip() or f'Collection {collection_id}'
-        safe_name = _re.sub(r'[^A-Za-z0-9 _\-]', '_', collection_name).strip()[:50]
-        if not safe_name or safe_name in ('Default', 'Vanilla'):
-            safe_name = f'Collection_{int(collection_id)}'
+        safe_name = modio_module.collection_preset_name(collection_name, int(collection_id))
 
         # 2. Optionally fetch the bundled mod IDs to know what to wipe.
         mods_to_wipe: list[int] = []
@@ -589,7 +586,6 @@ class Api:
 
         ``Default`` and ``Vanilla`` are reserved preset names — if a
         collection is called either, we fall back to ``Collection_<id>``."""
-        import re as _re
         token = self._modio_token()
         if not token:
             return {'ok': False, 'error': 'not authenticated'}
@@ -631,13 +627,11 @@ class Api:
                     'error': str(res.get('error') or 'unknown'),
                 })
 
-        # 4. Sanitise the preset name to match what is_valid_preset_name
-        #    accepts: [A-Za-z0-9 _-] only. Anything else (parentheses,
-        #    accents, colons, dots, ...) becomes an underscore so the file
-        #    we write here is also one we can later load and delete.
-        safe_name = _re.sub(r'[^A-Za-z0-9 _\-]', '_', collection_name).strip()[:50]
-        if not safe_name or safe_name in ('Default', 'Vanilla'):
-            safe_name = f'Collection_{int(collection_id)}'
+        # 4. Sanitise the preset name (matches what is_valid_preset_name
+        #    accepts and what the JS frontend mirrors in
+        #    _collectionPresetName so the "already installed" badge stays
+        #    in sync).
+        safe_name = modio_module.collection_preset_name(collection_name, int(collection_id))
 
         # 5. Write the preset file directly (one mod_id per line + the
         #    EnableNewMods sentinel) — no need to round-trip through

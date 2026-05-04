@@ -26,6 +26,24 @@ import requests
 GAME_ID = '11358'
 BASE_URL = f'https://g-{GAME_ID}.modapi.io/v1'
 
+# Reuse one HTTP session per process so back-to-back mod.io calls don't
+# pay the TLS handshake every time. requests.Session is thread-safe for
+# this read-mostly usage.
+_SESSION = requests.Session()
+
+
+def collection_preset_name(name: str, collection_id: int) -> str:
+    """Strip a collection name down to characters the preset filename
+    validator accepts ([A-Za-z0-9 _-]). Empty / reserved results fall
+    back to ``Collection_<id>``. The JS frontend mirrors this same
+    algorithm in app.js (_collectionPresetName) — keep them in lockstep
+    or the "already installed" badge will lie."""
+    import re as _re
+    safe = _re.sub(r'[^A-Za-z0-9 _\-]', '_', name or '').strip()[:50]
+    if not safe or safe in ('Default', 'Vanilla'):
+        safe = f'Collection_{int(collection_id)}'
+    return safe
+
 # Distinct error refs we care about (full list at https://docs.mod.io)
 ERR_TERMS_UPDATED = 11074
 
@@ -69,7 +87,7 @@ def email_request(api_key: str, email: str, timeout: float = 10.0) -> dict:
     if not email:
         return {'ok': False, 'error': 'email required'}
     try:
-        res = requests.post(
+        res = _SESSION.post(
             f'{BASE_URL}/oauth/emailrequest',
             data={'api_key': api_key, 'email': email},
             headers={'Accept': 'application/json'},
@@ -89,7 +107,7 @@ def email_exchange(api_key: str, code: str, terms_agreed: bool,
     if not api_key or not code:
         return {'ok': False, 'error': 'api key + code required'}
     try:
-        res = requests.post(
+        res = _SESSION.post(
             f'{BASE_URL}/oauth/emailexchange',
             data={
                 'api_key': api_key,
@@ -150,7 +168,7 @@ def list_mods(token: str, *, search: str = '', tags: list[str] | None = None,
         params['submitted_by'] = int(submitted_by)
     endpoint = 'collections' if collections else 'mods'
     try:
-        res = requests.get(
+        res = _SESSION.get(
             f'{BASE_URL}/games/{GAME_ID}/{endpoint}',
             headers=_bearer_headers(token),
             params=params,
@@ -187,7 +205,7 @@ def list_dependencies(token: str, mod_id: int, *, collection: bool = False,
            if collection
            else f'{BASE_URL}/games/{GAME_ID}/mods/{int(mod_id)}/dependencies')
     try:
-        res = requests.get(
+        res = _SESSION.get(
             url,
             headers=_bearer_headers(token),
             params={'_limit': 100},
@@ -211,7 +229,7 @@ def get_mod(token: str, mod_id: int, *, collection: bool = False,
         return {'ok': False, 'error': 'not authenticated'}
     segment = 'collections' if collection else 'mods'
     try:
-        res = requests.get(
+        res = _SESSION.get(
             f'{BASE_URL}/games/{GAME_ID}/{segment}/{int(mod_id)}',
             headers=_bearer_headers(token),
             timeout=timeout,
@@ -232,7 +250,7 @@ def list_game_tags(api_key: str, timeout: float = 15.0) -> dict:
     if not api_key:
         return {'ok': False, 'error': 'no API key'}
     try:
-        res = requests.get(
+        res = _SESSION.get(
             f'{BASE_URL}/games/{GAME_ID}/tags',
             params={'api_key': api_key, '_limit': 100},
             headers={'Accept': 'application/json'},
@@ -254,7 +272,7 @@ def list_my_ratings(token: str, timeout: float = 15.0) -> dict:
     if not token:
         return {'ok': False, 'error': 'not authenticated'}
     try:
-        res = requests.get(
+        res = _SESSION.get(
             f'{BASE_URL}/me/ratings',
             headers=_bearer_headers(token),
             params={'game_id': GAME_ID, '_limit': 100},
@@ -274,7 +292,7 @@ def list_subscribed(token: str, timeout: float = 15.0) -> dict:
     if not token:
         return {'ok': False, 'error': 'not authenticated'}
     try:
-        res = requests.get(
+        res = _SESSION.get(
             f'{BASE_URL}/me/subscribed',
             headers=_bearer_headers(token),
             params={'game_id': GAME_ID, '_limit': 100},
@@ -294,7 +312,7 @@ def subscribe(token: str, mod_id: int, timeout: float = 10.0) -> dict:
     if not token:
         return {'ok': False, 'error': 'not authenticated'}
     try:
-        res = requests.post(
+        res = _SESSION.post(
             f'{BASE_URL}/games/{GAME_ID}/mods/{int(mod_id)}/subscribe',
             headers=_bearer_headers_form(token),
             timeout=timeout,
@@ -312,7 +330,7 @@ def unsubscribe(token: str, mod_id: int, timeout: float = 10.0) -> dict:
     if not token:
         return {'ok': False, 'error': 'not authenticated'}
     try:
-        res = requests.delete(
+        res = _SESSION.delete(
             f'{BASE_URL}/games/{GAME_ID}/mods/{int(mod_id)}/subscribe',
             headers=_bearer_headers_form(token),
             timeout=timeout,
@@ -331,7 +349,7 @@ def endorse(token: str, mod_id: int, positive: bool, timeout: float = 10.0) -> d
     if not token:
         return {'ok': False, 'error': 'not authenticated'}
     try:
-        res = requests.post(
+        res = _SESSION.post(
             f'{BASE_URL}/games/{GAME_ID}/mods/{int(mod_id)}/ratings',
             headers=_bearer_headers_form(token),
             data={'rating': '1' if positive else '0'},
@@ -350,7 +368,7 @@ def download_modfile(url: str, dest_path: str, timeout: float = 60.0) -> dict:
     The mod.io modfile.binary_url is short-lived and pre-signed, so this is
     just a plain GET — no auth header needed."""
     try:
-        with requests.get(url, stream=True, timeout=timeout) as res:
+        with _SESSION.get(url, stream=True, timeout=timeout) as res:
             if res.status_code != 200:
                 return {'ok': False, 'error': f'HTTP {res.status_code}', 'status': res.status_code}
             with open(dest_path, 'wb') as f:

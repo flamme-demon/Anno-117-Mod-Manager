@@ -38,7 +38,8 @@ def get_options_schema(mod_path: str) -> dict:
         if not os.path.exists(target):
             continue
         try:
-            raw = open(target, 'r', encoding='utf-8').read()
+            with open(target, 'r', encoding='utf-8') as f:
+                raw = f.read()
             if name.endswith('.jsonc'):
                 raw = _strip_jsonc(raw)
             data = json.loads(raw)
@@ -54,7 +55,8 @@ def load_active_options(options_path: str) -> dict:
     if not options_path or not os.path.exists(options_path):
         return {}
     try:
-        raw = open(options_path, 'r', encoding='utf-8').read()
+        with open(options_path, 'r', encoding='utf-8') as f:
+            raw = f.read()
         return json.loads(_strip_jsonc(raw)) or {}
     except (OSError, ValueError):
         return {}

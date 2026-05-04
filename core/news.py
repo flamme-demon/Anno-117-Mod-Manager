@@ -29,6 +29,10 @@ import requests
 
 _UA = 'Mozilla/5.0 (X11; Linux x86_64) Anno117ModManager/1.0'
 
+# Reuse one HTTP session per process — saves the TLS handshake on every
+# 5-minute refresh poll. requests.Session is thread-safe for our usage.
+_SESSION = requests.Session()
+
 
 def _fmt_date(ts: float) -> str:
     try:
@@ -49,7 +53,7 @@ def fetch_anno_union(timeout: float = 10.0) -> list[dict]:
     items: list[dict] = []
     try:
         url = 'https://www.anno-union.com/wp-json/wp/v2/posts?_embed&per_page=10'
-        res = requests.get(url, headers={'User-Agent': _UA, 'Accept': 'application/json'},
+        res = _SESSION.get(url, headers={'User-Agent': _UA, 'Accept': 'application/json'},
                            timeout=timeout)
         res.raise_for_status()
         for post in res.json():
@@ -91,7 +95,7 @@ def fetch_reddit(timeout: float = 10.0) -> list[dict]:
     items: list[dict] = []
     try:
         url = 'https://www.reddit.com/r/anno/new.json?limit=10'
-        res = requests.get(url, headers={'User-Agent': _UA}, timeout=timeout)
+        res = _SESSION.get(url, headers={'User-Agent': _UA}, timeout=timeout)
         res.raise_for_status()
         for child in (res.json().get('data') or {}).get('children', []):
             d = child.get('data') or {}
@@ -138,7 +142,7 @@ def fetch_modio(token: str, timeout: float = 12.0) -> list[dict]:
 
     def _hit(endpoint: str, limit: int) -> list[dict]:
         try:
-            r = requests.get(
+            r = _SESSION.get(
                 f'{_MODIO_BASE}/games/{_MODIO_GAME_ID}/{endpoint}',
                 headers=headers,
                 params={'_sort': '-date_added', '_limit': limit},

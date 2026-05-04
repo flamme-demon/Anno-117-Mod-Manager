@@ -71,7 +71,8 @@ def _scan_one(path: str, lang_key: str, parent_path: str = '') -> Mod | None:
     if not target:
         return None
     try:
-        raw = open(target, 'r', encoding='utf-8').read()
+        with open(target, 'r', encoding='utf-8') as f:
+            raw = f.read()
         if target.endswith('.jsonc'):
             raw = _strip_jsonc_comments(raw)
         data = json.loads(raw)

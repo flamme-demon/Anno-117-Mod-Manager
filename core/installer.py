@@ -80,7 +80,8 @@ def install_zip(zip_path: str, target_base_dir: str, allow_overwrite: bool = Fal
                 p = os.path.join(final_destination, name)
                 if os.path.exists(p):
                     try:
-                        raw = open(p, 'r', encoding='utf-8').read()
+                        with open(p, 'r', encoding='utf-8') as f:
+                            raw = f.read()
                         if name.endswith('.jsonc'):
                             raw = _strip_jsonc(raw)
                         mod_id = str(json.loads(raw).get('ModID', ''))
