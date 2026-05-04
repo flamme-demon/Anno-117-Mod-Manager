@@ -4156,13 +4156,11 @@ window.annoApp = function () {
     newsTemplate() {
       const n = this.news;
 
+      // Refresh button moved to the bottom HUD so the toolbar stays focused
+      // on news-specific options (Reddit toggle + Anno Union shortcut).
       const toolbar = `
         <div class="news__toolbar">
-          <button class="settings__btn"
-                  ${n.loading ? 'disabled' : ''}
-                  onclick="annoRoot().refreshNews(true)">
-            ${escapeHtml(this.t(n.loading ? 'news.loading' : 'news.refresh'))}
-          </button>
+          ${n.loading ? `<span class="news__cached">${escapeHtml(this.t('news.loading'))}</span>` : ''}
           <label class="news__toggle">
             <input type="checkbox" ${this.settings.show_reddit_news ? 'checked' : ''}
                    onchange="annoRoot().setSetting('show_reddit_news', this.checked).then(() => annoRoot().refreshNews(true))" />
@@ -4172,7 +4170,7 @@ window.annoApp = function () {
                   onclick="annoRoot().openExternalUrl('https://www.anno-union.com/en/blogs/')">
             ${escapeHtml(this.t('news.visitUnion'))}
           </button>
-          ${n.cached ? `<span class="news__cached">${escapeHtml(this.t('news.cached'))}</span>` : ''}
+          ${n.cached && !n.loading ? `<span class="news__cached">${escapeHtml(this.t('news.cached'))}</span>` : ''}
         </div>`;
 
       let body;

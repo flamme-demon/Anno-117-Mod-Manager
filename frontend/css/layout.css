@@ -244,15 +244,13 @@
   gap: 8px;
   position: relative;
   z-index: 10;
-  /* Isolate the toolbar's paint so card hovers in .main don't trigger a
-     repaint of the buttons here. Containing the toolbar (small, static
-     subtree) is safe — containing .main was what broke the cards. */
-  contain: layout paint;
-  /* Force a permanent GPU compositing layer for the toolbar — without it,
-     WebKit2GTK 2.50 re-paints the whole bar every time a card in the
-     scrollable area below repaints, making the buttons visibly flicker. */
-  will-change: transform;
-  transform: translateZ(0);
+  /* Isolate layout (so card hovers in .main don't trigger a relayout of
+     the toolbar) but NOT paint — `contain: paint` clips child overflow
+     and was eating the box-shadows of the round buttons whenever the
+     row above repainted. The compositing layers are pushed down to the
+     two HUD rows below so each row has its own GPU layer and doesn't
+     re-paint its sibling on hover. */
+  contain: layout;
 }
 
 /* The composite HUD pill — single dark teal frame containing both internal
@@ -288,6 +286,11 @@
 .toolbar__hud-row {
   display: flex;
   align-items: center;
+  /* Each row gets its own GPU compositing layer so a hover repaint on the
+     top row doesn't trigger a recompose of the bottom row (which was
+     visibly knocking out the round buttons' shadows). */
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .toolbar__hud-row--top {
@@ -370,6 +373,17 @@
 .toolbar__search-input::placeholder {
   color: #adadad;
   font-style: italic;
+}
+/* Disabled state — kept visible (the user wanted the bar to stay put on
+   every tab) but visibly inert: dim text, dim icon, no-drop cursor on
+   the whole pill, no caret. */
+.toolbar__search:has(.toolbar__search-input:disabled) {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.toolbar__search-input:disabled {
+  cursor: not-allowed;
+  color: #6f7689;
 }
 
 .toolbar__group {
@@ -484,8 +498,13 @@
   cursor: pointer;
   flex-shrink: 0;
 }
-.toolbar__round:hover {
+.toolbar__round:hover:not(:disabled) {
   filter: brightness(1.15);
+}
+.toolbar__round:disabled {
+  opacity: 0.40;
+  cursor: not-allowed;
+  filter: grayscale(0.4);
 }
 /* Launch variant — exact same geometry, border, inset highlight and hover
    behaviour as the regular round buttons (cf. annolayouts' shared button

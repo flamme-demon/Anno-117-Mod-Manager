@@ -136,19 +136,29 @@
               </button>
             </div>
             <!-- Refresh: refreshMods() on Activation, browserRefresh() on
-                 Browser/Collections (both share the same state). -->
-            <div class="toolbar__cup" x-show="currentTab === 'activation' || currentTab === 'browser' || currentTab === 'collections'">
+                 Browser/Collections. Stays visible on every tab — just
+                 disabled on the ones where it has nothing to refresh,
+                 so the HUD keeps its shape and weight. -->
+            <div class="toolbar__cup">
               <button class="toolbar__round"
-                      @click="(currentTab === 'browser' || currentTab === 'collections') ? browserRefresh() : refreshMods()"
-                      :title="(currentTab === 'browser' || currentTab === 'collections') ? t('browser.refresh') : t('hud.refreshMods')">
+                      :disabled="currentTab !== 'activation' && currentTab !== 'browser' && currentTab !== 'collections' && currentTab !== 'news'"
+                      @click="
+                        currentTab === 'browser' || currentTab === 'collections' ? browserRefresh()
+                          : currentTab === 'news' ? refreshNews(true)
+                          : refreshMods()"
+                      :title="
+                        currentTab === 'browser' || currentTab === 'collections' ? t('browser.refresh')
+                          : currentTab === 'news' ? t('news.refresh')
+                          : t('hud.refreshMods')">
                 <img class="toolbar__round-icon" src="icons/refresh.png" alt="" />
               </button>
             </div>
           </div>
 
           <!-- Search filters the Activation list (live, x-model) and submits a
-               mod.io query on Enter when on Browser or Collections. -->
-          <div class="toolbar__search" x-show="currentTab === 'activation' || currentTab === 'browser' || currentTab === 'collections'">
+               mod.io query on Enter when on Browser or Collections. Stays
+               visible everywhere — disabled where it has nothing to filter. -->
+          <div class="toolbar__search">
             <svg class="toolbar__search-icon" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="2"
                  stroke-linecap="round" stroke-linejoin="round">
@@ -157,13 +167,12 @@
             </svg>
             <input class="toolbar__search-input"
                    type="text"
+                   :disabled="currentTab !== 'activation' && currentTab !== 'browser' && currentTab !== 'collections'"
                    :placeholder="(currentTab === 'browser' || currentTab === 'collections') ? t('browser.searchPlaceholder') : t('hud.searchMod')"
                    :value="(currentTab === 'browser' || currentTab === 'collections') ? browser.search : search"
                    @input="(currentTab === 'browser' || currentTab === 'collections') ? null : (search = $event.target.value)"
                    @keydown.enter="(currentTab === 'browser' || currentTab === 'collections') && (browser.search = $event.target.value, browser.offset = 0, browserFetch())" />
           </div>
-          <!-- Spacer to keep the launch button anchored right when the search is hidden -->
-          <div class="toolbar__bottom-spacer" x-show="currentTab !== 'activation' && currentTab !== 'browser' && currentTab !== 'collections'"></div>
 
           <div class="toolbar__group toolbar__group--utility">
             <div class="toolbar__cup">
