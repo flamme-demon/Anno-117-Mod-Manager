@@ -1,5 +1,7 @@
 # Anno 117 Mod Manager
 
+> ⚠️ **Diese deutsche README ist veraltet.** Sie beschreibt noch die Tk-basierte Vorgängerversion. Die aktuelle App nutzt pywebview + Alpine.js und unterscheidet sich in Aufbau, Tabs und Einstellungen deutlich. Bitte vorerst die [englische README](README.md) lesen — eine Übersetzung folgt, sobald die UI stabil ist.
+
 ![Anno 117 Mod Manager Logo](data/ui/modmanager_logo.png)
 
 Dieses Projekt steht in keiner Verbindung zu Ubisoft und/oder mod.io und wird von diesen auch nicht unterstützt.
