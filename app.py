@@ -69,16 +69,25 @@ def main() -> None:
              if isinstance(f, dict) and (f.get('pywebviewFullPath') or '').lower().endswith('.zip')),
             None,
         )
+        # Wrap every evaluate_js — the call races window teardown if the
+        # user closes the app mid-install, and a raw exception bubbling
+        # out of the pywebview event loop crashes the whole window.
+        def _safe_eval(js: str) -> None:
+            try:
+                window.evaluate_js(js)
+            except Exception as exc:
+                print(f'[dnd] evaluate_js failed: {exc!r}')
+
         if not zip_path:
-            window.evaluate_js(
+            _safe_eval(
                 'annoRoot().onNativeDropResult({ok:false, error:"not a zip file"}, "")'
             )
             return
         display = json.dumps(os.path.basename(zip_path))
         path_js = json.dumps(zip_path)
-        window.evaluate_js(f'annoRoot().onNativeDropStart({display})')
+        _safe_eval(f'annoRoot().onNativeDropStart({display})')
         result = api.install_zip_from_path(zip_path, allow_overwrite=False)
-        window.evaluate_js(f'annoRoot().onNativeDropResult({json.dumps(result)}, {path_js})')
+        _safe_eval(f'annoRoot().onNativeDropResult({json.dumps(result)}, {path_js})')
 
     _bound = {'done': False}
 

@@ -2790,6 +2790,12 @@ window.annoApp = function () {
         if (prev === 'log' && next !== 'log') {
           this._stopLogPolling();
         }
+        // News had a fire-and-forget setInterval that never got cleared —
+        // it kept polling /news every 5 minutes for the lifetime of the
+        // window. Stop it as soon as the user leaves the tab.
+        if (prev === 'news' && next !== 'news') {
+          this._stopNewsPolling();
+        }
       });
 
     },
@@ -2827,6 +2833,13 @@ window.annoApp = function () {
       if (this._logTimer) {
         clearInterval(this._logTimer);
         this._logTimer = null;
+      }
+    },
+
+    _stopNewsPolling() {
+      if (this._newsTimer) {
+        clearInterval(this._newsTimer);
+        this._newsTimer = null;
       }
     },
 
@@ -4093,7 +4106,12 @@ window.annoApp = function () {
       const mod = this.selectedMod;
       if (!mod) { this.selectedBannerUrl = ''; return; }
       if (this._bannerCache.has(mod.id)) {
-        this.selectedBannerUrl = this._bannerCache.get(mod.id);
+        // LRU touch: re-insert to mark as most-recently used so the eviction
+        // below kicks the right (oldest) entry next time we add a new one.
+        const cached = this._bannerCache.get(mod.id);
+        this._bannerCache.delete(mod.id);
+        this._bannerCache.set(mod.id, cached);
+        this.selectedBannerUrl = cached;
         return;
       }
       this.selectedBannerUrl = '';
@@ -4101,7 +4119,15 @@ window.annoApp = function () {
       try {
         const res = await window.pywebview.api.get_mod_banner(mod.id);
         const url = (res && res.ok && res.data_url) || '';
+        // Bound the cache: each banner is up to ~5 MB of data-URL on the
+        // backend (api.py:_data_url_for cap), so an unbounded Map across a
+        // long session would chew through hundreds of megabytes. 25 entries
+        // is plenty to cover quick back-and-forth navigation.
         this._bannerCache.set(mod.id, url);
+        while (this._bannerCache.size > 25) {
+          const oldest = this._bannerCache.keys().next().value;
+          this._bannerCache.delete(oldest);
+        }
         if (this.selectedMod && this.selectedMod.id === mod.id) {
           this.selectedBannerUrl = url;
         }
