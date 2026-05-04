@@ -43,6 +43,54 @@
   padding: 2px 8px;
   border: 1px solid var(--gold-dim);
   border-radius: 10px;
+  cursor: default;
+}
+/* Up-to-date version: green pill — purely informational. */
+.title-bar__version.is-up-to-date {
+  color: #d4ffd8;
+  border-color: #6e9659;
+  background: rgba(110, 150, 89, 0.18);
+}
+/* Stale version: red pill, clickable, leads to the GitHub release page. */
+.title-bar__version.is-stale {
+  color: #ffd6d6;
+  border-color: #c25555;
+  background: rgba(192, 57, 43, 0.20);
+  cursor: pointer;
+}
+.title-bar__version.is-stale:hover {
+  filter: brightness(1.15);
+}
+
+/* Discord / GitHub / Ko-fi quick-links sit between the version pill and
+   the language picker. Match the rest of the title bar's gold-on-dark
+   vocabulary (round dark disc, gold icon, hover lift). */
+.title-bar__links {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+}
+.title-bar__link {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-dim);
+  background: linear-gradient(to bottom, #2a3c56 0%, #14223a 100%);
+  color: var(--gold);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: filter 100ms ease, transform 100ms ease;
+  text-decoration: none;
+}
+.title-bar__link:hover {
+  filter: brightness(1.20);
+  color: var(--gold-light);
+}
+.title-bar__link svg {
+  display: block;
 }
 
 /* Language picker — round flag button in the top-right of the title bar
@@ -143,9 +191,14 @@
   background: var(--navy-darkest);
 }
 
+/* Scrollable on the outer stable container (the div with x-html) so
+   scrollTop is preserved by the browser when Alpine replaces innerHTML
+   on a state change. Tabs with their own internal scroll containers
+   (.activation, .news, .log-view, .tweak) keep height:100% + overflow:hidden
+   so they fit this viewport and use their internal scroll instead. */
 .main > div {
   flex: 1;
-  overflow: hidden;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
@@ -191,6 +244,15 @@
   gap: 8px;
   position: relative;
   z-index: 10;
+  /* Isolate the toolbar's paint so card hovers in .main don't trigger a
+     repaint of the buttons here. Containing the toolbar (small, static
+     subtree) is safe — containing .main was what broke the cards. */
+  contain: layout paint;
+  /* Force a permanent GPU compositing layer for the toolbar — without it,
+     WebKit2GTK 2.50 re-paints the whole bar every time a card in the
+     scrollable area below repaints, making the buttons visibly flicker. */
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 /* The composite HUD pill — single dark teal frame containing both internal

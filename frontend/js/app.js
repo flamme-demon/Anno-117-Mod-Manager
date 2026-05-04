@@ -6,6 +6,14 @@
 // dropping a {key: 'localized text'} entry into the TRANSLATIONS map below.
 const TRANSLATIONS = {
   english: {
+    'hud.settings':                 'Settings',
+    'hud.refreshMods':              'Refresh mod list',
+    'hud.searchMod':                'Search a mod…',
+    'hud.language':                 'Language',
+    'alert.loadPresetFail':         'Failed to load preset: {error}',
+    'alert.savePresetFail':         'Failed to save preset: {error}',
+    'alert.deletePresetFail':       'Failed to delete preset: {error}',
+    'alert.uninstallFail':          'Uninstall failed: {error}',
     'profile.label':           'Profile',
     'profile.new':             '＋ New',
     'profile.delete':          '🗑 Delete',
@@ -123,8 +131,105 @@ const TRANSLATIONS = {
     'news.cached':                  'cached (10 min)',
     'news.includeReddit':           'Include r/anno posts',
     'news.visitUnion':              'Open Anno Union ↗',
+    'settings.modio.clearKey':      'Clear key',
+    'modio.badge.connected':        '● Connected',
+    'modio.badge.keyOnly':          '◐ API key only',
+    'modio.badge.notSet':           '○ Not set',
+    'modio.session':                'Session',
+    'modio.expires':                'expires {date}',
+    'modio.disconnect':             'Disconnect',
+    'modio.disconnectConfirm':      'Disconnect from mod.io? Your API key stays saved; you can reconnect later.',
+    'modio.needKeyFirst':           'Save your API key above first, then you can connect.',
+    'modio.startConnect':           'Connect to mod.io',
+    'modio.email':                  'Email address',
+    'modio.emailPlaceholder':       'you@example.com',
+    'modio.emailRequired':          'Please enter your email.',
+    'modio.termsAgree':             'I agree to the mod.io',
+    'modio.termsLink':              'Terms of Use',
+    'modio.cancel':                 'Cancel',
+    'modio.sendCode':               'Send code',
+    'modio.sending':                'Sending…',
+    'modio.code':                   'Security code',
+    'modio.codeRequired':           'Enter the 5-character code from your email.',
+    'modio.codeSent':               'A 5-character code was sent to {email}. Check your inbox (and spam).',
+    'modio.connect':                'Connect',
+    'modio.connecting':             'Connecting…',
+    // Mod Browser
+    'browser.title':                'Mod Browser',
+    'browser.searchPlaceholder':    'Search mods…',
+    'browser.search':               'Search',
+    'browser.refresh':              'Refresh',
+    'browser.sortNewest':           'Newest',
+    'browser.sortPopular':          'Most popular',
+    'browser.sortDownloads':        'Most downloaded',
+    'browser.sortRating':           'Top rated',
+    'browser.sortAlpha':            'A → Z',
+    'browser.sortBy':               'Sort by:',
+    'browser.tag':                  'Tag:',
+    'browser.tagAll':               'All tags',
+    'browser.clearSearch':          'Clear search',
+    'browser.byAuthor':             'by {name}',
+    'browser.clearAuthor':          'Show all authors',
+    'browser.filterByAuthor':       'Show only this author\'s mods',
+    'browser.bundledMods':          'Bundled mods',
+    'browser.bundledEmpty':         'This collection lists no bundled mods.',
+    'browser.backToCollection':     'Back to collection',
+    'browser.installCollection':    'Install collection',
+    'browser.updateCollection':     'Update collection',
+    'browser.uninstallCollection':  '🗑 Uninstall collection',
+    'browser.uninstallConfirm':     'Delete the « {profile} » profile created from « {name} »?',
+    'browser.uninstallAlsoMods':    'Also wipe the {count} mod(s) bundled in this collection from disk?',
+    'browser.uninstallOk':          'Profile « {profile} » removed.',
+    'browser.uninstallOkWithMods':  'Profile « {profile} » removed; {count} bundled mod(s) wiped from disk.',
+    'browser.uninstallFail':        'Uninstall failed: {error}',
+    'browser.collectionInstallOk':  '« {name} »: {count}/{total} mods installed. Profile « {profile} » is now active.',
+    'browser.collectionInstallFailures': '({count} failed — see log)',
+    'browser.back':                 'Back',
+    'browser.empty':                'No mods match your search.',
+    'browser.loading':              'Loading mods…',
+    'browser.error':                'Could not load mods: {error}',
+    'browser.notAuth':              'Not connected to mod.io. Connect in the Settings tab.',
+    'browser.openSettings':         'Open Settings',
+    'browser.prev':                 '‹ Previous',
+    'browser.next':                 'Next ›',
+    'browser.pageOf':               'Page {page} / {total}',
+    'browser.resultsCount':         '{shown} of {total} mods',
+    'browser.detailPick':           'Select a mod from the list to see its details.',
+    'browser.install':              'Install',
+    'browser.installing':           'Installing…',
+    'browser.installed':            '✓ Installed',
+    'browser.update':               'Update',
+    'browser.installOk':            '« {name} » installed.',
+    'browser.installFail':          'Install failed: {error}',
+    'browser.subscribe':            '+ Subscribe',
+    'browser.subscribed':           '✓ Subscribed',
+    'browser.unsubscribe':          'Unsubscribe',
+    'browser.endorse':              '♥ Endorse',
+    'browser.endorsed':             '♥ Endorsed',
+    'browser.endorseFail':          'Could not endorse: {error}',
+    'browser.subFail':              'Could not subscribe: {error}',
+    'browser.openOnModio':          'Open on mod.io ↗',
+    'browser.author':               'by {name}',
+    'browser.downloads':            '{n} downloads',
+    'browser.subscribers':          '{n} subscribers',
+    'browser.modsTotal':            '{n} mods',
+    'browser.rating':               '{pct}% positive',
+    'browser.updated':              'Updated {date}',
+    'browser.size':                 'Size: {size}',
+    'browser.version':              'Version: {v}',
+    'browser.changelog':            'Changelog',
+    'browser.description':          'Description',
+    'browser.noModfile':            'This mod has no published file yet — nothing to install.',
   },
   french: {
+    'hud.settings':                 'Paramètres',
+    'hud.refreshMods':              'Rafraîchir la liste des mods',
+    'hud.searchMod':                'Rechercher un mod…',
+    'hud.language':                 'Langue',
+    'alert.loadPresetFail':         'Échec du chargement du preset : {error}',
+    'alert.savePresetFail':         'Échec de la sauvegarde : {error}',
+    'alert.deletePresetFail':       'Échec de la suppression : {error}',
+    'alert.uninstallFail':          'Échec de la désinstallation : {error}',
     'profile.label':           'Profil',
     'profile.new':             '＋ Nouveau',
     'profile.delete':          '🗑 Supprimer',
@@ -242,6 +347,2255 @@ const TRANSLATIONS = {
     'news.cached':                  'en cache (10 min)',
     'news.includeReddit':           'Inclure les posts r/anno',
     'news.visitUnion':              'Ouvrir Anno Union ↗',
+    'settings.modio.clearKey':      'Effacer la clé',
+    'modio.badge.connected':        '● Connecté',
+    'modio.badge.keyOnly':          '◐ Clé API seulement',
+    'modio.badge.notSet':           '○ Non configuré',
+    'modio.session':                'Session',
+    'modio.expires':                'expire le {date}',
+    'modio.disconnect':             'Déconnecter',
+    'modio.disconnectConfirm':      'Se déconnecter de mod.io ? Votre clé API reste enregistrée ; vous pouvez vous reconnecter plus tard.',
+    'modio.needKeyFirst':           'Enregistrez d’abord votre clé API ci-dessus, puis vous pourrez vous connecter.',
+    'modio.startConnect':           'Se connecter à mod.io',
+    'modio.email':                  'Adresse email',
+    'modio.emailPlaceholder':       'vous@exemple.com',
+    'modio.emailRequired':          'Saisissez votre adresse email.',
+    'modio.termsAgree':             'J’accepte les',
+    'modio.termsLink':              'Conditions d’utilisation mod.io',
+    'modio.cancel':                 'Annuler',
+    'modio.sendCode':               'Envoyer le code',
+    'modio.sending':                'Envoi…',
+    'modio.code':                   'Code de sécurité',
+    'modio.codeRequired':           'Saisissez le code à 5 caractères reçu par email.',
+    'modio.codeSent':               'Un code à 5 caractères a été envoyé à {email}. Vérifiez votre boîte (et les spams).',
+    'modio.connect':                'Connecter',
+    'modio.connecting':             'Connexion…',
+    // Mod Browser
+    'browser.title':                'Catalogue de mods',
+    'browser.searchPlaceholder':    'Rechercher un mod…',
+    'browser.search':               'Rechercher',
+    'browser.refresh':              'Rafraîchir',
+    'browser.sortNewest':           'Récents',
+    'browser.sortPopular':          'Plus populaires',
+    'browser.sortDownloads':        'Plus téléchargés',
+    'browser.sortRating':           'Mieux notés',
+    'browser.sortAlpha':            'A → Z',
+    'browser.sortBy':               'Trier par :',
+    'browser.tag':                  'Tag :',
+    'browser.tagAll':               'Tous les tags',
+    'browser.clearSearch':          'Effacer la recherche',
+    'browser.byAuthor':             'par {name}',
+    'browser.clearAuthor':          'Voir tous les auteurs',
+    'browser.filterByAuthor':       'Voir uniquement les mods de cet auteur',
+    'browser.bundledMods':          'Mods inclus',
+    'browser.bundledEmpty':         'Cette collection ne liste aucun mod.',
+    'browser.backToCollection':     'Retour à la collection',
+    'browser.installCollection':    'Installer la collection',
+    'browser.updateCollection':     'Mettre à jour la collection',
+    'browser.uninstallCollection':  '🗑 Désinstaller la collection',
+    'browser.uninstallConfirm':     'Supprimer le profil « {profile} » créé à partir de « {name} » ?',
+    'browser.uninstallAlsoMods':    'Supprimer aussi du disque les {count} mod(s) inclus dans cette collection ?',
+    'browser.uninstallOk':          'Profil « {profile} » supprimé.',
+    'browser.uninstallOkWithMods':  'Profil « {profile} » supprimé ; {count} mod(s) inclus effacés du disque.',
+    'browser.uninstallFail':        'Échec de la désinstallation : {error}',
+    'browser.collectionInstallOk':  '« {name} » : {count}/{total} mods installés. Le profil « {profile} » est maintenant actif.',
+    'browser.collectionInstallFailures': '({count} échec(s) — voir le journal)',
+    'browser.back':                 'Retour',
+    'browser.empty':                'Aucun mod ne correspond à votre recherche.',
+    'browser.loading':              'Chargement des mods…',
+    'browser.error':                'Impossible de charger les mods : {error}',
+    'browser.notAuth':              'Non connecté à mod.io. Connectez-vous dans l’onglet Paramètres.',
+    'browser.openSettings':         'Ouvrir les paramètres',
+    'browser.prev':                 '‹ Précédent',
+    'browser.next':                 'Suivant ›',
+    'browser.pageOf':               'Page {page} / {total}',
+    'browser.resultsCount':         '{shown} sur {total} mods',
+    'browser.detailPick':           'Sélectionnez un mod dans la liste pour voir ses détails.',
+    'browser.install':              'Installer',
+    'browser.installing':           'Installation…',
+    'browser.installed':            '✓ Installé',
+    'browser.update':               'Mettre à jour',
+    'browser.installOk':            '« {name} » installé.',
+    'browser.installFail':          'Échec de l’installation : {error}',
+    'browser.subscribe':            '+ S’abonner',
+    'browser.subscribed':           '✓ Abonné',
+    'browser.unsubscribe':          'Se désabonner',
+    'browser.endorse':              '♥ Recommander',
+    'browser.endorsed':             '♥ Recommandé',
+    'browser.endorseFail':          'Impossible de recommander : {error}',
+    'browser.subFail':              'Impossible de s’abonner : {error}',
+    'browser.openOnModio':          'Voir sur mod.io ↗',
+    'browser.author':               'par {name}',
+    'browser.downloads':            '{n} téléchargements',
+    'browser.subscribers':          '{n} abonnés',
+    'browser.modsTotal':            '{n} mods',
+    'browser.rating':               '{pct}% positifs',
+    'browser.updated':              'Mis à jour le {date}',
+    'browser.size':                 'Taille : {size}',
+    'browser.version':              'Version : {v}',
+    'browser.changelog':            'Notes de version',
+    'browser.description':          'Description',
+    'browser.noModfile':            'Ce mod n’a aucun fichier publié — rien à installer.',
+  },
+  german: {
+    'hud.settings':                 'Einstellungen',
+    'hud.refreshMods':              'Mod-Liste aktualisieren',
+    'hud.searchMod':                'Mod suchen…',
+    'hud.language':                 'Sprache',
+    'alert.loadPresetFail':         'Preset konnte nicht geladen werden: {error}',
+    'alert.savePresetFail':         'Preset konnte nicht gespeichert werden: {error}',
+    'alert.deletePresetFail':       'Preset konnte nicht gelöscht werden: {error}',
+    'alert.uninstallFail':          'Deinstallation fehlgeschlagen: {error}',
+    'profile.label':           'Profil',
+    'profile.new':             '＋ Neu',
+    'profile.delete':          '🗑 Löschen',
+    'profile.deleteConfirm':   'Preset „{name}“ löschen?',
+    'profile.cantDeleteReserved': 'Die Profile „Default“ und „Vanilla“ können nicht gelöscht werden.',
+    'profile.promptName':      'Name des neuen Presets:',
+    'mode.manage':             'Verwalten',
+    'mode.order':              'Ladereihenfolge',
+    'mode.manage.title':       'Mods sortieren und ein-/ausschalten',
+    'mode.order.title':        'Ladereihenfolge per Drag & Drop neu anordnen',
+    'list.head.toggleAll':     'Alle aktivieren / deaktivieren',
+    'list.head.category':      'Kategorie',
+    'list.head.name':          'Mod-Name',
+    'list.head.size':          'Größe',
+    'list.head.status':        'Status',
+    'list.empty':              'Keine Mods in den konfigurierten Ordnern gefunden.',
+    'count.active':            '{n} / {total} aktiv',
+    'pill.active':             'AN',
+    'pill.off':                'AUS',
+    'detail.empty':            'Wähle einen Mod aus der Liste, um seine Details anzuzeigen.',
+    'detail.banner.empty':     'Für diesen Mod wurde kein Banner bereitgestellt.',
+    'detail.description':      'Beschreibung',
+    'detail.noDescription':    'Keine Beschreibung vorhanden.',
+    'detail.details':          'Details',
+    'detail.meta.category':    'Kategorie',
+    'detail.meta.difficulty':  'Schwierigkeit',
+    'detail.meta.size':        'Größe',
+    'detail.meta.folder':      'Ordner',
+    'detail.creator':          'von {name} · v{version}',
+    'detail.openFolder':       'Ordner öffnen',
+    'detail.uninstall':        'Deinstallieren',
+    'detail.uninstallConfirm': 'Mod „{name}“ deinstallieren?\n\nDer Ordner wird von der Festplatte gelöscht.',
+    'tab.placeholder':         'Dieser Tab wird in Phase 2 der Migration übernommen.',
+    'tab.placeholderHint':     'pywebview-POC läuft — momentan funktioniert nur der Tab {tab}.',
+    'launch.title':            'Anno 117 starten',
+    'launch.error':            'Spiel konnte nicht gestartet werden: {err}',
+    'mods.openFolder.title':   'Mods-Ordner öffnen',
+    'tab.news':                'Neuigkeiten',
+    'tab.activation':          'Aktivierung',
+    'tab.browser':             'Mod-Browser',
+    'tab.collections':         'Sammlungen',
+    'tab.install':             'Manuelle Installation',
+    'tab.log':                 'Modloader-Log',
+    'tab.tweak':               'Anpassung',
+    'tab.settings':            'Einstellungen',
+    'settings.section.paths':       'Pfade',
+    'settings.section.behaviour':   'Verhalten',
+    'settings.section.advanced':    'Erweitert',
+    'settings.gamePath':            'Anno 117 ausführbare Datei',
+    'settings.gamePath.empty':      'Nicht konfiguriert — gib den Pfad zu Anno117.exe an',
+    'settings.docsPath':            'Dokumente-Ordner überschreiben',
+    'settings.docsPath.empty':      'Automatisch erkannt (nutzt ~/Documents oder das Proton-Präfix)',
+    'settings.browseFile':          'Datei auswählen…',
+    'settings.browseFolder':        'Ordner auswählen…',
+    'settings.autoDetect':          'Automatisch erkennen',
+    'settings.clear':               'Löschen',
+    'settings.open':                'Öffnen',
+    'settings.modLocation':         'Speicherort der Mods',
+    'settings.modLocation.documents': 'Dokumente-Ordner (empfohlen)',
+    'settings.modLocation.game':      'Spielinstallationsordner',
+    'settings.enableNewMods':       'Neu installierte Mods',
+    'settings.enableNewMods.on':    'Immer aktivieren',
+    'settings.enableNewMods.off':   'Niemals aktivieren',
+    'settings.enableNewMods.keep':  'Vorherigen Status beibehalten',
+    'settings.derived.docsMods':    'Mods-Ordner (Dokumente)',
+    'settings.derived.gameMods':    'Mods-Ordner (Spiel)',
+    'settings.derived.profile':     'active-profile.txt',
+    'settings.derived.appdata':     'AppData',
+    'settings.derived.presets':     'Presets',
+    'settings.pathError':           'Pfad konnte nicht gespeichert werden: {err}',
+    'settings.detectError':         'Automatische Erkennung fehlgeschlagen: {err}',
+    'settings.section.modio':       'mod.io-Integration',
+    'settings.modio.hint':          'Gib deinen persönlichen mod.io-API-Schlüssel ein, um die Tabs Mod-Browser und Sammlungen zu aktivieren. Erzeuge einen unter',
+    'settings.modio.apiKey':        'API-Schlüssel',
+    'settings.modio.apiKeyPlaceholder': 'Füge hier deinen mod.io-API-Schlüssel ein',
+    'settings.modio.save':          'Speichern',
+    'settings.modio.disconnect':    'Trennen',
+    'settings.modio.disconnectConfirm': 'Gespeicherten mod.io-API-Schlüssel entfernen?',
+    'settings.modio.emptyKey':      'API-Schlüssel ist leer.',
+    'settings.modio.connected':     'Verbunden',
+    'settings.modio.notConnected':  'Nicht verbunden',
+    'log.refresh':                  '↻ Aktualisieren',
+    'log.copy':                     '⧉ Kopieren',
+    'log.openFile':                 'Datei öffnen',
+    'log.loading':                  'Lädt…',
+    'log.empty':                    'mod-loader.log ist leer.',
+    'log.notFound':                 'mod-loader.log nicht gefunden unter:\n{path}',
+    'log.truncated':                'Log auf die letzten 2 MB gekürzt',
+    'install.title':                'Manuelle Installation',
+    'install.hint':                 'Lege ein Mod-ZIP hier ab oder klicke zum Auswählen. Das Archiv muss eine modinfo.json (oder .jsonc) enthalten.',
+    'install.drop':                 'Mod-.zip hier ablegen',
+    'install.or':                   '— oder —',
+    'install.browse':               'ZIP-Datei auswählen…',
+    'install.targetLabel':          'Installationsziel:',
+    'install.installing':           '{name} wird installiert…',
+    'install.uploading':            '{name} wird hochgeladen…',
+    'install.success':              '{name} installiert.',
+    'install.cancelled':            'Abgebrochen.',
+    'install.notZip':               'Nur .zip-Archive werden unterstützt.',
+    'install.overwriteConfirm':     'Ein Mod-Ordner namens „{name}“ existiert bereits. Ersetzen?',
+    'install.dropFailed':           'Beim Ablegen wurde keine Datei übergeben (dein Dateimanager unterstützt Drag-Drop in das Webview möglicherweise nicht). Nutze stattdessen die Schaltfläche „Auswählen“.',
+    'tweak.listHeader':             'Anpassbare Mods',
+    'tweak.optionWord':             'Optionen',
+    'tweak.noTweakable':            'Keiner deiner installierten Mods bietet Optionen.',
+    'tweak.pickHint':                'Wähle links einen Mod, um seine Optionen anzupassen.',
+    'tweak.noOptions':              'Dieser Mod hat keine konfigurierbaren Optionen.',
+    'tweak.resetMod':               'Diesen Mod zurücksetzen',
+    'tweak.resetAll':               'Alle zurücksetzen',
+    'tweak.resetModConfirm':        'Alle Optionen dieses Mods auf die Standardwerte zurücksetzen?',
+    'tweak.resetAllConfirm':        'Optionen aller Mods zurücksetzen? Die Datei active-options.jsonc wird gelöscht.',
+    'news.refresh':                 '↻ Aktualisieren',
+    'news.loading':                 'Neueste Beiträge werden geladen…',
+    'news.empty':                   'Keine Neuigkeiten verfügbar.',
+    'news.error':                   'Neuigkeiten konnten nicht geladen werden: {err}',
+    'news.cached':                  'zwischengespeichert (10 Min.)',
+    'news.includeReddit':           'r/anno-Beiträge einbeziehen',
+    'news.visitUnion':              'Anno Union öffnen ↗',
+    'settings.modio.clearKey':      'Schlüssel löschen',
+    'modio.badge.connected':        '● Verbunden',
+    'modio.badge.keyOnly':          '◐ Nur API-Schlüssel',
+    'modio.badge.notSet':           '○ Nicht gesetzt',
+    'modio.session':                'Sitzung',
+    'modio.expires':                'läuft ab am {date}',
+    'modio.disconnect':             'Trennen',
+    'modio.disconnectConfirm':      'Verbindung zu mod.io trennen? Dein API-Schlüssel bleibt gespeichert; du kannst dich später erneut verbinden.',
+    'modio.needKeyFirst':           'Speichere zuerst deinen API-Schlüssel oben, dann kannst du dich verbinden.',
+    'modio.startConnect':           'Mit mod.io verbinden',
+    'modio.email':                  'E-Mail-Adresse',
+    'modio.emailPlaceholder':       'du@beispiel.com',
+    'modio.emailRequired':          'Bitte gib deine E-Mail-Adresse ein.',
+    'modio.termsAgree':             'Ich akzeptiere die mod.io',
+    'modio.termsLink':              'Nutzungsbedingungen',
+    'modio.cancel':                 'Abbrechen',
+    'modio.sendCode':               'Code senden',
+    'modio.sending':                'Wird gesendet…',
+    'modio.code':                   'Sicherheitscode',
+    'modio.codeRequired':           'Gib den 5-stelligen Code aus deiner E-Mail ein.',
+    'modio.codeSent':               'Ein 5-stelliger Code wurde an {email} gesendet. Prüfe dein Postfach (auch Spam).',
+    'modio.connect':                'Verbinden',
+    'modio.connecting':             'Verbinde…',
+    // Mod Browser
+    'browser.title':                'Mod-Browser',
+    'browser.searchPlaceholder':    'Mods suchen…',
+    'browser.search':               'Suchen',
+    'browser.refresh':              'Aktualisieren',
+    'browser.sortNewest':           'Neueste',
+    'browser.sortPopular':          'Beliebteste',
+    'browser.sortDownloads':        'Meiste Downloads',
+    'browser.sortRating':           'Bestbewertet',
+    'browser.sortAlpha':            'A → Z',
+    'browser.sortBy':               'Sortieren nach:',
+    'browser.tag':                  'Tag:',
+    'browser.tagAll':               'Alle Tags',
+    'browser.clearSearch':          'Suche löschen',
+    'browser.byAuthor':             'von {name}',
+    'browser.clearAuthor':          'Alle Autoren anzeigen',
+    'browser.filterByAuthor':       'Nur Mods dieses Autors anzeigen',
+    'browser.bundledMods':          'Enthaltene Mods',
+    'browser.bundledEmpty':         'Diese Sammlung enthält keine Mods.',
+    'browser.backToCollection':     'Zurück zur Sammlung',
+    'browser.installCollection':    'Sammlung installieren',
+    'browser.updateCollection':     'Sammlung aktualisieren',
+    'browser.uninstallCollection':  '🗑 Sammlung deinstallieren',
+    'browser.uninstallConfirm':     'Profil „{profile}“, erstellt aus „{name}“, löschen?',
+    'browser.uninstallAlsoMods':    'Auch die {count} in dieser Sammlung enthaltenen Mod(s) von der Festplatte entfernen?',
+    'browser.uninstallOk':          'Profil „{profile}“ entfernt.',
+    'browser.uninstallOkWithMods':  'Profil „{profile}“ entfernt; {count} enthaltene Mod(s) von der Festplatte gelöscht.',
+    'browser.uninstallFail':        'Deinstallation fehlgeschlagen: {error}',
+    'browser.collectionInstallOk':  '„{name}“: {count}/{total} Mods installiert. Profil „{profile}“ ist nun aktiv.',
+    'browser.collectionInstallFailures': '({count} fehlgeschlagen — siehe Log)',
+    'browser.back':                 'Zurück',
+    'browser.empty':                'Keine Mods entsprechen deiner Suche.',
+    'browser.loading':              'Mods werden geladen…',
+    'browser.error':                'Mods konnten nicht geladen werden: {error}',
+    'browser.notAuth':              'Nicht mit mod.io verbunden. Verbinde dich im Tab Einstellungen.',
+    'browser.openSettings':         'Einstellungen öffnen',
+    'browser.prev':                 '‹ Zurück',
+    'browser.next':                 'Weiter ›',
+    'browser.pageOf':               'Seite {page} / {total}',
+    'browser.resultsCount':         '{shown} von {total} Mods',
+    'browser.detailPick':           'Wähle einen Mod aus der Liste, um seine Details anzuzeigen.',
+    'browser.install':              'Installieren',
+    'browser.installing':           'Installation läuft…',
+    'browser.installed':            '✓ Installiert',
+    'browser.update':               'Aktualisieren',
+    'browser.installOk':            '„{name}“ installiert.',
+    'browser.installFail':          'Installation fehlgeschlagen: {error}',
+    'browser.subscribe':            '+ Abonnieren',
+    'browser.subscribed':           '✓ Abonniert',
+    'browser.unsubscribe':          'Abbestellen',
+    'browser.endorse':              '♥ Empfehlen',
+    'browser.endorsed':             '♥ Empfohlen',
+    'browser.endorseFail':          'Empfehlung fehlgeschlagen: {error}',
+    'browser.subFail':              'Abonnement fehlgeschlagen: {error}',
+    'browser.openOnModio':          'Auf mod.io öffnen ↗',
+    'browser.author':               'von {name}',
+    'browser.downloads':            '{n} Downloads',
+    'browser.subscribers':          '{n} Abonnenten',
+    'browser.modsTotal':            '{n} Mods',
+    'browser.rating':               '{pct}% positiv',
+    'browser.updated':              'Aktualisiert {date}',
+    'browser.size':                 'Größe: {size}',
+    'browser.version':              'Version: {v}',
+    'browser.changelog':            'Änderungsprotokoll',
+    'browser.description':          'Beschreibung',
+    'browser.noModfile':            'Dieser Mod hat noch keine veröffentlichte Datei — nichts zu installieren.',
+  },
+  spanish: {
+    'hud.settings':                 'Ajustes',
+    'hud.refreshMods':              'Actualizar la lista de mods',
+    'hud.searchMod':                'Buscar un mod…',
+    'hud.language':                 'Idioma',
+    'alert.loadPresetFail':         'No se pudo cargar el preset: {error}',
+    'alert.savePresetFail':         'No se pudo guardar el preset: {error}',
+    'alert.deletePresetFail':       'No se pudo eliminar el preset: {error}',
+    'alert.uninstallFail':          'Desinstalación fallida: {error}',
+    'profile.label':           'Perfil',
+    'profile.new':             '＋ Nuevo',
+    'profile.delete':          '🗑 Eliminar',
+    'profile.deleteConfirm':   '¿Eliminar el preset «{name}»?',
+    'profile.cantDeleteReserved': 'Los perfiles «Default» y «Vanilla» no se pueden eliminar.',
+    'profile.promptName':      'Nombre del nuevo preset:',
+    'mode.manage':             'Gestionar',
+    'mode.order':              'Orden de carga',
+    'mode.manage.title':       'Ordenar y activar/desactivar mods',
+    'mode.order.title':        'Reordenar el orden de carga arrastrando',
+    'list.head.toggleAll':     'Activar / desactivar todos',
+    'list.head.category':      'Categoría',
+    'list.head.name':          'Nombre del mod',
+    'list.head.size':          'Tamaño',
+    'list.head.status':        'Estado',
+    'list.empty':              'No se detectaron mods en las carpetas configuradas.',
+    'count.active':            '{n} / {total} activos',
+    'pill.active':             'ON',
+    'pill.off':                'OFF',
+    'detail.empty':            'Selecciona un mod de la lista para ver su ficha.',
+    'detail.banner.empty':     'Este mod no incluye ningún banner.',
+    'detail.description':      'Descripción',
+    'detail.noDescription':    'Sin descripción disponible.',
+    'detail.details':          'Detalles',
+    'detail.meta.category':    'Categoría',
+    'detail.meta.difficulty':  'Dificultad',
+    'detail.meta.size':        'Tamaño',
+    'detail.meta.folder':      'Carpeta',
+    'detail.creator':          'por {name} · v{version}',
+    'detail.openFolder':       'Abrir carpeta',
+    'detail.uninstall':        'Desinstalar',
+    'detail.uninstallConfirm': '¿Desinstalar el mod «{name}»?\n\nLa carpeta se eliminará del disco.',
+    'tab.placeholder':         'Esta pestaña se migrará en la fase 2.',
+    'tab.placeholderHint':     'POC de pywebview en curso — solo la pestaña {tab} funciona por ahora.',
+    'launch.title':            'Iniciar Anno 117',
+    'launch.error':            'No se pudo iniciar el juego: {err}',
+    'mods.openFolder.title':   'Abrir la carpeta de mods',
+    'tab.news':                'Noticias',
+    'tab.activation':          'Activación',
+    'tab.browser':             'Catálogo de mods',
+    'tab.collections':         'Colecciones',
+    'tab.install':             'Instalación manual',
+    'tab.log':                 'Registro del Modloader',
+    'tab.tweak':               'Ajustes',
+    'tab.settings':            'Ajustes',
+    'settings.section.paths':       'Rutas',
+    'settings.section.behaviour':   'Comportamiento',
+    'settings.section.advanced':    'Avanzado',
+    'settings.gamePath':            'Ejecutable de Anno 117',
+    'settings.gamePath.empty':      'Sin configurar — indica la ruta de Anno117.exe',
+    'settings.docsPath':            'Carpeta Documentos personalizada',
+    'settings.docsPath.empty':      'Detección automática (usa ~/Documents o el prefijo Proton)',
+    'settings.browseFile':          'Buscar archivo…',
+    'settings.browseFolder':        'Buscar carpeta…',
+    'settings.autoDetect':          'Detección automática',
+    'settings.clear':               'Borrar',
+    'settings.open':                'Abrir',
+    'settings.modLocation':         'Ubicación de almacenamiento de mods',
+    'settings.modLocation.documents': 'Carpeta Documentos (recomendado)',
+    'settings.modLocation.game':      'Carpeta de instalación del juego',
+    'settings.enableNewMods':       'Mods recién instalados',
+    'settings.enableNewMods.on':    'Activarlos siempre',
+    'settings.enableNewMods.off':   'No activarlos nunca',
+    'settings.enableNewMods.keep':  'Mantener su estado anterior',
+    'settings.derived.docsMods':    'Carpeta de mods (Documentos)',
+    'settings.derived.gameMods':    'Carpeta de mods (juego)',
+    'settings.derived.profile':     'active-profile.txt',
+    'settings.derived.appdata':     'AppData',
+    'settings.derived.presets':     'Presets',
+    'settings.pathError':           'No se pudo guardar la ruta: {err}',
+    'settings.detectError':         'Detección automática fallida: {err}',
+    'settings.section.modio':       'Integración con mod.io',
+    'settings.modio.hint':          'Introduce tu clave API personal de mod.io para activar las pestañas Catálogo y Colecciones. Genera una en',
+    'settings.modio.apiKey':        'Clave API',
+    'settings.modio.apiKeyPlaceholder': 'Pega aquí tu clave API de mod.io',
+    'settings.modio.save':          'Guardar',
+    'settings.modio.disconnect':    'Desconectar',
+    'settings.modio.disconnectConfirm': '¿Eliminar la clave API de mod.io guardada?',
+    'settings.modio.emptyKey':      'La clave API está vacía.',
+    'settings.modio.connected':     'Conectado',
+    'settings.modio.notConnected':  'No conectado',
+    'log.refresh':                  '↻ Actualizar',
+    'log.copy':                     '⧉ Copiar',
+    'log.openFile':                 'Abrir archivo',
+    'log.loading':                  'Cargando…',
+    'log.empty':                    'mod-loader.log está vacío.',
+    'log.notFound':                 'mod-loader.log no encontrado en:\n{path}',
+    'log.truncated':                'Registro truncado a los últimos 2 MB',
+    'install.title':                'Instalación manual',
+    'install.hint':                 'Suelta un ZIP de mod aquí o haz clic para buscar. El archivo debe contener un modinfo.json (o .jsonc).',
+    'install.drop':                 'Suelta un mod .zip aquí',
+    'install.or':                   '— o —',
+    'install.browse':               'Buscar un archivo ZIP…',
+    'install.targetLabel':          'Destino de la instalación:',
+    'install.installing':           'Instalando {name}…',
+    'install.uploading':            'Subiendo {name}…',
+    'install.success':              '{name} instalado.',
+    'install.cancelled':            'Cancelado.',
+    'install.notZip':               'Solo se admiten archivos .zip.',
+    'install.overwriteConfirm':     'Ya existe una carpeta de mod llamada «{name}». ¿Reemplazarla?',
+    'install.dropFailed':           'El soltar no entregó ningún archivo (puede que tu gestor de archivos no admita arrastrar y soltar en el webview). Usa el botón Buscar en su lugar.',
+    'tweak.listHeader':             'Mods configurables',
+    'tweak.optionWord':             'opciones',
+    'tweak.noTweakable':            'Ninguno de tus mods instalados ofrece opciones.',
+    'tweak.pickHint':                'Selecciona un mod a la izquierda para ajustar sus opciones.',
+    'tweak.noOptions':              'Este mod no tiene opciones configurables.',
+    'tweak.resetMod':               'Restablecer este mod',
+    'tweak.resetAll':               'Restablecer todo',
+    'tweak.resetModConfirm':        '¿Restablecer todas las opciones de este mod a sus valores por defecto?',
+    'tweak.resetAllConfirm':        '¿Restablecer las opciones de todos los mods? Se eliminará el archivo active-options.jsonc.',
+    'news.refresh':                 '↻ Actualizar',
+    'news.loading':                 'Cargando últimas publicaciones…',
+    'news.empty':                   'No hay noticias para mostrar.',
+    'news.error':                   'No se pudieron obtener las noticias: {err}',
+    'news.cached':                  'en caché (10 min)',
+    'news.includeReddit':           'Incluir publicaciones de r/anno',
+    'news.visitUnion':              'Abrir Anno Union ↗',
+    'settings.modio.clearKey':      'Borrar clave',
+    'modio.badge.connected':        '● Conectado',
+    'modio.badge.keyOnly':          '◐ Solo clave API',
+    'modio.badge.notSet':           '○ Sin configurar',
+    'modio.session':                'Sesión',
+    'modio.expires':                'caduca el {date}',
+    'modio.disconnect':             'Desconectar',
+    'modio.disconnectConfirm':      '¿Desconectar de mod.io? Tu clave API permanecerá guardada; podrás reconectarte más tarde.',
+    'modio.needKeyFirst':           'Guarda primero tu clave API arriba y luego podrás conectarte.',
+    'modio.startConnect':           'Conectar a mod.io',
+    'modio.email':                  'Correo electrónico',
+    'modio.emailPlaceholder':       'tu@ejemplo.com',
+    'modio.emailRequired':          'Introduce tu correo electrónico.',
+    'modio.termsAgree':             'Acepto los',
+    'modio.termsLink':              'Términos de uso de mod.io',
+    'modio.cancel':                 'Cancelar',
+    'modio.sendCode':               'Enviar código',
+    'modio.sending':                'Enviando…',
+    'modio.code':                   'Código de seguridad',
+    'modio.codeRequired':           'Introduce el código de 5 caracteres recibido por correo.',
+    'modio.codeSent':               'Se envió un código de 5 caracteres a {email}. Revisa tu bandeja (y spam).',
+    'modio.connect':                'Conectar',
+    'modio.connecting':             'Conectando…',
+    // Mod Browser
+    'browser.title':                'Catálogo de mods',
+    'browser.searchPlaceholder':    'Buscar mods…',
+    'browser.search':               'Buscar',
+    'browser.refresh':              'Actualizar',
+    'browser.sortNewest':           'Más recientes',
+    'browser.sortPopular':          'Más populares',
+    'browser.sortDownloads':        'Más descargados',
+    'browser.sortRating':           'Mejor valorados',
+    'browser.sortAlpha':            'A → Z',
+    'browser.sortBy':               'Ordenar por:',
+    'browser.tag':                  'Etiqueta:',
+    'browser.tagAll':               'Todas las etiquetas',
+    'browser.clearSearch':          'Borrar búsqueda',
+    'browser.byAuthor':             'por {name}',
+    'browser.clearAuthor':          'Mostrar todos los autores',
+    'browser.filterByAuthor':       'Mostrar solo los mods de este autor',
+    'browser.bundledMods':          'Mods incluidos',
+    'browser.bundledEmpty':         'Esta colección no incluye mods.',
+    'browser.backToCollection':     'Volver a la colección',
+    'browser.installCollection':    'Instalar la colección',
+    'browser.updateCollection':     'Actualizar la colección',
+    'browser.uninstallCollection':  '🗑 Desinstalar la colección',
+    'browser.uninstallConfirm':     '¿Eliminar el perfil «{profile}» creado a partir de «{name}»?',
+    'browser.uninstallAlsoMods':    '¿Borrar también del disco los {count} mod(s) incluidos en esta colección?',
+    'browser.uninstallOk':          'Perfil «{profile}» eliminado.',
+    'browser.uninstallOkWithMods':  'Perfil «{profile}» eliminado; {count} mod(s) incluidos borrados del disco.',
+    'browser.uninstallFail':        'Desinstalación fallida: {error}',
+    'browser.collectionInstallOk':  '«{name}»: {count}/{total} mods instalados. El perfil «{profile}» está ahora activo.',
+    'browser.collectionInstallFailures': '({count} fallidos — ver registro)',
+    'browser.back':                 'Volver',
+    'browser.empty':                'Ningún mod coincide con tu búsqueda.',
+    'browser.loading':              'Cargando mods…',
+    'browser.error':                'No se pudieron cargar los mods: {error}',
+    'browser.notAuth':              'No conectado a mod.io. Conéctate desde la pestaña Ajustes.',
+    'browser.openSettings':         'Abrir ajustes',
+    'browser.prev':                 '‹ Anterior',
+    'browser.next':                 'Siguiente ›',
+    'browser.pageOf':               'Página {page} / {total}',
+    'browser.resultsCount':         '{shown} de {total} mods',
+    'browser.detailPick':           'Selecciona un mod de la lista para ver sus detalles.',
+    'browser.install':              'Instalar',
+    'browser.installing':           'Instalando…',
+    'browser.installed':            '✓ Instalado',
+    'browser.update':               'Actualizar',
+    'browser.installOk':            '«{name}» instalado.',
+    'browser.installFail':          'Instalación fallida: {error}',
+    'browser.subscribe':            '+ Suscribirse',
+    'browser.subscribed':           '✓ Suscrito',
+    'browser.unsubscribe':          'Cancelar suscripción',
+    'browser.endorse':              '♥ Recomendar',
+    'browser.endorsed':             '♥ Recomendado',
+    'browser.endorseFail':          'No se pudo recomendar: {error}',
+    'browser.subFail':              'No se pudo suscribir: {error}',
+    'browser.openOnModio':          'Ver en mod.io ↗',
+    'browser.author':               'por {name}',
+    'browser.downloads':            '{n} descargas',
+    'browser.subscribers':          '{n} suscriptores',
+    'browser.modsTotal':            '{n} mods',
+    'browser.rating':               '{pct}% positivos',
+    'browser.updated':              'Actualizado el {date}',
+    'browser.size':                 'Tamaño: {size}',
+    'browser.version':              'Versión: {v}',
+    'browser.changelog':            'Notas de versión',
+    'browser.description':          'Descripción',
+    'browser.noModfile':            'Este mod aún no tiene archivo publicado — nada que instalar.',
+  },
+  italian: {
+    'hud.settings':                 'Impostazioni',
+    'hud.refreshMods':              'Aggiorna l’elenco dei mod',
+    'hud.searchMod':                'Cerca un mod…',
+    'hud.language':                 'Lingua',
+    'alert.loadPresetFail':         'Impossibile caricare il preset: {error}',
+    'alert.savePresetFail':         'Impossibile salvare il preset: {error}',
+    'alert.deletePresetFail':       'Impossibile eliminare il preset: {error}',
+    'alert.uninstallFail':          'Disinstallazione fallita: {error}',
+    'profile.label':           'Profilo',
+    'profile.new':             '＋ Nuovo',
+    'profile.delete':          '🗑 Elimina',
+    'profile.deleteConfirm':   'Eliminare il preset «{name}»?',
+    'profile.cantDeleteReserved': 'I profili «Default» e «Vanilla» non possono essere eliminati.',
+    'profile.promptName':      'Nome del nuovo preset:',
+    'mode.manage':             'Gestisci',
+    'mode.order':              'Ordine di caricamento',
+    'mode.manage.title':       'Ordina e attiva/disattiva i mod',
+    'mode.order.title':        'Riorganizza l’ordine di caricamento con drag-and-drop',
+    'list.head.toggleAll':     'Attiva / disattiva tutto',
+    'list.head.category':      'Categoria',
+    'list.head.name':          'Nome del mod',
+    'list.head.size':          'Dimensione',
+    'list.head.status':        'Stato',
+    'list.empty':              'Nessun mod rilevato nelle cartelle configurate.',
+    'count.active':            '{n} / {total} attivi',
+    'pill.active':             'ON',
+    'pill.off':                'OFF',
+    'detail.empty':            'Seleziona un mod dall’elenco per vederne la scheda.',
+    'detail.banner.empty':     'Nessun banner fornito per questo mod.',
+    'detail.description':      'Descrizione',
+    'detail.noDescription':    'Nessuna descrizione fornita.',
+    'detail.details':          'Dettagli',
+    'detail.meta.category':    'Categoria',
+    'detail.meta.difficulty':  'Difficoltà',
+    'detail.meta.size':        'Dimensione',
+    'detail.meta.folder':      'Cartella',
+    'detail.creator':          'di {name} · v{version}',
+    'detail.openFolder':       'Apri cartella',
+    'detail.uninstall':        'Disinstalla',
+    'detail.uninstallConfirm': 'Disinstallare il mod «{name}»?\n\nLa cartella verrà eliminata dal disco.',
+    'tab.placeholder':         'Questa scheda sarà portata nella fase 2 della migrazione.',
+    'tab.placeholderHint':     'POC pywebview in corso — al momento funziona solo la scheda {tab}.',
+    'launch.title':            'Avvia Anno 117',
+    'launch.error':            'Impossibile avviare il gioco: {err}',
+    'mods.openFolder.title':   'Apri la cartella dei mod',
+    'tab.news':                'Notizie',
+    'tab.activation':          'Attivazione',
+    'tab.browser':             'Catalogo mod',
+    'tab.collections':         'Collezioni',
+    'tab.install':             'Installazione manuale',
+    'tab.log':                 'Log del Modloader',
+    'tab.tweak':               'Personalizzazione',
+    'tab.settings':            'Impostazioni',
+    'settings.section.paths':       'Percorsi',
+    'settings.section.behaviour':   'Comportamento',
+    'settings.section.advanced':    'Avanzate',
+    'settings.gamePath':            'Eseguibile di Anno 117',
+    'settings.gamePath.empty':      'Non configurato — imposta il percorso di Anno117.exe',
+    'settings.docsPath':            'Cartella Documenti personalizzata',
+    'settings.docsPath.empty':      'Rilevata automaticamente (usa ~/Documents o il prefisso Proton)',
+    'settings.browseFile':          'Sfoglia file…',
+    'settings.browseFolder':        'Sfoglia cartella…',
+    'settings.autoDetect':          'Rilevamento automatico',
+    'settings.clear':               'Cancella',
+    'settings.open':                'Apri',
+    'settings.modLocation':         'Percorso di archiviazione dei mod',
+    'settings.modLocation.documents': 'Cartella Documenti (consigliato)',
+    'settings.modLocation.game':      'Cartella di installazione del gioco',
+    'settings.enableNewMods':       'Mod appena installati',
+    'settings.enableNewMods.on':    'Attivali sempre',
+    'settings.enableNewMods.off':   'Non attivarli mai',
+    'settings.enableNewMods.keep':  'Mantieni il loro stato precedente',
+    'settings.derived.docsMods':    'Cartella mod (Documenti)',
+    'settings.derived.gameMods':    'Cartella mod (gioco)',
+    'settings.derived.profile':     'active-profile.txt',
+    'settings.derived.appdata':     'AppData',
+    'settings.derived.presets':     'Presets',
+    'settings.pathError':           'Impossibile salvare il percorso: {err}',
+    'settings.detectError':         'Rilevamento automatico non riuscito: {err}',
+    'settings.section.modio':       'Integrazione mod.io',
+    'settings.modio.hint':          'Inserisci la tua chiave API personale di mod.io per attivare le schede Catalogo e Collezioni. Generane una su',
+    'settings.modio.apiKey':        'Chiave API',
+    'settings.modio.apiKeyPlaceholder': 'Incolla qui la tua chiave API mod.io',
+    'settings.modio.save':          'Salva',
+    'settings.modio.disconnect':    'Disconnetti',
+    'settings.modio.disconnectConfirm': 'Rimuovere la chiave API mod.io salvata?',
+    'settings.modio.emptyKey':      'La chiave API è vuota.',
+    'settings.modio.connected':     'Connesso',
+    'settings.modio.notConnected':  'Non connesso',
+    'log.refresh':                  '↻ Aggiorna',
+    'log.copy':                     '⧉ Copia',
+    'log.openFile':                 'Apri file',
+    'log.loading':                  'Caricamento…',
+    'log.empty':                    'mod-loader.log è vuoto.',
+    'log.notFound':                 'mod-loader.log non trovato in:\n{path}',
+    'log.truncated':                'Log troncato agli ultimi 2 MB',
+    'install.title':                'Installazione manuale',
+    'install.hint':                 'Trascina qui un ZIP di mod o clicca per sfogliare. L’archivio deve contenere un file modinfo.json (o .jsonc).',
+    'install.drop':                 'Trascina qui un mod .zip',
+    'install.or':                   '— oppure —',
+    'install.browse':               'Sfoglia un file ZIP…',
+    'install.targetLabel':          'Destinazione installazione:',
+    'install.installing':           'Installazione di {name}…',
+    'install.uploading':            'Caricamento di {name}…',
+    'install.success':              '{name} installato.',
+    'install.cancelled':            'Annullato.',
+    'install.notZip':               'Sono supportati solo gli archivi .zip.',
+    'install.overwriteConfirm':     'Esiste già una cartella di mod chiamata «{name}». Sostituirla?',
+    'install.dropFailed':           'Il rilascio non ha consegnato alcun file (il tuo file manager potrebbe non supportare il drag-drop nel webview). Usa invece il pulsante Sfoglia.',
+    'tweak.listHeader':             'Mod personalizzabili',
+    'tweak.optionWord':             'opzioni',
+    'tweak.noTweakable':            'Nessuno dei tuoi mod installati espone opzioni.',
+    'tweak.pickHint':                'Seleziona un mod a sinistra per personalizzarne le opzioni.',
+    'tweak.noOptions':              'Questo mod non ha opzioni configurabili.',
+    'tweak.resetMod':               'Reimposta questo mod',
+    'tweak.resetAll':               'Reimposta tutto',
+    'tweak.resetModConfirm':        'Reimpostare tutte le opzioni di questo mod ai valori predefiniti?',
+    'tweak.resetAllConfirm':        'Reimpostare le opzioni di tutti i mod? Il file active-options.jsonc sarà eliminato.',
+    'news.refresh':                 '↻ Aggiorna',
+    'news.loading':                 'Recupero degli ultimi post…',
+    'news.empty':                   'Nessuna notizia da mostrare.',
+    'news.error':                   'Impossibile recuperare le notizie: {err}',
+    'news.cached':                  'in cache (10 min)',
+    'news.includeReddit':           'Includi i post di r/anno',
+    'news.visitUnion':              'Apri Anno Union ↗',
+    'settings.modio.clearKey':      'Cancella chiave',
+    'modio.badge.connected':        '● Connesso',
+    'modio.badge.keyOnly':          '◐ Solo chiave API',
+    'modio.badge.notSet':           '○ Non impostato',
+    'modio.session':                'Sessione',
+    'modio.expires':                'scade il {date}',
+    'modio.disconnect':             'Disconnetti',
+    'modio.disconnectConfirm':      'Disconnettersi da mod.io? La tua chiave API resta salvata; potrai riconnetterti più tardi.',
+    'modio.needKeyFirst':           'Salva prima la tua chiave API qui sopra, poi potrai connetterti.',
+    'modio.startConnect':           'Connetti a mod.io',
+    'modio.email':                  'Indirizzo email',
+    'modio.emailPlaceholder':       'tu@esempio.com',
+    'modio.emailRequired':          'Inserisci la tua email.',
+    'modio.termsAgree':             'Accetto i',
+    'modio.termsLink':              'Termini d’uso di mod.io',
+    'modio.cancel':                 'Annulla',
+    'modio.sendCode':               'Invia codice',
+    'modio.sending':                'Invio…',
+    'modio.code':                   'Codice di sicurezza',
+    'modio.codeRequired':           'Inserisci il codice di 5 caratteri ricevuto via email.',
+    'modio.codeSent':               'Un codice di 5 caratteri è stato inviato a {email}. Controlla la posta in arrivo (e lo spam).',
+    'modio.connect':                'Connetti',
+    'modio.connecting':             'Connessione…',
+    // Mod Browser
+    'browser.title':                'Catalogo mod',
+    'browser.searchPlaceholder':    'Cerca mod…',
+    'browser.search':               'Cerca',
+    'browser.refresh':              'Aggiorna',
+    'browser.sortNewest':           'Più recenti',
+    'browser.sortPopular':          'Più popolari',
+    'browser.sortDownloads':        'Più scaricati',
+    'browser.sortRating':           'Più votati',
+    'browser.sortAlpha':            'A → Z',
+    'browser.sortBy':               'Ordina per:',
+    'browser.tag':                  'Tag:',
+    'browser.tagAll':               'Tutti i tag',
+    'browser.clearSearch':          'Cancella ricerca',
+    'browser.byAuthor':             'di {name}',
+    'browser.clearAuthor':          'Mostra tutti gli autori',
+    'browser.filterByAuthor':       'Mostra solo i mod di questo autore',
+    'browser.bundledMods':          'Mod inclusi',
+    'browser.bundledEmpty':         'Questa collezione non elenca mod inclusi.',
+    'browser.backToCollection':     'Torna alla collezione',
+    'browser.installCollection':    'Installa la collezione',
+    'browser.updateCollection':     'Aggiorna la collezione',
+    'browser.uninstallCollection':  '🗑 Disinstalla la collezione',
+    'browser.uninstallConfirm':     'Eliminare il profilo «{profile}» creato da «{name}»?',
+    'browser.uninstallAlsoMods':    'Eliminare anche dal disco i {count} mod inclusi in questa collezione?',
+    'browser.uninstallOk':          'Profilo «{profile}» rimosso.',
+    'browser.uninstallOkWithMods':  'Profilo «{profile}» rimosso; {count} mod inclusi eliminati dal disco.',
+    'browser.uninstallFail':        'Disinstallazione fallita: {error}',
+    'browser.collectionInstallOk':  '«{name}»: {count}/{total} mod installati. Il profilo «{profile}» è ora attivo.',
+    'browser.collectionInstallFailures': '({count} falliti — vedi log)',
+    'browser.back':                 'Indietro',
+    'browser.empty':                'Nessun mod corrisponde alla ricerca.',
+    'browser.loading':              'Caricamento dei mod…',
+    'browser.error':                'Impossibile caricare i mod: {error}',
+    'browser.notAuth':              'Non connesso a mod.io. Connettiti dalla scheda Impostazioni.',
+    'browser.openSettings':         'Apri impostazioni',
+    'browser.prev':                 '‹ Precedente',
+    'browser.next':                 'Successivo ›',
+    'browser.pageOf':               'Pagina {page} / {total}',
+    'browser.resultsCount':         '{shown} di {total} mod',
+    'browser.detailPick':           'Seleziona un mod dall’elenco per vederne i dettagli.',
+    'browser.install':              'Installa',
+    'browser.installing':           'Installazione…',
+    'browser.installed':            '✓ Installato',
+    'browser.update':               'Aggiorna',
+    'browser.installOk':            '«{name}» installato.',
+    'browser.installFail':          'Installazione fallita: {error}',
+    'browser.subscribe':            '+ Iscriviti',
+    'browser.subscribed':           '✓ Iscritto',
+    'browser.unsubscribe':          'Annulla iscrizione',
+    'browser.endorse':              '♥ Consiglia',
+    'browser.endorsed':             '♥ Consigliato',
+    'browser.endorseFail':          'Impossibile consigliare: {error}',
+    'browser.subFail':              'Impossibile iscriversi: {error}',
+    'browser.openOnModio':          'Apri su mod.io ↗',
+    'browser.author':               'di {name}',
+    'browser.downloads':            '{n} download',
+    'browser.subscribers':          '{n} iscritti',
+    'browser.modsTotal':            '{n} mod',
+    'browser.rating':               '{pct}% positivi',
+    'browser.updated':              'Aggiornato il {date}',
+    'browser.size':                 'Dimensione: {size}',
+    'browser.version':              'Versione: {v}',
+    'browser.changelog':            'Note di versione',
+    'browser.description':          'Descrizione',
+    'browser.noModfile':            'Questo mod non ha ancora un file pubblicato — niente da installare.',
+  },
+  polish: {
+    'hud.settings':                 'Ustawienia',
+    'hud.refreshMods':              'Odśwież listę modów',
+    'hud.searchMod':                'Szukaj moda…',
+    'hud.language':                 'Język',
+    'alert.loadPresetFail':         'Nie udało się wczytać presetu: {error}',
+    'alert.savePresetFail':         'Nie udało się zapisać presetu: {error}',
+    'alert.deletePresetFail':       'Nie udało się usunąć presetu: {error}',
+    'alert.uninstallFail':          'Odinstalowanie nie powiodło się: {error}',
+    'profile.label':           'Profil',
+    'profile.new':             '＋ Nowy',
+    'profile.delete':          '🗑 Usuń',
+    'profile.deleteConfirm':   'Usunąć preset „{name}”?',
+    'profile.cantDeleteReserved': 'Profili „Default” i „Vanilla” nie można usunąć.',
+    'profile.promptName':      'Nazwa nowego presetu:',
+    'mode.manage':             'Zarządzaj',
+    'mode.order':              'Kolejność wczytywania',
+    'mode.manage.title':       'Sortuj i włączaj/wyłączaj mody',
+    'mode.order.title':        'Zmień kolejność wczytywania metodą przeciągnij i upuść',
+    'list.head.toggleAll':     'Włącz / wyłącz wszystko',
+    'list.head.category':      'Kategoria',
+    'list.head.name':          'Nazwa moda',
+    'list.head.size':          'Rozmiar',
+    'list.head.status':        'Status',
+    'list.empty':              'Nie wykryto modów w skonfigurowanych folderach.',
+    'count.active':            '{n} / {total} aktywnych',
+    'pill.active':             'WŁ',
+    'pill.off':                'WYŁ',
+    'detail.empty':            'Wybierz moda z listy, aby zobaczyć jego kartę.',
+    'detail.banner.empty':     'Brak banera dla tego moda.',
+    'detail.description':      'Opis',
+    'detail.noDescription':    'Brak opisu.',
+    'detail.details':          'Szczegóły',
+    'detail.meta.category':    'Kategoria',
+    'detail.meta.difficulty':  'Trudność',
+    'detail.meta.size':        'Rozmiar',
+    'detail.meta.folder':      'Folder',
+    'detail.creator':          'autor: {name} · v{version}',
+    'detail.openFolder':       'Otwórz folder',
+    'detail.uninstall':        'Odinstaluj',
+    'detail.uninstallConfirm': 'Odinstalować moda „{name}”?\n\nFolder zostanie usunięty z dysku.',
+    'tab.placeholder':         'Ta zakładka zostanie przeniesiona w fazie 2 migracji.',
+    'tab.placeholderHint':     'POC pywebview w toku — na razie działa tylko zakładka {tab}.',
+    'launch.title':            'Uruchom Anno 117',
+    'launch.error':            'Nie udało się uruchomić gry: {err}',
+    'mods.openFolder.title':   'Otwórz folder modów',
+    'tab.news':                'Aktualności',
+    'tab.activation':          'Aktywacja',
+    'tab.browser':             'Przeglądarka modów',
+    'tab.collections':         'Kolekcje',
+    'tab.install':             'Instalacja ręczna',
+    'tab.log':                 'Log Modloadera',
+    'tab.tweak':               'Dostosowanie',
+    'tab.settings':            'Ustawienia',
+    'settings.section.paths':       'Ścieżki',
+    'settings.section.behaviour':   'Zachowanie',
+    'settings.section.advanced':    'Zaawansowane',
+    'settings.gamePath':            'Plik wykonywalny Anno 117',
+    'settings.gamePath.empty':      'Nieskonfigurowane — podaj ścieżkę do Anno117.exe',
+    'settings.docsPath':            'Niestandardowy folder Dokumenty',
+    'settings.docsPath.empty':      'Wykrywane automatycznie (używa ~/Documents lub prefiksu Proton)',
+    'settings.browseFile':          'Wybierz plik…',
+    'settings.browseFolder':        'Wybierz folder…',
+    'settings.autoDetect':          'Wykryj automatycznie',
+    'settings.clear':               'Wyczyść',
+    'settings.open':                'Otwórz',
+    'settings.modLocation':         'Lokalizacja przechowywania modów',
+    'settings.modLocation.documents': 'Folder Dokumenty (zalecane)',
+    'settings.modLocation.game':      'Folder instalacji gry',
+    'settings.enableNewMods':       'Nowo zainstalowane mody',
+    'settings.enableNewMods.on':    'Zawsze aktywuj',
+    'settings.enableNewMods.off':   'Nigdy nie aktywuj',
+    'settings.enableNewMods.keep':  'Zachowaj poprzedni stan',
+    'settings.derived.docsMods':    'Folder modów (Dokumenty)',
+    'settings.derived.gameMods':    'Folder modów (gra)',
+    'settings.derived.profile':     'active-profile.txt',
+    'settings.derived.appdata':     'AppData',
+    'settings.derived.presets':     'Presety',
+    'settings.pathError':           'Nie udało się zapisać ścieżki: {err}',
+    'settings.detectError':         'Automatyczne wykrywanie nie powiodło się: {err}',
+    'settings.section.modio':       'Integracja z mod.io',
+    'settings.modio.hint':          'Wprowadź swój osobisty klucz API mod.io, aby włączyć zakładki Przeglądarka modów i Kolekcje. Wygeneruj go na',
+    'settings.modio.apiKey':        'Klucz API',
+    'settings.modio.apiKeyPlaceholder': 'Wklej tutaj swój klucz API mod.io',
+    'settings.modio.save':          'Zapisz',
+    'settings.modio.disconnect':    'Rozłącz',
+    'settings.modio.disconnectConfirm': 'Usunąć zapisany klucz API mod.io?',
+    'settings.modio.emptyKey':      'Klucz API jest pusty.',
+    'settings.modio.connected':     'Połączono',
+    'settings.modio.notConnected':  'Nie połączono',
+    'log.refresh':                  '↻ Odśwież',
+    'log.copy':                     '⧉ Kopiuj',
+    'log.openFile':                 'Otwórz plik',
+    'log.loading':                  'Ładowanie…',
+    'log.empty':                    'mod-loader.log jest pusty.',
+    'log.notFound':                 'mod-loader.log nie znaleziony pod adresem:\n{path}',
+    'log.truncated':                'Log skrócony do ostatnich 2 MB',
+    'install.title':                'Instalacja ręczna',
+    'install.hint':                 'Upuść tutaj plik ZIP moda lub kliknij, aby przeglądać. Archiwum musi zawierać plik modinfo.json (lub .jsonc).',
+    'install.drop':                 'Upuść moda .zip tutaj',
+    'install.or':                   '— lub —',
+    'install.browse':               'Wybierz plik ZIP…',
+    'install.targetLabel':          'Miejsce instalacji:',
+    'install.installing':           'Instalowanie {name}…',
+    'install.uploading':            'Przesyłanie {name}…',
+    'install.success':              '{name} zainstalowany.',
+    'install.cancelled':            'Anulowano.',
+    'install.notZip':               'Obsługiwane są tylko archiwa .zip.',
+    'install.overwriteConfirm':     'Folder moda o nazwie „{name}” już istnieje. Zastąpić?',
+    'install.dropFailed':           'Upuszczenie nie dostarczyło pliku (twój menedżer plików może nie obsługiwać przeciągania do widoku web). Użyj przycisku Przeglądaj.',
+    'tweak.listHeader':             'Konfigurowalne mody',
+    'tweak.optionWord':             'opcji',
+    'tweak.noTweakable':            'Żaden z zainstalowanych modów nie udostępnia opcji.',
+    'tweak.pickHint':                'Wybierz moda po lewej, aby dostosować jego opcje.',
+    'tweak.noOptions':              'Ten mod nie ma konfigurowalnych opcji.',
+    'tweak.resetMod':               'Zresetuj tego moda',
+    'tweak.resetAll':               'Zresetuj wszystkie',
+    'tweak.resetModConfirm':        'Zresetować wszystkie opcje tego moda do wartości domyślnych?',
+    'tweak.resetAllConfirm':        'Zresetować opcje wszystkich modów? Plik active-options.jsonc zostanie usunięty.',
+    'news.refresh':                 '↻ Odśwież',
+    'news.loading':                 'Pobieranie najnowszych wpisów…',
+    'news.empty':                   'Brak aktualności do wyświetlenia.',
+    'news.error':                   'Nie udało się pobrać aktualności: {err}',
+    'news.cached':                  'w pamięci podręcznej (10 min)',
+    'news.includeReddit':           'Uwzględnij wpisy z r/anno',
+    'news.visitUnion':              'Otwórz Anno Union ↗',
+    'settings.modio.clearKey':      'Wyczyść klucz',
+    'modio.badge.connected':        '● Połączono',
+    'modio.badge.keyOnly':          '◐ Tylko klucz API',
+    'modio.badge.notSet':           '○ Nieustawione',
+    'modio.session':                'Sesja',
+    'modio.expires':                'wygasa {date}',
+    'modio.disconnect':             'Rozłącz',
+    'modio.disconnectConfirm':      'Rozłączyć się z mod.io? Twój klucz API pozostanie zapisany; możesz połączyć się ponownie później.',
+    'modio.needKeyFirst':           'Najpierw zapisz swój klucz API powyżej, potem możesz się połączyć.',
+    'modio.startConnect':           'Połącz z mod.io',
+    'modio.email':                  'Adres e-mail',
+    'modio.emailPlaceholder':       'ty@przyklad.com',
+    'modio.emailRequired':          'Wprowadź swój adres e-mail.',
+    'modio.termsAgree':             'Akceptuję',
+    'modio.termsLink':              'Warunki korzystania mod.io',
+    'modio.cancel':                 'Anuluj',
+    'modio.sendCode':               'Wyślij kod',
+    'modio.sending':                'Wysyłanie…',
+    'modio.code':                   'Kod bezpieczeństwa',
+    'modio.codeRequired':           'Wprowadź 5-znakowy kod otrzymany e-mailem.',
+    'modio.codeSent':               '5-znakowy kod został wysłany na {email}. Sprawdź skrzynkę odbiorczą (i spam).',
+    'modio.connect':                'Połącz',
+    'modio.connecting':             'Łączenie…',
+    // Mod Browser
+    'browser.title':                'Przeglądarka modów',
+    'browser.searchPlaceholder':    'Szukaj modów…',
+    'browser.search':               'Szukaj',
+    'browser.refresh':              'Odśwież',
+    'browser.sortNewest':           'Najnowsze',
+    'browser.sortPopular':          'Najpopularniejsze',
+    'browser.sortDownloads':        'Najczęściej pobierane',
+    'browser.sortRating':           'Najlepiej oceniane',
+    'browser.sortAlpha':            'A → Z',
+    'browser.sortBy':               'Sortuj według:',
+    'browser.tag':                  'Tag:',
+    'browser.tagAll':               'Wszystkie tagi',
+    'browser.clearSearch':          'Wyczyść wyszukiwanie',
+    'browser.byAuthor':             'autor: {name}',
+    'browser.clearAuthor':          'Pokaż wszystkich autorów',
+    'browser.filterByAuthor':       'Pokaż tylko mody tego autora',
+    'browser.bundledMods':          'Dołączone mody',
+    'browser.bundledEmpty':         'Ta kolekcja nie zawiera żadnych modów.',
+    'browser.backToCollection':     'Wróć do kolekcji',
+    'browser.installCollection':    'Zainstaluj kolekcję',
+    'browser.updateCollection':     'Aktualizuj kolekcję',
+    'browser.uninstallCollection':  '🗑 Odinstaluj kolekcję',
+    'browser.uninstallConfirm':     'Usunąć profil „{profile}” utworzony z „{name}”?',
+    'browser.uninstallAlsoMods':    'Usunąć także z dysku {count} mod(ów) dołączonych do tej kolekcji?',
+    'browser.uninstallOk':          'Profil „{profile}” usunięty.',
+    'browser.uninstallOkWithMods':  'Profil „{profile}” usunięty; {count} dołączonych modów usuniętych z dysku.',
+    'browser.uninstallFail':        'Odinstalowanie nie powiodło się: {error}',
+    'browser.collectionInstallOk':  '„{name}”: {count}/{total} modów zainstalowanych. Profil „{profile}” jest teraz aktywny.',
+    'browser.collectionInstallFailures': '({count} nieudanych — zobacz log)',
+    'browser.back':                 'Wróć',
+    'browser.empty':                'Żaden mod nie pasuje do wyszukiwania.',
+    'browser.loading':              'Ładowanie modów…',
+    'browser.error':                'Nie udało się załadować modów: {error}',
+    'browser.notAuth':              'Nie połączono z mod.io. Połącz się w zakładce Ustawienia.',
+    'browser.openSettings':         'Otwórz ustawienia',
+    'browser.prev':                 '‹ Poprzednia',
+    'browser.next':                 'Następna ›',
+    'browser.pageOf':               'Strona {page} / {total}',
+    'browser.resultsCount':         '{shown} z {total} modów',
+    'browser.detailPick':           'Wybierz moda z listy, aby zobaczyć jego szczegóły.',
+    'browser.install':              'Zainstaluj',
+    'browser.installing':           'Instalowanie…',
+    'browser.installed':            '✓ Zainstalowano',
+    'browser.update':               'Aktualizuj',
+    'browser.installOk':            '„{name}” zainstalowany.',
+    'browser.installFail':          'Instalacja nie powiodła się: {error}',
+    'browser.subscribe':            '+ Subskrybuj',
+    'browser.subscribed':           '✓ Subskrybowano',
+    'browser.unsubscribe':          'Anuluj subskrypcję',
+    'browser.endorse':              '♥ Poleć',
+    'browser.endorsed':             '♥ Polecono',
+    'browser.endorseFail':          'Nie udało się polecić: {error}',
+    'browser.subFail':              'Nie udało się subskrybować: {error}',
+    'browser.openOnModio':          'Otwórz w mod.io ↗',
+    'browser.author':               'autor: {name}',
+    'browser.downloads':            '{n} pobrań',
+    'browser.subscribers':          '{n} subskrybentów',
+    'browser.modsTotal':            '{n} modów',
+    'browser.rating':               '{pct}% pozytywnych',
+    'browser.updated':              'Aktualizacja: {date}',
+    'browser.size':                 'Rozmiar: {size}',
+    'browser.version':              'Wersja: {v}',
+    'browser.changelog':            'Lista zmian',
+    'browser.description':          'Opis',
+    'browser.noModfile':            'Ten mod nie ma jeszcze opublikowanego pliku — nic do zainstalowania.',
+  },
+  russian: {
+    'hud.settings':                 'Настройки',
+    'hud.refreshMods':              'Обновить список модов',
+    'hud.searchMod':                'Поиск мода…',
+    'hud.language':                 'Язык',
+    'alert.loadPresetFail':         'Не удалось загрузить пресет: {error}',
+    'alert.savePresetFail':         'Не удалось сохранить пресет: {error}',
+    'alert.deletePresetFail':       'Не удалось удалить пресет: {error}',
+    'alert.uninstallFail':          'Не удалось удалить: {error}',
+    'profile.label':           'Профиль',
+    'profile.new':             '＋ Новый',
+    'profile.delete':          '🗑 Удалить',
+    'profile.deleteConfirm':   'Удалить пресет «{name}»?',
+    'profile.cantDeleteReserved': 'Профили «Default» и «Vanilla» нельзя удалить.',
+    'profile.promptName':      'Имя нового пресета:',
+    'mode.manage':             'Управление',
+    'mode.order':              'Порядок загрузки',
+    'mode.manage.title':       'Сортировать и включать/выключать моды',
+    'mode.order.title':        'Изменить порядок загрузки перетаскиванием',
+    'list.head.toggleAll':     'Включить / выключить все',
+    'list.head.category':      'Категория',
+    'list.head.name':          'Название мода',
+    'list.head.size':          'Размер',
+    'list.head.status':        'Статус',
+    'list.empty':              'В настроенных папках моды не обнаружены.',
+    'count.active':            '{n} / {total} активны',
+    'pill.active':             'ВКЛ',
+    'pill.off':                'ВЫКЛ',
+    'detail.empty':            'Выберите мод из списка, чтобы увидеть его карточку.',
+    'detail.banner.empty':     'Для этого мода баннер не предоставлен.',
+    'detail.description':      'Описание',
+    'detail.noDescription':    'Описание отсутствует.',
+    'detail.details':          'Подробности',
+    'detail.meta.category':    'Категория',
+    'detail.meta.difficulty':  'Сложность',
+    'detail.meta.size':        'Размер',
+    'detail.meta.folder':      'Папка',
+    'detail.creator':          'автор: {name} · v{version}',
+    'detail.openFolder':       'Открыть папку',
+    'detail.uninstall':        'Удалить',
+    'detail.uninstallConfirm': 'Удалить мод «{name}»?\n\nПапка будет удалена с диска.',
+    'tab.placeholder':         'Эта вкладка будет перенесена во второй фазе миграции.',
+    'tab.placeholderHint':     'POC pywebview в процессе — пока работает только вкладка {tab}.',
+    'launch.title':            'Запустить Anno 117',
+    'launch.error':            'Не удалось запустить игру: {err}',
+    'mods.openFolder.title':   'Открыть папку модов',
+    'tab.news':                'Новости',
+    'tab.activation':          'Активация',
+    'tab.browser':             'Каталог модов',
+    'tab.collections':         'Коллекции',
+    'tab.install':             'Ручная установка',
+    'tab.log':                 'Журнал Modloader',
+    'tab.tweak':               'Настройка',
+    'tab.settings':            'Настройки',
+    'settings.section.paths':       'Пути',
+    'settings.section.behaviour':   'Поведение',
+    'settings.section.advanced':    'Дополнительно',
+    'settings.gamePath':            'Исполняемый файл Anno 117',
+    'settings.gamePath.empty':      'Не настроено — укажите путь к Anno117.exe',
+    'settings.docsPath':            'Переопределение папки «Документы»',
+    'settings.docsPath.empty':      'Определяется автоматически (используется ~/Documents или префикс Proton)',
+    'settings.browseFile':          'Выбрать файл…',
+    'settings.browseFolder':        'Выбрать папку…',
+    'settings.autoDetect':          'Определить автоматически',
+    'settings.clear':               'Очистить',
+    'settings.open':                'Открыть',
+    'settings.modLocation':         'Расположение хранилища модов',
+    'settings.modLocation.documents': 'Папка «Документы» (рекомендуется)',
+    'settings.modLocation.game':      'Папка установки игры',
+    'settings.enableNewMods':       'Только что установленные моды',
+    'settings.enableNewMods.on':    'Всегда активировать',
+    'settings.enableNewMods.off':   'Никогда не активировать',
+    'settings.enableNewMods.keep':  'Сохранять прежнее состояние',
+    'settings.derived.docsMods':    'Папка модов (Документы)',
+    'settings.derived.gameMods':    'Папка модов (игра)',
+    'settings.derived.profile':     'active-profile.txt',
+    'settings.derived.appdata':     'AppData',
+    'settings.derived.presets':     'Пресеты',
+    'settings.pathError':           'Не удалось сохранить путь: {err}',
+    'settings.detectError':         'Не удалось определить автоматически: {err}',
+    'settings.section.modio':       'Интеграция с mod.io',
+    'settings.modio.hint':          'Введите свой персональный API-ключ mod.io, чтобы включить вкладки «Каталог» и «Коллекции». Сгенерируйте ключ на',
+    'settings.modio.apiKey':        'API-ключ',
+    'settings.modio.apiKeyPlaceholder': 'Вставьте сюда свой API-ключ mod.io',
+    'settings.modio.save':          'Сохранить',
+    'settings.modio.disconnect':    'Отключить',
+    'settings.modio.disconnectConfirm': 'Удалить сохранённый API-ключ mod.io?',
+    'settings.modio.emptyKey':      'API-ключ пуст.',
+    'settings.modio.connected':     'Подключено',
+    'settings.modio.notConnected':  'Не подключено',
+    'log.refresh':                  '↻ Обновить',
+    'log.copy':                     '⧉ Копировать',
+    'log.openFile':                 'Открыть файл',
+    'log.loading':                  'Загрузка…',
+    'log.empty':                    'mod-loader.log пуст.',
+    'log.notFound':                 'mod-loader.log не найден по пути:\n{path}',
+    'log.truncated':                'Журнал обрезан до последних 2 МБ',
+    'install.title':                'Ручная установка',
+    'install.hint':                 'Перетащите ZIP мода сюда или кликните для выбора. Архив должен содержать файл modinfo.json (или .jsonc).',
+    'install.drop':                 'Перетащите мод .zip сюда',
+    'install.or':                   '— или —',
+    'install.browse':               'Выбрать ZIP-файл…',
+    'install.targetLabel':          'Назначение установки:',
+    'install.installing':           'Установка {name}…',
+    'install.uploading':            'Загрузка {name}…',
+    'install.success':              '{name} установлен.',
+    'install.cancelled':            'Отменено.',
+    'install.notZip':               'Поддерживаются только архивы .zip.',
+    'install.overwriteConfirm':     'Папка мода «{name}» уже существует. Заменить?',
+    'install.dropFailed':           'Перетаскивание не передало файл (ваш файловый менеджер может не поддерживать drag-drop в webview). Используйте кнопку «Обзор».',
+    'tweak.listHeader':             'Настраиваемые моды',
+    'tweak.optionWord':             'опции',
+    'tweak.noTweakable':            'Ни один из установленных модов не предоставляет опций.',
+    'tweak.pickHint':                'Выберите мод слева, чтобы настроить его опции.',
+    'tweak.noOptions':              'У этого мода нет настраиваемых опций.',
+    'tweak.resetMod':               'Сбросить этот мод',
+    'tweak.resetAll':               'Сбросить всё',
+    'tweak.resetModConfirm':        'Сбросить все опции этого мода к значениям по умолчанию?',
+    'tweak.resetAllConfirm':        'Сбросить опции всех модов? Файл active-options.jsonc будет удалён.',
+    'news.refresh':                 '↻ Обновить',
+    'news.loading':                 'Получение последних публикаций…',
+    'news.empty':                   'Нет новостей для отображения.',
+    'news.error':                   'Не удалось получить новости: {err}',
+    'news.cached':                  'в кэше (10 мин)',
+    'news.includeReddit':           'Включать публикации r/anno',
+    'news.visitUnion':              'Открыть Anno Union ↗',
+    'settings.modio.clearKey':      'Очистить ключ',
+    'modio.badge.connected':        '● Подключено',
+    'modio.badge.keyOnly':          '◐ Только API-ключ',
+    'modio.badge.notSet':           '○ Не настроено',
+    'modio.session':                'Сессия',
+    'modio.expires':                'истекает {date}',
+    'modio.disconnect':             'Отключить',
+    'modio.disconnectConfirm':      'Отключиться от mod.io? Ваш API-ключ останется сохранён; вы сможете подключиться снова позже.',
+    'modio.needKeyFirst':           'Сначала сохраните свой API-ключ выше, затем сможете подключиться.',
+    'modio.startConnect':           'Подключиться к mod.io',
+    'modio.email':                  'Адрес электронной почты',
+    'modio.emailPlaceholder':       'vy@example.com',
+    'modio.emailRequired':          'Введите свой email.',
+    'modio.termsAgree':             'Я принимаю',
+    'modio.termsLink':              'Условия использования mod.io',
+    'modio.cancel':                 'Отмена',
+    'modio.sendCode':               'Отправить код',
+    'modio.sending':                'Отправка…',
+    'modio.code':                   'Код безопасности',
+    'modio.codeRequired':           'Введите 5-значный код, полученный по email.',
+    'modio.codeSent':               '5-значный код отправлен на {email}. Проверьте входящие (и спам).',
+    'modio.connect':                'Подключить',
+    'modio.connecting':             'Подключение…',
+    // Mod Browser
+    'browser.title':                'Каталог модов',
+    'browser.searchPlaceholder':    'Поиск модов…',
+    'browser.search':               'Найти',
+    'browser.refresh':              'Обновить',
+    'browser.sortNewest':           'Новейшие',
+    'browser.sortPopular':          'Популярные',
+    'browser.sortDownloads':        'Самые скачиваемые',
+    'browser.sortRating':           'Лучшие по рейтингу',
+    'browser.sortAlpha':            'А → Я',
+    'browser.sortBy':               'Сортировать по:',
+    'browser.tag':                  'Тег:',
+    'browser.tagAll':               'Все теги',
+    'browser.clearSearch':          'Очистить поиск',
+    'browser.byAuthor':             'автор: {name}',
+    'browser.clearAuthor':          'Показать всех авторов',
+    'browser.filterByAuthor':       'Показать только моды этого автора',
+    'browser.bundledMods':          'Включённые моды',
+    'browser.bundledEmpty':         'В этой коллекции нет модов.',
+    'browser.backToCollection':     'Назад к коллекции',
+    'browser.installCollection':    'Установить коллекцию',
+    'browser.updateCollection':     'Обновить коллекцию',
+    'browser.uninstallCollection':  '🗑 Удалить коллекцию',
+    'browser.uninstallConfirm':     'Удалить профиль «{profile}», созданный из «{name}»?',
+    'browser.uninstallAlsoMods':    'Также удалить с диска {count} мод(ов), включённых в эту коллекцию?',
+    'browser.uninstallOk':          'Профиль «{profile}» удалён.',
+    'browser.uninstallOkWithMods':  'Профиль «{profile}» удалён; {count} включённых модов удалено с диска.',
+    'browser.uninstallFail':        'Не удалось удалить: {error}',
+    'browser.collectionInstallOk':  '«{name}»: {count}/{total} модов установлено. Профиль «{profile}» теперь активен.',
+    'browser.collectionInstallFailures': '({count} с ошибками — см. журнал)',
+    'browser.back':                 'Назад',
+    'browser.empty':                'Ни один мод не соответствует поиску.',
+    'browser.loading':              'Загрузка модов…',
+    'browser.error':                'Не удалось загрузить моды: {error}',
+    'browser.notAuth':              'Не подключено к mod.io. Подключитесь во вкладке «Настройки».',
+    'browser.openSettings':         'Открыть настройки',
+    'browser.prev':                 '‹ Назад',
+    'browser.next':                 'Вперёд ›',
+    'browser.pageOf':               'Страница {page} / {total}',
+    'browser.resultsCount':         '{shown} из {total} модов',
+    'browser.detailPick':           'Выберите мод из списка, чтобы увидеть его подробности.',
+    'browser.install':              'Установить',
+    'browser.installing':           'Установка…',
+    'browser.installed':            '✓ Установлено',
+    'browser.update':               'Обновить',
+    'browser.installOk':            '«{name}» установлен.',
+    'browser.installFail':          'Установка не удалась: {error}',
+    'browser.subscribe':            '+ Подписаться',
+    'browser.subscribed':           '✓ Подписан',
+    'browser.unsubscribe':          'Отписаться',
+    'browser.endorse':              '♥ Рекомендовать',
+    'browser.endorsed':             '♥ Рекомендовано',
+    'browser.endorseFail':          'Не удалось рекомендовать: {error}',
+    'browser.subFail':              'Не удалось подписаться: {error}',
+    'browser.openOnModio':          'Открыть на mod.io ↗',
+    'browser.author':               'автор: {name}',
+    'browser.downloads':            '{n} загрузок',
+    'browser.subscribers':          '{n} подписчиков',
+    'browser.modsTotal':            '{n} модов',
+    'browser.rating':               '{pct}% положительных',
+    'browser.updated':              'Обновлено {date}',
+    'browser.size':                 'Размер: {size}',
+    'browser.version':              'Версия: {v}',
+    'browser.changelog':            'Список изменений',
+    'browser.description':          'Описание',
+    'browser.noModfile':            'У этого мода ещё нет опубликованного файла — устанавливать нечего.',
+  },
+  brazilian: {
+    'hud.settings':                 'Configurações',
+    'hud.refreshMods':              'Atualizar lista de mods',
+    'hud.searchMod':                'Pesquisar mod…',
+    'hud.language':                 'Idioma',
+    'alert.loadPresetFail':         'Falha ao carregar o preset: {error}',
+    'alert.savePresetFail':         'Falha ao salvar o preset: {error}',
+    'alert.deletePresetFail':       'Falha ao excluir o preset: {error}',
+    'alert.uninstallFail':          'Falha na desinstalação: {error}',
+    'profile.label':           'Perfil',
+    'profile.new':             '＋ Novo',
+    'profile.delete':          '🗑 Excluir',
+    'profile.deleteConfirm':   'Excluir o preset «{name}»?',
+    'profile.cantDeleteReserved': 'Os perfis «Default» e «Vanilla» não podem ser excluídos.',
+    'profile.promptName':      'Nome do novo preset:',
+    'mode.manage':             'Gerenciar',
+    'mode.order':              'Ordem de carregamento',
+    'mode.manage.title':       'Ordenar e ativar/desativar mods',
+    'mode.order.title':        'Reordenar a ordem de carregamento por arrastar e soltar',
+    'list.head.toggleAll':     'Ativar / desativar todos',
+    'list.head.category':      'Categoria',
+    'list.head.name':          'Nome do mod',
+    'list.head.size':          'Tamanho',
+    'list.head.status':        'Status',
+    'list.empty':              'Nenhum mod detectado nas pastas configuradas.',
+    'count.active':            '{n} / {total} ativos',
+    'pill.active':             'ON',
+    'pill.off':                'OFF',
+    'detail.empty':            'Selecione um mod da lista para ver sua ficha.',
+    'detail.banner.empty':     'Nenhum banner fornecido para este mod.',
+    'detail.description':      'Descrição',
+    'detail.noDescription':    'Sem descrição.',
+    'detail.details':          'Detalhes',
+    'detail.meta.category':    'Categoria',
+    'detail.meta.difficulty':  'Dificuldade',
+    'detail.meta.size':        'Tamanho',
+    'detail.meta.folder':      'Pasta',
+    'detail.creator':          'por {name} · v{version}',
+    'detail.openFolder':       'Abrir pasta',
+    'detail.uninstall':        'Desinstalar',
+    'detail.uninstallConfirm': 'Desinstalar o mod «{name}»?\n\nA pasta será excluída do disco.',
+    'tab.placeholder':         'Esta aba será portada na fase 2 da migração.',
+    'tab.placeholderHint':     'POC pywebview em andamento — apenas a aba {tab} funciona por enquanto.',
+    'launch.title':            'Iniciar Anno 117',
+    'launch.error':            'Não foi possível iniciar o jogo: {err}',
+    'mods.openFolder.title':   'Abrir a pasta de mods',
+    'tab.news':                'Notícias',
+    'tab.activation':          'Ativação',
+    'tab.browser':             'Catálogo de mods',
+    'tab.collections':         'Coleções',
+    'tab.install':             'Instalação manual',
+    'tab.log':                 'Log do Modloader',
+    'tab.tweak':               'Ajustes',
+    'tab.settings':            'Configurações',
+    'settings.section.paths':       'Caminhos',
+    'settings.section.behaviour':   'Comportamento',
+    'settings.section.advanced':    'Avançado',
+    'settings.gamePath':            'Executável do Anno 117',
+    'settings.gamePath.empty':      'Não configurado — defina o caminho de Anno117.exe',
+    'settings.docsPath':            'Pasta Documentos personalizada',
+    'settings.docsPath.empty':      'Detectada automaticamente (usa ~/Documents ou o prefixo Proton)',
+    'settings.browseFile':          'Procurar arquivo…',
+    'settings.browseFolder':        'Procurar pasta…',
+    'settings.autoDetect':          'Detectar automaticamente',
+    'settings.clear':               'Limpar',
+    'settings.open':                'Abrir',
+    'settings.modLocation':         'Local de armazenamento dos mods',
+    'settings.modLocation.documents': 'Pasta Documentos (recomendado)',
+    'settings.modLocation.game':      'Pasta de instalação do jogo',
+    'settings.enableNewMods':       'Mods recém-instalados',
+    'settings.enableNewMods.on':    'Sempre ativar',
+    'settings.enableNewMods.off':   'Nunca ativar',
+    'settings.enableNewMods.keep':  'Manter o estado anterior',
+    'settings.derived.docsMods':    'Pasta de mods (Documentos)',
+    'settings.derived.gameMods':    'Pasta de mods (jogo)',
+    'settings.derived.profile':     'active-profile.txt',
+    'settings.derived.appdata':     'AppData',
+    'settings.derived.presets':     'Presets',
+    'settings.pathError':           'Não foi possível salvar o caminho: {err}',
+    'settings.detectError':         'Falha na detecção automática: {err}',
+    'settings.section.modio':       'Integração com mod.io',
+    'settings.modio.hint':          'Insira sua chave API pessoal do mod.io para ativar as abas Catálogo e Coleções. Gere uma em',
+    'settings.modio.apiKey':        'Chave API',
+    'settings.modio.apiKeyPlaceholder': 'Cole aqui sua chave API mod.io',
+    'settings.modio.save':          'Salvar',
+    'settings.modio.disconnect':    'Desconectar',
+    'settings.modio.disconnectConfirm': 'Remover a chave API mod.io salva?',
+    'settings.modio.emptyKey':      'A chave API está vazia.',
+    'settings.modio.connected':     'Conectado',
+    'settings.modio.notConnected':  'Não conectado',
+    'log.refresh':                  '↻ Atualizar',
+    'log.copy':                     '⧉ Copiar',
+    'log.openFile':                 'Abrir arquivo',
+    'log.loading':                  'Carregando…',
+    'log.empty':                    'mod-loader.log está vazio.',
+    'log.notFound':                 'mod-loader.log não encontrado em:\n{path}',
+    'log.truncated':                'Log truncado nos últimos 2 MB',
+    'install.title':                'Instalação manual',
+    'install.hint':                 'Solte um ZIP de mod aqui ou clique para procurar. O arquivo deve conter um modinfo.json (ou .jsonc).',
+    'install.drop':                 'Solte um mod .zip aqui',
+    'install.or':                   '— ou —',
+    'install.browse':               'Procurar um arquivo ZIP…',
+    'install.targetLabel':          'Destino da instalação:',
+    'install.installing':           'Instalando {name}…',
+    'install.uploading':            'Enviando {name}…',
+    'install.success':              '{name} instalado.',
+    'install.cancelled':            'Cancelado.',
+    'install.notZip':               'Apenas arquivos .zip são suportados.',
+    'install.overwriteConfirm':     'Já existe uma pasta de mod chamada «{name}». Substituir?',
+    'install.dropFailed':           'O arrastar não entregou nenhum arquivo (seu gerenciador de arquivos pode não suportar arrastar e soltar no webview). Use o botão Procurar.',
+    'tweak.listHeader':             'Mods configuráveis',
+    'tweak.optionWord':             'opções',
+    'tweak.noTweakable':            'Nenhum dos seus mods instalados expõe opções.',
+    'tweak.pickHint':                'Selecione um mod à esquerda para ajustar suas opções.',
+    'tweak.noOptions':              'Este mod não tem opções configuráveis.',
+    'tweak.resetMod':               'Redefinir este mod',
+    'tweak.resetAll':               'Redefinir tudo',
+    'tweak.resetModConfirm':        'Redefinir todas as opções deste mod aos valores padrão?',
+    'tweak.resetAllConfirm':        'Redefinir as opções de todos os mods? O arquivo active-options.jsonc será excluído.',
+    'news.refresh':                 '↻ Atualizar',
+    'news.loading':                 'Buscando últimas postagens…',
+    'news.empty':                   'Nenhuma notícia para exibir.',
+    'news.error':                   'Não foi possível buscar notícias: {err}',
+    'news.cached':                  'em cache (10 min)',
+    'news.includeReddit':           'Incluir postagens de r/anno',
+    'news.visitUnion':              'Abrir Anno Union ↗',
+    'settings.modio.clearKey':      'Limpar chave',
+    'modio.badge.connected':        '● Conectado',
+    'modio.badge.keyOnly':          '◐ Apenas chave API',
+    'modio.badge.notSet':           '○ Não definido',
+    'modio.session':                'Sessão',
+    'modio.expires':                'expira em {date}',
+    'modio.disconnect':             'Desconectar',
+    'modio.disconnectConfirm':      'Desconectar do mod.io? Sua chave API permanecerá salva; você pode reconectar mais tarde.',
+    'modio.needKeyFirst':           'Salve primeiro sua chave API acima, depois você pode conectar.',
+    'modio.startConnect':           'Conectar ao mod.io',
+    'modio.email':                  'Endereço de e-mail',
+    'modio.emailPlaceholder':       'voce@exemplo.com',
+    'modio.emailRequired':          'Por favor, informe seu e-mail.',
+    'modio.termsAgree':             'Aceito os',
+    'modio.termsLink':              'Termos de Uso do mod.io',
+    'modio.cancel':                 'Cancelar',
+    'modio.sendCode':               'Enviar código',
+    'modio.sending':                'Enviando…',
+    'modio.code':                   'Código de segurança',
+    'modio.codeRequired':           'Insira o código de 5 caracteres recebido por e-mail.',
+    'modio.codeSent':               'Um código de 5 caracteres foi enviado para {email}. Verifique sua caixa (e o spam).',
+    'modio.connect':                'Conectar',
+    'modio.connecting':             'Conectando…',
+    // Mod Browser
+    'browser.title':                'Catálogo de mods',
+    'browser.searchPlaceholder':    'Pesquisar mods…',
+    'browser.search':               'Pesquisar',
+    'browser.refresh':              'Atualizar',
+    'browser.sortNewest':           'Mais recentes',
+    'browser.sortPopular':          'Mais populares',
+    'browser.sortDownloads':        'Mais baixados',
+    'browser.sortRating':           'Mais bem avaliados',
+    'browser.sortAlpha':            'A → Z',
+    'browser.sortBy':               'Ordenar por:',
+    'browser.tag':                  'Tag:',
+    'browser.tagAll':               'Todas as tags',
+    'browser.clearSearch':          'Limpar pesquisa',
+    'browser.byAuthor':             'por {name}',
+    'browser.clearAuthor':          'Mostrar todos os autores',
+    'browser.filterByAuthor':       'Mostrar apenas mods deste autor',
+    'browser.bundledMods':          'Mods incluídos',
+    'browser.bundledEmpty':         'Esta coleção não lista mods incluídos.',
+    'browser.backToCollection':     'Voltar à coleção',
+    'browser.installCollection':    'Instalar coleção',
+    'browser.updateCollection':     'Atualizar coleção',
+    'browser.uninstallCollection':  '🗑 Desinstalar coleção',
+    'browser.uninstallConfirm':     'Excluir o perfil «{profile}» criado a partir de «{name}»?',
+    'browser.uninstallAlsoMods':    'Também apagar do disco os {count} mod(s) incluídos nesta coleção?',
+    'browser.uninstallOk':          'Perfil «{profile}» removido.',
+    'browser.uninstallOkWithMods':  'Perfil «{profile}» removido; {count} mod(s) incluídos apagados do disco.',
+    'browser.uninstallFail':        'Falha na desinstalação: {error}',
+    'browser.collectionInstallOk':  '«{name}»: {count}/{total} mods instalados. O perfil «{profile}» agora está ativo.',
+    'browser.collectionInstallFailures': '({count} com falha — veja o log)',
+    'browser.back':                 'Voltar',
+    'browser.empty':                'Nenhum mod corresponde à sua pesquisa.',
+    'browser.loading':              'Carregando mods…',
+    'browser.error':                'Não foi possível carregar os mods: {error}',
+    'browser.notAuth':              'Não conectado ao mod.io. Conecte-se na aba Configurações.',
+    'browser.openSettings':         'Abrir configurações',
+    'browser.prev':                 '‹ Anterior',
+    'browser.next':                 'Próximo ›',
+    'browser.pageOf':               'Página {page} / {total}',
+    'browser.resultsCount':         '{shown} de {total} mods',
+    'browser.detailPick':           'Selecione um mod da lista para ver seus detalhes.',
+    'browser.install':              'Instalar',
+    'browser.installing':           'Instalando…',
+    'browser.installed':            '✓ Instalado',
+    'browser.update':               'Atualizar',
+    'browser.installOk':            '«{name}» instalado.',
+    'browser.installFail':          'Falha na instalação: {error}',
+    'browser.subscribe':            '+ Inscrever-se',
+    'browser.subscribed':           '✓ Inscrito',
+    'browser.unsubscribe':          'Cancelar inscrição',
+    'browser.endorse':              '♥ Recomendar',
+    'browser.endorsed':             '♥ Recomendado',
+    'browser.endorseFail':          'Não foi possível recomendar: {error}',
+    'browser.subFail':              'Não foi possível inscrever: {error}',
+    'browser.openOnModio':          'Abrir no mod.io ↗',
+    'browser.author':               'por {name}',
+    'browser.downloads':            '{n} downloads',
+    'browser.subscribers':          '{n} inscritos',
+    'browser.modsTotal':            '{n} mods',
+    'browser.rating':               '{pct}% positivos',
+    'browser.updated':              'Atualizado em {date}',
+    'browser.size':                 'Tamanho: {size}',
+    'browser.version':              'Versão: {v}',
+    'browser.changelog':            'Notas de versão',
+    'browser.description':          'Descrição',
+    'browser.noModfile':            'Este mod ainda não tem arquivo publicado — nada a instalar.',
+  },
+  japanese: {
+    'hud.settings':                 '設定',
+    'hud.refreshMods':              'MOD一覧を更新',
+    'hud.searchMod':                'MODを検索…',
+    'hud.language':                 '言語',
+    'alert.loadPresetFail':         'プリセットの読み込みに失敗しました: {error}',
+    'alert.savePresetFail':         'プリセットの保存に失敗しました: {error}',
+    'alert.deletePresetFail':       'プリセットの削除に失敗しました: {error}',
+    'alert.uninstallFail':          'アンインストールに失敗しました: {error}',
+    'profile.label':           'プロファイル',
+    'profile.new':             '＋ 新規',
+    'profile.delete':          '🗑 削除',
+    'profile.deleteConfirm':   'プリセット「{name}」を削除しますか？',
+    'profile.cantDeleteReserved': '「Default」および「Vanilla」プロファイルは削除できません。',
+    'profile.promptName':      '新しいプリセットの名前:',
+    'mode.manage':             '管理',
+    'mode.order':              '読み込み順',
+    'mode.manage.title':       'MODの並び替えと有効/無効の切り替え',
+    'mode.order.title':        'ドラッグ＆ドロップで読み込み順を変更',
+    'list.head.toggleAll':     'すべて有効/無効',
+    'list.head.category':      'カテゴリ',
+    'list.head.name':          'MOD名',
+    'list.head.size':          'サイズ',
+    'list.head.status':        'ステータス',
+    'list.empty':              '設定されたフォルダにMODが見つかりません。',
+    'count.active':            '{n} / {total} 有効',
+    'pill.active':             'ON',
+    'pill.off':                'OFF',
+    'detail.empty':            'リストからMODを選択して詳細を表示します。',
+    'detail.banner.empty':     'このMODにはバナーがありません。',
+    'detail.description':      '説明',
+    'detail.noDescription':    '説明はありません。',
+    'detail.details':          '詳細',
+    'detail.meta.category':    'カテゴリ',
+    'detail.meta.difficulty':  '難易度',
+    'detail.meta.size':        'サイズ',
+    'detail.meta.folder':      'フォルダ',
+    'detail.creator':          '作者: {name} · v{version}',
+    'detail.openFolder':       'フォルダを開く',
+    'detail.uninstall':        'アンインストール',
+    'detail.uninstallConfirm': 'MOD「{name}」をアンインストールしますか？\n\nフォルダがディスクから削除されます。',
+    'tab.placeholder':         'このタブは移行のフェーズ2で対応されます。',
+    'tab.placeholderHint':     'pywebview POC作業中 — 現時点では{tab}タブのみ動作します。',
+    'launch.title':            'Anno 117を起動',
+    'launch.error':            'ゲームを起動できませんでした: {err}',
+    'mods.openFolder.title':   'MODフォルダを開く',
+    'tab.news':                'ニュース',
+    'tab.activation':          '有効化',
+    'tab.browser':             'MODブラウザ',
+    'tab.collections':         'コレクション',
+    'tab.install':             '手動インストール',
+    'tab.log':                 'Modloaderログ',
+    'tab.tweak':               '調整',
+    'tab.settings':            '設定',
+    'settings.section.paths':       'パス',
+    'settings.section.behaviour':   '動作',
+    'settings.section.advanced':    '詳細',
+    'settings.gamePath':            'Anno 117 実行ファイル',
+    'settings.gamePath.empty':      '未設定 — Anno117.exe のパスを指定してください',
+    'settings.docsPath':            'Documentsフォルダの上書き',
+    'settings.docsPath.empty':      '自動検出（~/Documents または Proton プレフィックスを使用）',
+    'settings.browseFile':          'ファイルを参照…',
+    'settings.browseFolder':        'フォルダを参照…',
+    'settings.autoDetect':          '自動検出',
+    'settings.clear':               'クリア',
+    'settings.open':                '開く',
+    'settings.modLocation':         'MODの保存場所',
+    'settings.modLocation.documents': 'Documentsフォルダ（推奨）',
+    'settings.modLocation.game':      'ゲームインストールフォルダ',
+    'settings.enableNewMods':       '新しくインストールされたMOD',
+    'settings.enableNewMods.on':    '常に有効化',
+    'settings.enableNewMods.off':   '有効化しない',
+    'settings.enableNewMods.keep':  '以前の状態を維持',
+    'settings.derived.docsMods':    'MODフォルダ（Documents）',
+    'settings.derived.gameMods':    'MODフォルダ（ゲーム）',
+    'settings.derived.profile':     'active-profile.txt',
+    'settings.derived.appdata':     'AppData',
+    'settings.derived.presets':     'プリセット',
+    'settings.pathError':           'パスを保存できませんでした: {err}',
+    'settings.detectError':         '自動検出に失敗しました: {err}',
+    'settings.section.modio':       'mod.io 連携',
+    'settings.modio.hint':          'MODブラウザとコレクションタブを有効にするには、個人のmod.io APIキーを入力してください。次の場所で生成できます:',
+    'settings.modio.apiKey':        'APIキー',
+    'settings.modio.apiKeyPlaceholder': 'mod.io APIキーをここに貼り付けてください',
+    'settings.modio.save':          '保存',
+    'settings.modio.disconnect':    '切断',
+    'settings.modio.disconnectConfirm': '保存されたmod.io APIキーを削除しますか？',
+    'settings.modio.emptyKey':      'APIキーが空です。',
+    'settings.modio.connected':     '接続済み',
+    'settings.modio.notConnected':  '未接続',
+    'log.refresh':                  '↻ 更新',
+    'log.copy':                     '⧉ コピー',
+    'log.openFile':                 'ファイルを開く',
+    'log.loading':                  '読み込み中…',
+    'log.empty':                    'mod-loader.log は空です。',
+    'log.notFound':                 'mod-loader.log が見つかりません:\n{path}',
+    'log.truncated':                'ログを最後の2 MBに切り詰めました',
+    'install.title':                '手動インストール',
+    'install.hint':                 'MODのZIPをここにドロップするか、クリックして参照してください。アーカイブには modinfo.json（または .jsonc）が必要です。',
+    'install.drop':                 'MODの.zipをここにドロップ',
+    'install.or':                   '— または —',
+    'install.browse':               'ZIPファイルを参照…',
+    'install.targetLabel':          'インストール先:',
+    'install.installing':           '{name} をインストール中…',
+    'install.uploading':            '{name} をアップロード中…',
+    'install.success':              '{name} をインストールしました。',
+    'install.cancelled':            'キャンセルされました。',
+    'install.notZip':               '.zip アーカイブのみサポートされています。',
+    'install.overwriteConfirm':     '「{name}」という名前のMODフォルダが既に存在します。置き換えますか？',
+    'install.dropFailed':           'ドロップでファイルが渡されませんでした（ファイルマネージャがwebviewへのドラッグ＆ドロップに対応していない可能性があります）。代わりに「参照」ボタンを使用してください。',
+    'tweak.listHeader':             '調整可能なMOD',
+    'tweak.optionWord':             'オプション',
+    'tweak.noTweakable':            'インストール済みのMODにはオプションを公開しているものがありません。',
+    'tweak.pickHint':                '左側でMODを選択してオプションを調整してください。',
+    'tweak.noOptions':              'このMODには設定可能なオプションがありません。',
+    'tweak.resetMod':               'このMODをリセット',
+    'tweak.resetAll':               'すべてリセット',
+    'tweak.resetModConfirm':        'このMODのすべてのオプションをデフォルトに戻しますか？',
+    'tweak.resetAllConfirm':        'すべてのMODのオプションをリセットしますか？ active-options.jsonc ファイルが削除されます。',
+    'news.refresh':                 '↻ 更新',
+    'news.loading':                 '最新の投稿を取得中…',
+    'news.empty':                   '表示するニュースはありません。',
+    'news.error':                   'ニュースを取得できませんでした: {err}',
+    'news.cached':                  'キャッシュ済み（10分）',
+    'news.includeReddit':           'r/anno の投稿を含める',
+    'news.visitUnion':              'Anno Union を開く ↗',
+    'settings.modio.clearKey':      'キーをクリア',
+    'modio.badge.connected':        '● 接続済み',
+    'modio.badge.keyOnly':          '◐ APIキーのみ',
+    'modio.badge.notSet':           '○ 未設定',
+    'modio.session':                'セッション',
+    'modio.expires':                '{date} に期限切れ',
+    'modio.disconnect':             '切断',
+    'modio.disconnectConfirm':      'mod.io から切断しますか？ APIキーは保存されたままなので、後で再接続できます。',
+    'modio.needKeyFirst':           '先に上のAPIキーを保存してから接続してください。',
+    'modio.startConnect':           'mod.io に接続',
+    'modio.email':                  'メールアドレス',
+    'modio.emailPlaceholder':       'you@example.com',
+    'modio.emailRequired':          'メールアドレスを入力してください。',
+    'modio.termsAgree':             '次に同意します:',
+    'modio.termsLink':              'mod.io 利用規約',
+    'modio.cancel':                 'キャンセル',
+    'modio.sendCode':               'コードを送信',
+    'modio.sending':                '送信中…',
+    'modio.code':                   'セキュリティコード',
+    'modio.codeRequired':           'メールで届いた5文字のコードを入力してください。',
+    'modio.codeSent':               '5文字のコードを {email} に送信しました。受信トレイ（および迷惑メール）を確認してください。',
+    'modio.connect':                '接続',
+    'modio.connecting':             '接続中…',
+    // Mod Browser
+    'browser.title':                'MODブラウザ',
+    'browser.searchPlaceholder':    'MODを検索…',
+    'browser.search':               '検索',
+    'browser.refresh':              '更新',
+    'browser.sortNewest':           '新着順',
+    'browser.sortPopular':          '人気順',
+    'browser.sortDownloads':        'ダウンロード数順',
+    'browser.sortRating':           '評価順',
+    'browser.sortAlpha':            'A → Z',
+    'browser.sortBy':               '並び替え:',
+    'browser.tag':                  'タグ:',
+    'browser.tagAll':               'すべてのタグ',
+    'browser.clearSearch':          '検索をクリア',
+    'browser.byAuthor':             '作者: {name}',
+    'browser.clearAuthor':          'すべての作者を表示',
+    'browser.filterByAuthor':       'この作者のMODのみ表示',
+    'browser.bundledMods':          '同梱MOD',
+    'browser.bundledEmpty':         'このコレクションには同梱MODがありません。',
+    'browser.backToCollection':     'コレクションに戻る',
+    'browser.installCollection':    'コレクションをインストール',
+    'browser.updateCollection':     'コレクションを更新',
+    'browser.uninstallCollection':  '🗑 コレクションをアンインストール',
+    'browser.uninstallConfirm':     '「{name}」から作成されたプロファイル「{profile}」を削除しますか？',
+    'browser.uninstallAlsoMods':    'このコレクションに含まれる {count} 個のMODもディスクから削除しますか？',
+    'browser.uninstallOk':          'プロファイル「{profile}」を削除しました。',
+    'browser.uninstallOkWithMods':  'プロファイル「{profile}」を削除しました。同梱の {count} 個のMODをディスクから削除しました。',
+    'browser.uninstallFail':        'アンインストールに失敗しました: {error}',
+    'browser.collectionInstallOk':  '「{name}」: {count}/{total} のMODをインストールしました。プロファイル「{profile}」が有効になりました。',
+    'browser.collectionInstallFailures': '({count} 件失敗 — ログを参照)',
+    'browser.back':                 '戻る',
+    'browser.empty':                '検索条件に一致するMODがありません。',
+    'browser.loading':              'MODを読み込み中…',
+    'browser.error':                'MODを読み込めませんでした: {error}',
+    'browser.notAuth':              'mod.io に接続されていません。設定タブで接続してください。',
+    'browser.openSettings':         '設定を開く',
+    'browser.prev':                 '‹ 前へ',
+    'browser.next':                 '次へ ›',
+    'browser.pageOf':               'ページ {page} / {total}',
+    'browser.resultsCount':         '{total} 中 {shown} のMOD',
+    'browser.detailPick':           'リストからMODを選択して詳細を表示します。',
+    'browser.install':              'インストール',
+    'browser.installing':           'インストール中…',
+    'browser.installed':            '✓ インストール済み',
+    'browser.update':               '更新',
+    'browser.installOk':            '「{name}」をインストールしました。',
+    'browser.installFail':          'インストールに失敗しました: {error}',
+    'browser.subscribe':            '+ 購読',
+    'browser.subscribed':           '✓ 購読中',
+    'browser.unsubscribe':          '購読解除',
+    'browser.endorse':              '♥ 推薦',
+    'browser.endorsed':             '♥ 推薦済み',
+    'browser.endorseFail':          '推薦できませんでした: {error}',
+    'browser.subFail':              '購読できませんでした: {error}',
+    'browser.openOnModio':          'mod.io で開く ↗',
+    'browser.author':               '作者: {name}',
+    'browser.downloads':            '{n} ダウンロード',
+    'browser.subscribers':          '{n} 購読者',
+    'browser.modsTotal':            '{n} 個のMOD',
+    'browser.rating':               '{pct}% 高評価',
+    'browser.updated':              '更新日: {date}',
+    'browser.size':                 'サイズ: {size}',
+    'browser.version':              'バージョン: {v}',
+    'browser.changelog':            '変更履歴',
+    'browser.description':          '説明',
+    'browser.noModfile':            'このMODはまだ公開ファイルがありません — インストールするものがありません。',
+  },
+  korean: {
+    'hud.settings':                 '설정',
+    'hud.refreshMods':              '모드 목록 새로고침',
+    'hud.searchMod':                '모드 검색…',
+    'hud.language':                 '언어',
+    'alert.loadPresetFail':         '프리셋을 불러오지 못했습니다: {error}',
+    'alert.savePresetFail':         '프리셋을 저장하지 못했습니다: {error}',
+    'alert.deletePresetFail':       '프리셋을 삭제하지 못했습니다: {error}',
+    'alert.uninstallFail':          '제거에 실패했습니다: {error}',
+    'profile.label':           '프로필',
+    'profile.new':             '＋ 새로 만들기',
+    'profile.delete':          '🗑 삭제',
+    'profile.deleteConfirm':   '프리셋 「{name}」을(를) 삭제하시겠습니까?',
+    'profile.cantDeleteReserved': '「Default」 및 「Vanilla」 프로필은 삭제할 수 없습니다.',
+    'profile.promptName':      '새 프리셋 이름:',
+    'mode.manage':             '관리',
+    'mode.order':              '로딩 순서',
+    'mode.manage.title':       '모드 정렬 및 활성화/비활성화',
+    'mode.order.title':        '드래그 앤 드롭으로 로딩 순서 재정렬',
+    'list.head.toggleAll':     '전체 활성화 / 비활성화',
+    'list.head.category':      '카테고리',
+    'list.head.name':          '모드 이름',
+    'list.head.size':          '크기',
+    'list.head.status':        '상태',
+    'list.empty':              '설정된 폴더에서 모드를 찾을 수 없습니다.',
+    'count.active':            '{n} / {total} 활성화됨',
+    'pill.active':             'ON',
+    'pill.off':                'OFF',
+    'detail.empty':            '목록에서 모드를 선택하여 상세 정보를 확인하세요.',
+    'detail.banner.empty':     '이 모드에는 배너가 없습니다.',
+    'detail.description':      '설명',
+    'detail.noDescription':    '설명이 없습니다.',
+    'detail.details':          '세부 정보',
+    'detail.meta.category':    '카테고리',
+    'detail.meta.difficulty':  '난이도',
+    'detail.meta.size':        '크기',
+    'detail.meta.folder':      '폴더',
+    'detail.creator':          '제작: {name} · v{version}',
+    'detail.openFolder':       '폴더 열기',
+    'detail.uninstall':        '제거',
+    'detail.uninstallConfirm': '모드 「{name}」을(를) 제거하시겠습니까?\n\n폴더가 디스크에서 삭제됩니다.',
+    'tab.placeholder':         '이 탭은 마이그레이션 2단계에서 이전됩니다.',
+    'tab.placeholderHint':     'pywebview POC 진행 중 — 현재 {tab} 탭만 작동합니다.',
+    'launch.title':            'Anno 117 실행',
+    'launch.error':            '게임을 실행할 수 없습니다: {err}',
+    'mods.openFolder.title':   '모드 폴더 열기',
+    'tab.news':                '뉴스',
+    'tab.activation':          '활성화',
+    'tab.browser':             '모드 브라우저',
+    'tab.collections':         '컬렉션',
+    'tab.install':             '수동 설치',
+    'tab.log':                 'Modloader 로그',
+    'tab.tweak':               '조정',
+    'tab.settings':            '설정',
+    'settings.section.paths':       '경로',
+    'settings.section.behaviour':   '동작',
+    'settings.section.advanced':    '고급',
+    'settings.gamePath':            'Anno 117 실행 파일',
+    'settings.gamePath.empty':      '미설정 — Anno117.exe 경로를 지정하세요',
+    'settings.docsPath':            '문서 폴더 재정의',
+    'settings.docsPath.empty':      '자동 감지됨 (~/Documents 또는 Proton 프리픽스 사용)',
+    'settings.browseFile':          '파일 찾기…',
+    'settings.browseFolder':        '폴더 찾기…',
+    'settings.autoDetect':          '자동 감지',
+    'settings.clear':               '지우기',
+    'settings.open':                '열기',
+    'settings.modLocation':         '모드 저장 위치',
+    'settings.modLocation.documents': '문서 폴더 (권장)',
+    'settings.modLocation.game':      '게임 설치 폴더',
+    'settings.enableNewMods':       '새로 설치된 모드',
+    'settings.enableNewMods.on':    '항상 활성화',
+    'settings.enableNewMods.off':   '항상 비활성화',
+    'settings.enableNewMods.keep':  '이전 상태 유지',
+    'settings.derived.docsMods':    '모드 폴더 (문서)',
+    'settings.derived.gameMods':    '모드 폴더 (게임)',
+    'settings.derived.profile':     'active-profile.txt',
+    'settings.derived.appdata':     'AppData',
+    'settings.derived.presets':     '프리셋',
+    'settings.pathError':           '경로를 저장할 수 없습니다: {err}',
+    'settings.detectError':         '자동 감지 실패: {err}',
+    'settings.section.modio':       'mod.io 연동',
+    'settings.modio.hint':          '모드 브라우저와 컬렉션 탭을 활성화하려면 개인 mod.io API 키를 입력하세요. 다음에서 생성하세요:',
+    'settings.modio.apiKey':        'API 키',
+    'settings.modio.apiKeyPlaceholder': 'mod.io API 키를 여기에 붙여넣기',
+    'settings.modio.save':          '저장',
+    'settings.modio.disconnect':    '연결 해제',
+    'settings.modio.disconnectConfirm': '저장된 mod.io API 키를 제거하시겠습니까?',
+    'settings.modio.emptyKey':      'API 키가 비어 있습니다.',
+    'settings.modio.connected':     '연결됨',
+    'settings.modio.notConnected':  '연결되지 않음',
+    'log.refresh':                  '↻ 새로고침',
+    'log.copy':                     '⧉ 복사',
+    'log.openFile':                 '파일 열기',
+    'log.loading':                  '로딩 중…',
+    'log.empty':                    'mod-loader.log이 비어 있습니다.',
+    'log.notFound':                 '다음 위치에서 mod-loader.log를 찾을 수 없습니다:\n{path}',
+    'log.truncated':                '로그가 마지막 2 MB로 잘렸습니다',
+    'install.title':                '수동 설치',
+    'install.hint':                 '모드 ZIP을 여기에 놓거나 클릭하여 찾아보세요. 아카이브에는 modinfo.json (또는 .jsonc) 파일이 포함되어 있어야 합니다.',
+    'install.drop':                 '모드 .zip을 여기에 놓으세요',
+    'install.or':                   '— 또는 —',
+    'install.browse':               'ZIP 파일 찾기…',
+    'install.targetLabel':          '설치 위치:',
+    'install.installing':           '{name} 설치 중…',
+    'install.uploading':            '{name} 업로드 중…',
+    'install.success':              '{name} 설치됨.',
+    'install.cancelled':            '취소됨.',
+    'install.notZip':               '.zip 아카이브만 지원됩니다.',
+    'install.overwriteConfirm':     '「{name}」이라는 모드 폴더가 이미 있습니다. 교체하시겠습니까?',
+    'install.dropFailed':           '드롭으로 파일이 전달되지 않았습니다 (파일 관리자가 webview로의 드래그 앤 드롭을 지원하지 않을 수 있습니다). 대신 찾아보기 버튼을 사용하세요.',
+    'tweak.listHeader':             '조정 가능한 모드',
+    'tweak.optionWord':             '옵션',
+    'tweak.noTweakable':            '설치된 모드 중 옵션을 제공하는 것이 없습니다.',
+    'tweak.pickHint':                '왼쪽에서 모드를 선택하여 옵션을 조정하세요.',
+    'tweak.noOptions':              '이 모드에는 설정 가능한 옵션이 없습니다.',
+    'tweak.resetMod':               '이 모드 재설정',
+    'tweak.resetAll':               '모두 재설정',
+    'tweak.resetModConfirm':        '이 모드의 모든 옵션을 기본값으로 재설정하시겠습니까?',
+    'tweak.resetAllConfirm':        '모든 모드의 옵션을 재설정하시겠습니까? active-options.jsonc 파일이 삭제됩니다.',
+    'news.refresh':                 '↻ 새로고침',
+    'news.loading':                 '최신 게시물 가져오는 중…',
+    'news.empty':                   '표시할 뉴스가 없습니다.',
+    'news.error':                   '뉴스를 가져올 수 없습니다: {err}',
+    'news.cached':                  '캐시됨 (10분)',
+    'news.includeReddit':           'r/anno 게시물 포함',
+    'news.visitUnion':              'Anno Union 열기 ↗',
+    'settings.modio.clearKey':      '키 지우기',
+    'modio.badge.connected':        '● 연결됨',
+    'modio.badge.keyOnly':          '◐ API 키만',
+    'modio.badge.notSet':           '○ 설정되지 않음',
+    'modio.session':                '세션',
+    'modio.expires':                '{date}에 만료',
+    'modio.disconnect':             '연결 해제',
+    'modio.disconnectConfirm':      'mod.io 연결을 해제하시겠습니까? API 키는 저장된 상태로 유지되며 나중에 다시 연결할 수 있습니다.',
+    'modio.needKeyFirst':           '먼저 위에 API 키를 저장한 다음 연결할 수 있습니다.',
+    'modio.startConnect':           'mod.io에 연결',
+    'modio.email':                  '이메일 주소',
+    'modio.emailPlaceholder':       'you@example.com',
+    'modio.emailRequired':          '이메일을 입력하세요.',
+    'modio.termsAgree':             '동의합니다:',
+    'modio.termsLink':              'mod.io 이용 약관',
+    'modio.cancel':                 '취소',
+    'modio.sendCode':               '코드 전송',
+    'modio.sending':                '전송 중…',
+    'modio.code':                   '보안 코드',
+    'modio.codeRequired':           '이메일로 받은 5자리 코드를 입력하세요.',
+    'modio.codeSent':               '5자리 코드가 {email}로 전송되었습니다. 받은편지함 (및 스팸)을 확인하세요.',
+    'modio.connect':                '연결',
+    'modio.connecting':             '연결 중…',
+    // Mod Browser
+    'browser.title':                '모드 브라우저',
+    'browser.searchPlaceholder':    '모드 검색…',
+    'browser.search':               '검색',
+    'browser.refresh':              '새로고침',
+    'browser.sortNewest':           '최신순',
+    'browser.sortPopular':          '인기순',
+    'browser.sortDownloads':        '다운로드순',
+    'browser.sortRating':           '평점순',
+    'browser.sortAlpha':            'A → Z',
+    'browser.sortBy':               '정렬 기준:',
+    'browser.tag':                  '태그:',
+    'browser.tagAll':               '모든 태그',
+    'browser.clearSearch':          '검색 지우기',
+    'browser.byAuthor':             '제작: {name}',
+    'browser.clearAuthor':          '모든 작성자 표시',
+    'browser.filterByAuthor':       '이 작성자의 모드만 표시',
+    'browser.bundledMods':          '포함된 모드',
+    'browser.bundledEmpty':         '이 컬렉션에는 포함된 모드가 없습니다.',
+    'browser.backToCollection':     '컬렉션으로 돌아가기',
+    'browser.installCollection':    '컬렉션 설치',
+    'browser.updateCollection':     '컬렉션 업데이트',
+    'browser.uninstallCollection':  '🗑 컬렉션 제거',
+    'browser.uninstallConfirm':     '「{name}」에서 생성된 프로필 「{profile}」을(를) 삭제하시겠습니까?',
+    'browser.uninstallAlsoMods':    '이 컬렉션에 포함된 {count}개의 모드도 디스크에서 제거하시겠습니까?',
+    'browser.uninstallOk':          '프로필 「{profile}」을(를) 제거했습니다.',
+    'browser.uninstallOkWithMods':  '프로필 「{profile}」을(를) 제거했습니다. 포함된 {count}개의 모드를 디스크에서 삭제했습니다.',
+    'browser.uninstallFail':        '제거에 실패했습니다: {error}',
+    'browser.collectionInstallOk':  '「{name}」: {count}/{total} 모드 설치됨. 프로필 「{profile}」이(가) 이제 활성화되었습니다.',
+    'browser.collectionInstallFailures': '({count}개 실패 — 로그 참조)',
+    'browser.back':                 '뒤로',
+    'browser.empty':                '검색과 일치하는 모드가 없습니다.',
+    'browser.loading':              '모드 로드 중…',
+    'browser.error':                '모드를 로드할 수 없습니다: {error}',
+    'browser.notAuth':              'mod.io에 연결되지 않았습니다. 설정 탭에서 연결하세요.',
+    'browser.openSettings':         '설정 열기',
+    'browser.prev':                 '‹ 이전',
+    'browser.next':                 '다음 ›',
+    'browser.pageOf':               '{page} / {total} 페이지',
+    'browser.resultsCount':         '{total}개 중 {shown}개 모드',
+    'browser.detailPick':           '목록에서 모드를 선택하여 세부 정보를 확인하세요.',
+    'browser.install':              '설치',
+    'browser.installing':           '설치 중…',
+    'browser.installed':            '✓ 설치됨',
+    'browser.update':               '업데이트',
+    'browser.installOk':            '「{name}」 설치됨.',
+    'browser.installFail':          '설치에 실패했습니다: {error}',
+    'browser.subscribe':            '+ 구독',
+    'browser.subscribed':           '✓ 구독 중',
+    'browser.unsubscribe':          '구독 취소',
+    'browser.endorse':              '♥ 추천',
+    'browser.endorsed':             '♥ 추천됨',
+    'browser.endorseFail':          '추천할 수 없습니다: {error}',
+    'browser.subFail':              '구독할 수 없습니다: {error}',
+    'browser.openOnModio':          'mod.io에서 열기 ↗',
+    'browser.author':               '제작: {name}',
+    'browser.downloads':            '{n}회 다운로드',
+    'browser.subscribers':          '{n}명 구독',
+    'browser.modsTotal':            '{n}개 모드',
+    'browser.rating':               '{pct}% 긍정적',
+    'browser.updated':              '업데이트: {date}',
+    'browser.size':                 '크기: {size}',
+    'browser.version':              '버전: {v}',
+    'browser.changelog':            '변경 로그',
+    'browser.description':          '설명',
+    'browser.noModfile':            '이 모드에는 아직 게시된 파일이 없습니다 — 설치할 것이 없습니다.',
+  },
+  simplified_chinese: {
+    'hud.settings':                 '设置',
+    'hud.refreshMods':              '刷新模组列表',
+    'hud.searchMod':                '搜索模组…',
+    'hud.language':                 '语言',
+    'alert.loadPresetFail':         '加载预设失败：{error}',
+    'alert.savePresetFail':         '保存预设失败：{error}',
+    'alert.deletePresetFail':       '删除预设失败：{error}',
+    'alert.uninstallFail':          '卸载失败：{error}',
+    'profile.label':           '配置文件',
+    'profile.new':             '＋ 新建',
+    'profile.delete':          '🗑 删除',
+    'profile.deleteConfirm':   '删除预设「{name}」？',
+    'profile.cantDeleteReserved': '「Default」和「Vanilla」配置文件无法删除。',
+    'profile.promptName':      '新预设名称：',
+    'mode.manage':             '管理',
+    'mode.order':              '加载顺序',
+    'mode.manage.title':       '排序并启用/禁用模组',
+    'mode.order.title':        '通过拖放重新排序加载顺序',
+    'list.head.toggleAll':     '全部启用/禁用',
+    'list.head.category':      '类别',
+    'list.head.name':          '模组名称',
+    'list.head.size':          '大小',
+    'list.head.status':        '状态',
+    'list.empty':              '在已配置的文件夹中未检测到模组。',
+    'count.active':            '{n} / {total} 已启用',
+    'pill.active':             'ON',
+    'pill.off':                'OFF',
+    'detail.empty':            '从列表中选择一个模组以查看其详情。',
+    'detail.banner.empty':     '此模组未提供横幅。',
+    'detail.description':      '描述',
+    'detail.noDescription':    '没有描述。',
+    'detail.details':          '详情',
+    'detail.meta.category':    '类别',
+    'detail.meta.difficulty':  '难度',
+    'detail.meta.size':        '大小',
+    'detail.meta.folder':      '文件夹',
+    'detail.creator':          '作者：{name} · v{version}',
+    'detail.openFolder':       '打开文件夹',
+    'detail.uninstall':        '卸载',
+    'detail.uninstallConfirm': '卸载模组「{name}」？\n\n该文件夹将从磁盘中删除。',
+    'tab.placeholder':         '此选项卡将在迁移第二阶段移植。',
+    'tab.placeholderHint':     'pywebview POC 进行中 — 目前仅 {tab} 选项卡可用。',
+    'launch.title':            '启动 Anno 117',
+    'launch.error':            '无法启动游戏：{err}',
+    'mods.openFolder.title':   '打开模组文件夹',
+    'tab.news':                '新闻',
+    'tab.activation':          '激活',
+    'tab.browser':             '模组浏览器',
+    'tab.collections':         '合集',
+    'tab.install':             '手动安装',
+    'tab.log':                 'Modloader 日志',
+    'tab.tweak':               '调整',
+    'tab.settings':            '设置',
+    'settings.section.paths':       '路径',
+    'settings.section.behaviour':   '行为',
+    'settings.section.advanced':    '高级',
+    'settings.gamePath':            'Anno 117 可执行文件',
+    'settings.gamePath.empty':      '未配置 — 设置 Anno117.exe 的路径',
+    'settings.docsPath':            '文档文件夹覆盖',
+    'settings.docsPath.empty':      '自动检测（使用 ~/Documents 或 Proton 前缀）',
+    'settings.browseFile':          '浏览文件…',
+    'settings.browseFolder':        '浏览文件夹…',
+    'settings.autoDetect':          '自动检测',
+    'settings.clear':               '清除',
+    'settings.open':                '打开',
+    'settings.modLocation':         '模组存储位置',
+    'settings.modLocation.documents': '文档文件夹（推荐）',
+    'settings.modLocation.game':      '游戏安装文件夹',
+    'settings.enableNewMods':       '新安装的模组',
+    'settings.enableNewMods.on':    '始终启用',
+    'settings.enableNewMods.off':   '从不启用',
+    'settings.enableNewMods.keep':  '保持先前状态',
+    'settings.derived.docsMods':    '模组文件夹（文档）',
+    'settings.derived.gameMods':    '模组文件夹（游戏）',
+    'settings.derived.profile':     'active-profile.txt',
+    'settings.derived.appdata':     'AppData',
+    'settings.derived.presets':     '预设',
+    'settings.pathError':           '无法保存路径：{err}',
+    'settings.detectError':         '自动检测失败：{err}',
+    'settings.section.modio':       'mod.io 集成',
+    'settings.modio.hint':          '输入您的个人 mod.io API 密钥以启用模组浏览器和合集选项卡。请在以下位置生成：',
+    'settings.modio.apiKey':        'API 密钥',
+    'settings.modio.apiKeyPlaceholder': '在此粘贴您的 mod.io API 密钥',
+    'settings.modio.save':          '保存',
+    'settings.modio.disconnect':    '断开连接',
+    'settings.modio.disconnectConfirm': '删除已保存的 mod.io API 密钥？',
+    'settings.modio.emptyKey':      'API 密钥为空。',
+    'settings.modio.connected':     '已连接',
+    'settings.modio.notConnected':  '未连接',
+    'log.refresh':                  '↻ 刷新',
+    'log.copy':                     '⧉ 复制',
+    'log.openFile':                 '打开文件',
+    'log.loading':                  '加载中…',
+    'log.empty':                    'mod-loader.log 为空。',
+    'log.notFound':                 '未在以下位置找到 mod-loader.log：\n{path}',
+    'log.truncated':                '日志已截断为最后 2 MB',
+    'install.title':                '手动安装',
+    'install.hint':                 '在此处放下模组 ZIP，或点击浏览。压缩包必须包含 modinfo.json（或 .jsonc）文件。',
+    'install.drop':                 '在此处放下 .zip 模组',
+    'install.or':                   '— 或 —',
+    'install.browse':               '浏览 ZIP 文件…',
+    'install.targetLabel':          '安装目标：',
+    'install.installing':           '正在安装 {name}…',
+    'install.uploading':            '正在上传 {name}…',
+    'install.success':              '{name} 已安装。',
+    'install.cancelled':            '已取消。',
+    'install.notZip':               '仅支持 .zip 压缩包。',
+    'install.overwriteConfirm':     '名为「{name}」的模组文件夹已存在。是否替换？',
+    'install.dropFailed':           '拖放未交付任何文件（您的文件管理器可能不支持向 webview 拖放）。请改用浏览按钮。',
+    'tweak.listHeader':             '可调整的模组',
+    'tweak.optionWord':             '选项',
+    'tweak.noTweakable':            '已安装的模组中没有提供选项的。',
+    'tweak.pickHint':                '在左侧选择模组以调整其选项。',
+    'tweak.noOptions':              '此模组没有可配置的选项。',
+    'tweak.resetMod':               '重置此模组',
+    'tweak.resetAll':               '全部重置',
+    'tweak.resetModConfirm':        '将此模组的所有选项重置为默认值？',
+    'tweak.resetAllConfirm':        '重置所有模组的选项？active-options.jsonc 文件将被删除。',
+    'news.refresh':                 '↻ 刷新',
+    'news.loading':                 '正在获取最新帖子…',
+    'news.empty':                   '没有可显示的新闻。',
+    'news.error':                   '无法获取新闻：{err}',
+    'news.cached':                  '已缓存（10 分钟）',
+    'news.includeReddit':           '包含 r/anno 帖子',
+    'news.visitUnion':              '打开 Anno Union ↗',
+    'settings.modio.clearKey':      '清除密钥',
+    'modio.badge.connected':        '● 已连接',
+    'modio.badge.keyOnly':          '◐ 仅 API 密钥',
+    'modio.badge.notSet':           '○ 未设置',
+    'modio.session':                '会话',
+    'modio.expires':                '于 {date} 过期',
+    'modio.disconnect':             '断开连接',
+    'modio.disconnectConfirm':      '断开与 mod.io 的连接？您的 API 密钥将保持已保存状态；您可以稍后重新连接。',
+    'modio.needKeyFirst':           '先在上方保存您的 API 密钥，然后才能连接。',
+    'modio.startConnect':           '连接到 mod.io',
+    'modio.email':                  '电子邮箱地址',
+    'modio.emailPlaceholder':       'you@example.com',
+    'modio.emailRequired':          '请输入您的邮箱。',
+    'modio.termsAgree':             '我同意 mod.io 的',
+    'modio.termsLink':              '使用条款',
+    'modio.cancel':                 '取消',
+    'modio.sendCode':               '发送验证码',
+    'modio.sending':                '发送中…',
+    'modio.code':                   '安全码',
+    'modio.codeRequired':           '输入您邮箱中收到的 5 位验证码。',
+    'modio.codeSent':               '已向 {email} 发送 5 位验证码。请检查收件箱（和垃圾邮件）。',
+    'modio.connect':                '连接',
+    'modio.connecting':             '连接中…',
+    // Mod Browser
+    'browser.title':                '模组浏览器',
+    'browser.searchPlaceholder':    '搜索模组…',
+    'browser.search':               '搜索',
+    'browser.refresh':              '刷新',
+    'browser.sortNewest':           '最新',
+    'browser.sortPopular':          '最热门',
+    'browser.sortDownloads':        '最多下载',
+    'browser.sortRating':           '评价最高',
+    'browser.sortAlpha':            'A → Z',
+    'browser.sortBy':               '排序：',
+    'browser.tag':                  '标签：',
+    'browser.tagAll':               '所有标签',
+    'browser.clearSearch':          '清除搜索',
+    'browser.byAuthor':             '作者：{name}',
+    'browser.clearAuthor':          '显示所有作者',
+    'browser.filterByAuthor':       '仅显示此作者的模组',
+    'browser.bundledMods':          '包含的模组',
+    'browser.bundledEmpty':         '此合集未列出任何包含的模组。',
+    'browser.backToCollection':     '返回合集',
+    'browser.installCollection':    '安装合集',
+    'browser.updateCollection':     '更新合集',
+    'browser.uninstallCollection':  '🗑 卸载合集',
+    'browser.uninstallConfirm':     '删除从「{name}」创建的配置文件「{profile}」？',
+    'browser.uninstallAlsoMods':    '是否也从磁盘删除此合集中包含的 {count} 个模组？',
+    'browser.uninstallOk':          '配置文件「{profile}」已删除。',
+    'browser.uninstallOkWithMods':  '配置文件「{profile}」已删除；{count} 个包含的模组已从磁盘删除。',
+    'browser.uninstallFail':        '卸载失败：{error}',
+    'browser.collectionInstallOk':  '「{name}」：已安装 {count}/{total} 个模组。配置文件「{profile}」现已激活。',
+    'browser.collectionInstallFailures': '（{count} 个失败 — 请查看日志）',
+    'browser.back':                 '返回',
+    'browser.empty':                '没有模组与您的搜索匹配。',
+    'browser.loading':              '加载模组中…',
+    'browser.error':                '无法加载模组：{error}',
+    'browser.notAuth':              '未连接到 mod.io。请在设置选项卡中连接。',
+    'browser.openSettings':         '打开设置',
+    'browser.prev':                 '‹ 上一页',
+    'browser.next':                 '下一页 ›',
+    'browser.pageOf':               '第 {page} / {total} 页',
+    'browser.resultsCount':         '共 {total} 个模组中的 {shown} 个',
+    'browser.detailPick':           '从列表中选择模组以查看其详情。',
+    'browser.install':              '安装',
+    'browser.installing':           '安装中…',
+    'browser.installed':            '✓ 已安装',
+    'browser.update':               '更新',
+    'browser.installOk':            '「{name}」已安装。',
+    'browser.installFail':          '安装失败：{error}',
+    'browser.subscribe':            '+ 订阅',
+    'browser.subscribed':           '✓ 已订阅',
+    'browser.unsubscribe':          '取消订阅',
+    'browser.endorse':              '♥ 推荐',
+    'browser.endorsed':             '♥ 已推荐',
+    'browser.endorseFail':          '无法推荐：{error}',
+    'browser.subFail':              '无法订阅：{error}',
+    'browser.openOnModio':          '在 mod.io 上打开 ↗',
+    'browser.author':               '作者：{name}',
+    'browser.downloads':            '{n} 次下载',
+    'browser.subscribers':          '{n} 个订阅者',
+    'browser.modsTotal':            '{n} 个模组',
+    'browser.rating':               '{pct}% 好评',
+    'browser.updated':              '更新于 {date}',
+    'browser.size':                 '大小：{size}',
+    'browser.version':              '版本：{v}',
+    'browser.changelog':            '更新日志',
+    'browser.description':          '描述',
+    'browser.noModfile':            '此模组尚未发布文件 — 没有可安装的内容。',
+  },
+  traditional_chinese: {
+    'hud.settings':                 '設定',
+    'hud.refreshMods':              '重新整理模組列表',
+    'hud.searchMod':                '搜尋模組…',
+    'hud.language':                 '語言',
+    'alert.loadPresetFail':         '載入預設失敗：{error}',
+    'alert.savePresetFail':         '儲存預設失敗：{error}',
+    'alert.deletePresetFail':       '刪除預設失敗：{error}',
+    'alert.uninstallFail':          '解除安裝失敗：{error}',
+    'profile.label':           '設定檔',
+    'profile.new':             '＋ 新增',
+    'profile.delete':          '🗑 刪除',
+    'profile.deleteConfirm':   '刪除預設「{name}」？',
+    'profile.cantDeleteReserved': '「Default」和「Vanilla」設定檔無法刪除。',
+    'profile.promptName':      '新預設名稱：',
+    'mode.manage':             '管理',
+    'mode.order':              '載入順序',
+    'mode.manage.title':       '排序與啟用/停用模組',
+    'mode.order.title':        '透過拖放重新排序載入順序',
+    'list.head.toggleAll':     '全部啟用 / 停用',
+    'list.head.category':      '類別',
+    'list.head.name':          '模組名稱',
+    'list.head.size':          '大小',
+    'list.head.status':        '狀態',
+    'list.empty':              '在已設定的資料夾中未偵測到模組。',
+    'count.active':            '{n} / {total} 已啟用',
+    'pill.active':             'ON',
+    'pill.off':                'OFF',
+    'detail.empty':            '從列表中選擇模組以檢視其詳細資料。',
+    'detail.banner.empty':     '此模組未提供橫幅。',
+    'detail.description':      '描述',
+    'detail.noDescription':    '沒有描述。',
+    'detail.details':          '詳細資料',
+    'detail.meta.category':    '類別',
+    'detail.meta.difficulty':  '難度',
+    'detail.meta.size':        '大小',
+    'detail.meta.folder':      '資料夾',
+    'detail.creator':          '作者：{name} · v{version}',
+    'detail.openFolder':       '開啟資料夾',
+    'detail.uninstall':        '解除安裝',
+    'detail.uninstallConfirm': '解除安裝模組「{name}」？\n\n該資料夾將從磁碟中刪除。',
+    'tab.placeholder':         '此分頁將在遷移第二階段移植。',
+    'tab.placeholderHint':     'pywebview POC 進行中 — 目前只有 {tab} 分頁可用。',
+    'launch.title':            '啟動 Anno 117',
+    'launch.error':            '無法啟動遊戲：{err}',
+    'mods.openFolder.title':   '開啟模組資料夾',
+    'tab.news':                '新聞',
+    'tab.activation':          '啟用',
+    'tab.browser':             '模組瀏覽器',
+    'tab.collections':         '合輯',
+    'tab.install':             '手動安裝',
+    'tab.log':                 'Modloader 紀錄',
+    'tab.tweak':               '調整',
+    'tab.settings':            '設定',
+    'settings.section.paths':       '路徑',
+    'settings.section.behaviour':   '行為',
+    'settings.section.advanced':    '進階',
+    'settings.gamePath':            'Anno 117 執行檔',
+    'settings.gamePath.empty':      '未設定 — 設定 Anno117.exe 的路徑',
+    'settings.docsPath':            '文件資料夾覆寫',
+    'settings.docsPath.empty':      '自動偵測（使用 ~/Documents 或 Proton 前綴）',
+    'settings.browseFile':          '瀏覽檔案…',
+    'settings.browseFolder':        '瀏覽資料夾…',
+    'settings.autoDetect':          '自動偵測',
+    'settings.clear':               '清除',
+    'settings.open':                '開啟',
+    'settings.modLocation':         '模組儲存位置',
+    'settings.modLocation.documents': '文件資料夾（建議）',
+    'settings.modLocation.game':      '遊戲安裝資料夾',
+    'settings.enableNewMods':       '新安裝的模組',
+    'settings.enableNewMods.on':    '一律啟用',
+    'settings.enableNewMods.off':   '一律不啟用',
+    'settings.enableNewMods.keep':  '保留先前狀態',
+    'settings.derived.docsMods':    '模組資料夾（文件）',
+    'settings.derived.gameMods':    '模組資料夾（遊戲）',
+    'settings.derived.profile':     'active-profile.txt',
+    'settings.derived.appdata':     'AppData',
+    'settings.derived.presets':     '預設',
+    'settings.pathError':           '無法儲存路徑：{err}',
+    'settings.detectError':         '自動偵測失敗：{err}',
+    'settings.section.modio':       'mod.io 整合',
+    'settings.modio.hint':          '輸入您的個人 mod.io API 金鑰以啟用模組瀏覽器和合輯分頁。請在以下位置產生：',
+    'settings.modio.apiKey':        'API 金鑰',
+    'settings.modio.apiKeyPlaceholder': '在此貼上您的 mod.io API 金鑰',
+    'settings.modio.save':          '儲存',
+    'settings.modio.disconnect':    '中斷連線',
+    'settings.modio.disconnectConfirm': '移除已儲存的 mod.io API 金鑰？',
+    'settings.modio.emptyKey':      'API 金鑰為空。',
+    'settings.modio.connected':     '已連線',
+    'settings.modio.notConnected':  '未連線',
+    'log.refresh':                  '↻ 重新整理',
+    'log.copy':                     '⧉ 複製',
+    'log.openFile':                 '開啟檔案',
+    'log.loading':                  '載入中…',
+    'log.empty':                    'mod-loader.log 為空。',
+    'log.notFound':                 '在以下位置找不到 mod-loader.log：\n{path}',
+    'log.truncated':                '紀錄已截斷至最後 2 MB',
+    'install.title':                '手動安裝',
+    'install.hint':                 '將模組 ZIP 拖放至此，或點擊瀏覽。封存檔必須包含 modinfo.json（或 .jsonc）檔案。',
+    'install.drop':                 '在此處拖放 .zip 模組',
+    'install.or':                   '— 或 —',
+    'install.browse':               '瀏覽 ZIP 檔案…',
+    'install.targetLabel':          '安裝目的地：',
+    'install.installing':           '正在安裝 {name}…',
+    'install.uploading':            '正在上傳 {name}…',
+    'install.success':              '{name} 已安裝。',
+    'install.cancelled':            '已取消。',
+    'install.notZip':               '僅支援 .zip 封存檔。',
+    'install.overwriteConfirm':     '名為「{name}」的模組資料夾已存在。是否替換？',
+    'install.dropFailed':           '拖放未交付檔案（您的檔案管理員可能不支援拖放至 webview）。請改用「瀏覽」按鈕。',
+    'tweak.listHeader':             '可調整的模組',
+    'tweak.optionWord':             '選項',
+    'tweak.noTweakable':            '已安裝的模組中沒有提供選項的。',
+    'tweak.pickHint':                '在左側選擇模組以調整其選項。',
+    'tweak.noOptions':              '此模組沒有可設定的選項。',
+    'tweak.resetMod':               '重設此模組',
+    'tweak.resetAll':               '全部重設',
+    'tweak.resetModConfirm':        '將此模組的所有選項重設為預設值？',
+    'tweak.resetAllConfirm':        '重設所有模組的選項？active-options.jsonc 檔案將被刪除。',
+    'news.refresh':                 '↻ 重新整理',
+    'news.loading':                 '正在擷取最新貼文…',
+    'news.empty':                   '沒有新聞可顯示。',
+    'news.error':                   '無法擷取新聞：{err}',
+    'news.cached':                  '已快取（10 分鐘）',
+    'news.includeReddit':           '包含 r/anno 貼文',
+    'news.visitUnion':              '開啟 Anno Union ↗',
+    'settings.modio.clearKey':      '清除金鑰',
+    'modio.badge.connected':        '● 已連線',
+    'modio.badge.keyOnly':          '◐ 僅 API 金鑰',
+    'modio.badge.notSet':           '○ 未設定',
+    'modio.session':                '工作階段',
+    'modio.expires':                '於 {date} 到期',
+    'modio.disconnect':             '中斷連線',
+    'modio.disconnectConfirm':      '中斷與 mod.io 的連線？您的 API 金鑰會保持儲存；您可以稍後重新連線。',
+    'modio.needKeyFirst':           '請先在上方儲存您的 API 金鑰，然後才能連線。',
+    'modio.startConnect':           '連線到 mod.io',
+    'modio.email':                  '電子郵件地址',
+    'modio.emailPlaceholder':       'you@example.com',
+    'modio.emailRequired':          '請輸入您的電子郵件。',
+    'modio.termsAgree':             '我同意 mod.io 的',
+    'modio.termsLink':              '使用條款',
+    'modio.cancel':                 '取消',
+    'modio.sendCode':               '傳送驗證碼',
+    'modio.sending':                '傳送中…',
+    'modio.code':                   '安全碼',
+    'modio.codeRequired':           '輸入您電子郵件中收到的 5 位驗證碼。',
+    'modio.codeSent':               '已將 5 位驗證碼傳送至 {email}。請檢查收件匣（和垃圾郵件）。',
+    'modio.connect':                '連線',
+    'modio.connecting':             '連線中…',
+    // Mod Browser
+    'browser.title':                '模組瀏覽器',
+    'browser.searchPlaceholder':    '搜尋模組…',
+    'browser.search':               '搜尋',
+    'browser.refresh':              '重新整理',
+    'browser.sortNewest':           '最新',
+    'browser.sortPopular':          '最熱門',
+    'browser.sortDownloads':        '最多下載',
+    'browser.sortRating':           '評價最高',
+    'browser.sortAlpha':            'A → Z',
+    'browser.sortBy':               '排序方式：',
+    'browser.tag':                  '標籤：',
+    'browser.tagAll':               '所有標籤',
+    'browser.clearSearch':          '清除搜尋',
+    'browser.byAuthor':             '作者：{name}',
+    'browser.clearAuthor':          '顯示所有作者',
+    'browser.filterByAuthor':       '僅顯示此作者的模組',
+    'browser.bundledMods':          '包含的模組',
+    'browser.bundledEmpty':         '此合輯未列出任何包含的模組。',
+    'browser.backToCollection':     '返回合輯',
+    'browser.installCollection':    '安裝合輯',
+    'browser.updateCollection':     '更新合輯',
+    'browser.uninstallCollection':  '🗑 解除安裝合輯',
+    'browser.uninstallConfirm':     '刪除由「{name}」建立的設定檔「{profile}」？',
+    'browser.uninstallAlsoMods':    '是否也從磁碟刪除此合輯中包含的 {count} 個模組？',
+    'browser.uninstallOk':          '設定檔「{profile}」已移除。',
+    'browser.uninstallOkWithMods':  '設定檔「{profile}」已移除；{count} 個包含的模組已從磁碟刪除。',
+    'browser.uninstallFail':        '解除安裝失敗：{error}',
+    'browser.collectionInstallOk':  '「{name}」：已安裝 {count}/{total} 個模組。設定檔「{profile}」現在已啟用。',
+    'browser.collectionInstallFailures': '（{count} 個失敗 — 請查看紀錄）',
+    'browser.back':                 '返回',
+    'browser.empty':                '沒有模組符合您的搜尋。',
+    'browser.loading':              '載入模組中…',
+    'browser.error':                '無法載入模組：{error}',
+    'browser.notAuth':              '未連線到 mod.io。請在設定分頁中連線。',
+    'browser.openSettings':         '開啟設定',
+    'browser.prev':                 '‹ 上一頁',
+    'browser.next':                 '下一頁 ›',
+    'browser.pageOf':               '第 {page} / {total} 頁',
+    'browser.resultsCount':         '共 {total} 個模組中的 {shown} 個',
+    'browser.detailPick':           '從列表中選擇模組以檢視其詳細資料。',
+    'browser.install':              '安裝',
+    'browser.installing':           '安裝中…',
+    'browser.installed':            '✓ 已安裝',
+    'browser.update':               '更新',
+    'browser.installOk':            '「{name}」已安裝。',
+    'browser.installFail':          '安裝失敗：{error}',
+    'browser.subscribe':            '+ 訂閱',
+    'browser.subscribed':           '✓ 已訂閱',
+    'browser.unsubscribe':          '取消訂閱',
+    'browser.endorse':              '♥ 推薦',
+    'browser.endorsed':             '♥ 已推薦',
+    'browser.endorseFail':          '無法推薦：{error}',
+    'browser.subFail':              '無法訂閱：{error}',
+    'browser.openOnModio':          '在 mod.io 上開啟 ↗',
+    'browser.author':               '作者：{name}',
+    'browser.downloads':            '{n} 次下載',
+    'browser.subscribers':          '{n} 位訂閱者',
+    'browser.modsTotal':            '{n} 個模組',
+    'browser.rating':               '{pct}% 好評',
+    'browser.updated':              '更新於 {date}',
+    'browser.size':                 '大小：{size}',
+    'browser.version':              '版本：{v}',
+    'browser.changelog':            '變更紀錄',
+    'browser.description':          '描述',
+    'browser.noModfile':            '此模組尚未發布檔案 — 沒有可安裝的內容。',
   },
 };
 
@@ -249,6 +2603,7 @@ window.annoApp = function () {
   return {
     // ── State ──────────────────────────────────────────────────────────────
     version: '',
+    release: { checked: false, up_to_date: true, latest: '', url: '' },
     currentTab: 'activation',
     mods: [],
     selectedModId: null,
@@ -267,6 +2622,10 @@ window.annoApp = function () {
     langOpen: false,            // popover open state
     settings: {},               // mirror of the persisted settings.json
     pathsInfo: {},              // resolved paths from the backend (Settings tab)
+    modioStatus: { api_key_set: false, has_token: false, token_valid: false,
+                   expires_text: '', terms_agreed: false },
+    modioAuth: { step: 'idle', email: '', code: '', termsAgreed: true,
+                 error: '', busy: false },
     log: { content: '', path: '', exists: false, truncated: false, loaded: false },
     _logTimer: null,            // setInterval id while the Log tab is open
     install: { busy: false, message: '', error: false, dragOver: false },
@@ -281,6 +2640,43 @@ window.annoApp = function () {
     },
     news: { items: [], loading: false, error: '', cached: false, loaded: false },
     _newsTimer: null,           // background poll started on first News open
+    browser: {
+      // List state
+      items: [],                // current page of mod summaries from mod.io
+      total: 0,                 // result_total reported by mod.io
+      offset: 0,                // current pagination offset
+      limit: 24,                // page size (multiple of 4 cards/row)
+      search: '',               // committed search query (the input is uncontrolled)
+      sort: '-date_updated',    // mod.io _sort syntax
+      tagFilter: '',            // '' = all, otherwise the exact tag name to filter on
+      tagsCatalog: [],          // array of {name, tags: [str, ...]} groups from mod.io
+      authorFilter: { id: 0, name: '' }, // {id, name} when filtering by submitter
+      dependencies: [],         // mods bundled by the currently-open collection
+      dependenciesLoading: false,
+      // Single-step navigation stack: when the user opens a mod from a
+      // collection's "Mods inclus" list we stash the collection here so the
+      // back button can restore it instead of dropping back to the grid.
+      parent: null,             // null | { detail, dependencies, isCollection }
+      detailOpen: false,        // false = grid of cards, true = detail page
+      loading: false,
+      loaded: false,            // false until the first list call resolves
+      error: '',
+      notAuth: false,           // surface "go connect in Settings" CTA
+      // Detail state
+      selectedId: null,
+      detail: null,             // full mod object once fetched
+      detailLoading: false,
+      // Cross-cutting actions
+      subscribed: {},           // {modId: true} membership cache
+      installedFolders: {},     // {folderName: true} — derived from local mods scanner
+      installedIds: {},         // {modioId: true} — persisted in settings.json after each install
+      installing: {},           // {modId: true} while a download+install is in flight
+      subBusy: {},              // {modId: true} while a subscribe/unsubscribe call runs
+      endorseBusy: {},          // {modId: true} while a rating call runs
+      endorsed: {},             // {modId: true} optimistic flip after a successful endorse
+      flash: '',                // transient success line under the detail panel
+      flashError: false,
+    },
 
     // Sidebar tab definitions (icons stay text-glyph for the POC; phase 2 will
     // swap them for the data/ui/4k icon set the Tk version already uses).
@@ -288,8 +2684,8 @@ window.annoApp = function () {
     // translation table so the labels swap when the language changes.
     _tabsRaw: [
       { id: 'activation',   key: 'tab.activation',   img: 'icons/activation.png',  group: 'mods' },
-      { id: 'browser',      key: 'tab.browser',      img: 'icons/browser.png',     group: 'mods', disabled: true },
-      { id: 'collections',  key: 'tab.collections',  img: 'icons/collections.png', group: 'mods', disabled: true },
+      { id: 'browser',      key: 'tab.browser',      img: 'icons/browser.png',     group: 'mods' },
+      { id: 'collections',  key: 'tab.collections',  img: 'icons/collections.png', group: 'mods' },
       { id: 'install',      key: 'tab.install',      img: 'icons/install.png',     group: 'mods' },
       { id: 'news',         key: 'tab.news',         img: 'icons/news.png',        group: 'tools' },
       { id: 'log',          key: 'tab.log',          img: 'icons/log.png',         group: 'tools' },
@@ -317,6 +2713,16 @@ window.annoApp = function () {
       await this.waitForApi();
       const info = await window.pywebview.api.app_info();
       this.version = info.version;
+      // Best-effort latest-release check — non blocking, failure is silent.
+      // Drives the green/red dot next to the version label.
+      window.pywebview.api.check_latest_release().then((r) => {
+        if (r) this.release = {
+          checked: true,
+          up_to_date: !!r.up_to_date,
+          latest: String(r.latest || ''),
+          url: String(r.url || 'https://github.com/taludas/anno-117-mod-manager/releases'),
+        };
+      }).catch(() => {});
       try {
         this.languages = await window.pywebview.api.get_languages();
         this.currentLang = await window.pywebview.api.get_language();
@@ -324,6 +2730,35 @@ window.annoApp = function () {
         console.error('language init failed:', e);
       }
       await this.refreshMods();
+      // Pull mod.io status once at boot so the gated-tab redirect in
+      // selectTab() can decide based on the real token state, not the
+      // {token_valid: false} default.
+      try {
+        this.modioStatus = (await window.pywebview.api.modio_status())
+                           || this.modioStatus;
+      } catch (e) {
+        console.error('modio_status init failed:', e);
+      }
+      // Restore the previously-selected profile, if any. We persist the
+      // user's choice in settings so a relaunch lands on the same preset
+      // they were working from. Falls back to Default if the saved name
+      // no longer matches an existing preset (or is reserved).
+      try {
+        const s = await window.pywebview.api.get_settings();
+        const saved = s && s.active_profile_name;
+        if (saved && (saved === 'Default' || saved === 'Vanilla' ||
+                      this.presets.includes(saved))) {
+          this.profileName = saved;
+          if (saved !== 'Default') {
+            // Re-apply the preset to active-profile.txt so the in-memory
+            // state and on-disk profile actually match.
+            await window.pywebview.api.load_preset(saved);
+            await this.refreshMods();
+          }
+        }
+      } catch (e) {
+        console.error('restore active profile failed:', e);
+      }
       // Refresh contextual data each time the user opens a tab that needs it.
       // For the log we also kick off a 2-second poll so the user sees new
       // entries land while the game is running, and stop the poll the moment
@@ -332,6 +2767,21 @@ window.annoApp = function () {
         if (next === 'settings') this.refreshSettings();
         if (next === 'tweak')    this.refreshTweakable();
         if (next === 'news' && !this.news.loaded) this.refreshNews(false);
+        if (next === 'browser' || next === 'collections') {
+          // Browser and Collections share the same state — only the API
+          // filter differs. Switch tab → close any open detail page and
+          // re-fetch with the right collections_only flag.
+          this.browser.detailOpen = false;
+          this.browser.offset = 0;
+          if (!this.browser.loaded && !this.browser.loading) {
+            this.browserOpen();
+          } else if (prev !== next) {
+            this.browserFetch();
+            this._refreshInstalledIds();
+          } else {
+            this._refreshInstalledIds();
+          }
+        }
         if (next === 'log') {
           this.refreshLog();
           this._stopLogPolling();
@@ -341,6 +2791,7 @@ window.annoApp = function () {
           this._stopLogPolling();
         }
       });
+
     },
 
     async refreshNews(force) {
@@ -444,9 +2895,549 @@ window.annoApp = function () {
       try {
         this.settings = (await window.pywebview.api.get_settings()) || {};
         this.pathsInfo = (await window.pywebview.api.get_paths_info()) || {};
+        this.modioStatus = (await window.pywebview.api.modio_status()) || this.modioStatus;
       } catch (e) {
         console.error('refresh settings failed:', e);
       }
+    },
+
+    // ── mod.io OAuth ───────────────────────────────────────────────────────
+
+    modioStartConnect() {
+      this.modioAuth = { step: 'email', email: '', code: '',
+                         termsAgreed: this.modioStatus.terms_agreed || true,
+                         error: '', busy: false };
+    },
+
+    modioCancelConnect() {
+      this.modioAuth = { ...this.modioAuth, step: 'idle', error: '', busy: false };
+    },
+
+    async modioSubmitEmail() {
+      // Read straight from the DOM — we deliberately don't bind oninput on the
+      // text field, because each keystroke would trigger an x-html re-render
+      // and destroy the focused input, kicking the user out mid-typing.
+      const input = document.getElementById('modio-email-input');
+      const email = ((input && input.value) || '').trim();
+      this.modioAuth = { ...this.modioAuth, email };
+      if (!email) { this.modioAuth.error = this.t('modio.emailRequired'); return; }
+      this.modioAuth = { ...this.modioAuth, busy: true, error: '' };
+      try {
+        const res = await window.pywebview.api.modio_email_request(email);
+        if (res && res.ok) {
+          this.modioAuth = { ...this.modioAuth, step: 'code', busy: false };
+        } else {
+          this.modioAuth = { ...this.modioAuth, busy: false,
+                             error: (res && res.error) || 'request failed' };
+        }
+      } catch (e) {
+        this.modioAuth = { ...this.modioAuth, busy: false, error: String(e) };
+      }
+    },
+
+    async modioSubmitCode() {
+      const input = document.getElementById('modio-code-input');
+      const code = ((input && input.value) || '').trim().toUpperCase();
+      this.modioAuth = { ...this.modioAuth, code };
+      if (!code) { this.modioAuth.error = this.t('modio.codeRequired'); return; }
+      this.modioAuth = { ...this.modioAuth, busy: true, error: '' };
+      try {
+        const res = await window.pywebview.api.modio_email_exchange(
+          code, !!this.modioAuth.termsAgreed);
+        if (res && res.ok) {
+          this.modioAuth = { step: 'idle', email: '', code: '',
+                             termsAgreed: true, error: '', busy: false };
+          await this.refreshSettings();
+        } else {
+          this.modioAuth = { ...this.modioAuth, busy: false,
+                             error: (res && res.error) || 'exchange failed' };
+        }
+      } catch (e) {
+        this.modioAuth = { ...this.modioAuth, busy: false, error: String(e) };
+      }
+    },
+
+    async modioDisconnect() {
+      if (!confirm(this.t('modio.disconnectConfirm'))) return;
+      try {
+        await window.pywebview.api.modio_disconnect();
+        await this.refreshSettings();
+      } catch (e) {
+        console.error('modio_disconnect threw:', e);
+      }
+    },
+
+    // ── Mod Browser ────────────────────────────────────────────────────────
+    /** First open of the Browser tab — refresh subscribed list (small,
+     *  one-shot) then trigger the initial mod listing. Subsequent opens
+     *  reuse the existing list (browserRefresh forces a re-fetch). */
+    async browserOpen() {
+      // Folders of locally installed mods (kept for the legacy heuristic
+      // in browserIsInstalled — the authoritative source is the persisted
+      // mod.io ID list below).
+      this.browser.installedFolders = {};
+      try {
+        for (const m of (this.mods || [])) {
+          if (m.folder) this.browser.installedFolders[m.folder] = true;
+        }
+      } catch (_) {}
+      // Hydrate "already installed" state from settings.json so the
+      // ✓ Installé / Mettre à jour badge survives across launches.
+      try {
+        const r = await window.pywebview.api.modio_installed_ids();
+        if (r && r.ok) {
+          const map = {};
+          for (const id of (r.ids || [])) map[id] = true;
+          this.browser.installedIds = map;
+        }
+      } catch (_) {}
+      // Subscribed list — best-effort.
+      try {
+        const res = await window.pywebview.api.modio_subscribed();
+        if (res && res.ok) {
+          const map = {};
+          for (const m of (res.data || [])) map[m.id] = true;
+          this.browser.subscribed = map;
+        }
+      } catch (_) {}
+      // Endorsements the user has already cast — needed to render the
+      // gold heart on previously-endorsed mods (the list endpoint doesn't
+      // carry user_rating, only /me/ratings does).
+      try {
+        const res = await window.pywebview.api.modio_my_ratings();
+        if (res && res.ok) {
+          const map = {};
+          for (const r of (res.data || [])) {
+            if (Number(r.rating) > 0 && r.mod_id) map[r.mod_id] = true;
+          }
+          this.browser.endorsed = map;
+        }
+      } catch (_) {}
+      // Tag taxonomy for the filter dropdown — one-shot, doesn't change.
+      try {
+        const res = await window.pywebview.api.modio_tags();
+        if (res && res.ok) this.browser.tagsCatalog = res.data || [];
+      } catch (_) {}
+      await this.browserFetch();
+    },
+
+    async browserRefresh() {
+      this.browser.offset = 0;
+      await this.browserFetch();
+    },
+
+    browserSetSort(sort) {
+      if (this.browser.sort === sort) return;
+      this.browser.sort = sort;
+      this.browser.offset = 0;
+      this.browserFetch();
+    },
+
+    browserSetTag(tag) {
+      const next = tag || '';
+      if (this.browser.tagFilter === next) return;
+      this.browser.tagFilter = next;
+      this.browser.offset = 0;
+      this.browserFetch();
+    },
+
+    /** Click an author name → restrict the listing to that submitter.
+     *  Closes the detail page if open so the user lands directly on the
+     *  filtered grid. Pass id=0 to clear the filter. */
+    browserSetAuthor(userId, displayName) {
+      const id = Number(userId) || 0;
+      this.browser.authorFilter = id
+        ? { id, name: String(displayName || '') }
+        : { id: 0, name: '' };
+      this.browser.offset = 0;
+      this.browser.detailOpen = false;
+      this.browserFetch();
+    },
+
+    browserClearAuthor() { this.browserSetAuthor(0, ''); },
+
+    browserPrev() {
+      if (this.browser.offset <= 0) return;
+      this.browser.offset = Math.max(0, this.browser.offset - this.browser.limit);
+      this.browserFetch();
+    },
+
+    browserNext() {
+      const next = this.browser.offset + this.browser.limit;
+      if (next >= this.browser.total) return;
+      this.browser.offset = next;
+      this.browserFetch();
+    },
+
+    async browserFetch() {
+      this.browser.loading = true;
+      this.browser.error = '';
+      this.browser.notAuth = false;
+      try {
+        const isCollections = this.currentTab === 'collections';
+        const res = await window.pywebview.api.modio_browse(
+          this.browser.search,
+          // Tags only apply to the mods taxonomy — drop them on Collections
+          // so a stale Browser tag doesn't filter the collection listing
+          // down to nothing.
+          (!isCollections && this.browser.tagFilter) ? [this.browser.tagFilter] : null,
+          this.browser.limit,
+          this.browser.offset,
+          this.browser.sort,
+          this.browser.authorFilter.id || 0,
+          isCollections,
+        );
+        if (res && res.ok) {
+          this.browser.items = res.data || [];
+          this.browser.total = res.result_total || 0;
+          this.browser.loaded = true;
+          this.browser.loading = false;
+          // Seed endorsed from per-mod user_rating when the API exposes it
+          // (the endpoint usually doesn't, so /me/ratings on browserOpen is
+          // the authoritative source — this is just a free top-up).
+          const endorsed = { ...this.browser.endorsed };
+          for (const m of this.browser.items) {
+            if (m && Number(m.user_rating) > 0) endorsed[m.id] = true;
+          }
+          this.browser.endorsed = endorsed;
+          // Re-read the installed marker files from disk on every fetch so
+          // a manual rm -rf or an Uninstall through the Activation tab
+          // mid-session is reflected without having to leave + re-enter
+          // the Browser tab.
+          try {
+            const r = await window.pywebview.api.modio_installed_ids();
+            if (r && r.ok) {
+              const map = {};
+              for (const id of (r.ids || [])) map[id] = true;
+              this.browser.installedIds = map;
+            }
+          } catch (_) {}
+        } else {
+          const err = (res && res.error) || 'fetch failed';
+          this.browser.loading = false;
+          this.browser.loaded = true;
+          if (/not authenticated/i.test(err)) {
+            this.browser.notAuth = true;
+          } else {
+            this.browser.error = err;
+          }
+        }
+      } catch (e) {
+        this.browser.loading = false;
+        this.browser.loaded = true;
+        this.browser.error = String(e);
+      }
+    },
+
+    /** Open the full-width detail view for ``modId``. ``isCollection``
+     *  defaults to whatever the active tab dictates so card clicks "just
+     *  work" — pass it explicitly when navigating into a mod from inside
+     *  a collection's bundled list (where the source tab is Collections
+     *  but the target is a regular mod). */
+    async browserSelect(modId, isCollection) {
+      if (!modId) return;
+      const asCollection = (isCollection === undefined)
+        ? (this.currentTab === 'collections')
+        : !!isCollection;
+      this.browser.selectedId = modId;
+      this.browser.detailOpen = true;
+      this.browser.dependencies = [];
+      // The summary stub from the grid lights up the panel instantly
+      // (the get_mod fetch can take a beat). Bundled-mod clicks have no
+      // matching item in the current grid, so the stub will be undefined
+      // and the panel just shows blank for that brief window — fine.
+      const stub = this.browser.items.find((m) => m.id === modId);
+      this.browser.detail = stub ? { ...stub } : null;
+      this.browser.detailLoading = true;
+      try {
+        const res = await window.pywebview.api.modio_get(modId, asCollection);
+        if (res && res.ok) this.browser.detail = res.mod || stub || null;
+      } catch (e) {
+        console.error('modio_get threw:', e);
+      } finally {
+        this.browser.detailLoading = false;
+      }
+      if (asCollection) {
+        this.browser.dependenciesLoading = true;
+        try {
+          const dr = await window.pywebview.api.modio_dependencies(modId, true);
+          if (dr && dr.ok) this.browser.dependencies = dr.data || [];
+        } catch (e) {
+          console.error('modio_dependencies threw:', e);
+        } finally {
+          this.browser.dependenciesLoading = false;
+        }
+      }
+    },
+
+    /** Drill into one of a collection's bundled mods. Stash the current
+     *  detail (the collection) so the back button can come back to it
+     *  instead of falling all the way back to the grid. */
+    async browserOpenChildMod(modId) {
+      if (!modId) return;
+      // Snapshot the collection so we can restore it on back.
+      this.browser.parent = {
+        detail: this.browser.detail,
+        dependencies: this.browser.dependencies,
+        isCollection: true,
+      };
+      await this.browserSelect(modId, false);
+    },
+
+    /** Back button. If we drilled into a child mod from a collection,
+     *  pop back to the collection instead of dropping all the way to
+     *  the grid (one-level breadcrumb). */
+    browserBack() {
+      if (this.browser.parent) {
+        const p = this.browser.parent;
+        this.browser.detail = p.detail;
+        this.browser.dependencies = p.dependencies || [];
+        this.browser.selectedId = p.detail ? p.detail.id : null;
+        this.browser.parent = null;
+        return;
+      }
+      this.browser.detailOpen = false;
+    },
+
+    async browserToggleSubscribe(modId) {
+      if (!modId || this.browser.subBusy[modId]) return;
+      this.browser.subBusy = { ...this.browser.subBusy, [modId]: true };
+      const wasSubscribed = !!this.browser.subscribed[modId];
+      try {
+        const res = wasSubscribed
+          ? await window.pywebview.api.modio_unsubscribe(modId)
+          : await window.pywebview.api.modio_subscribe(modId);
+        if (res && res.ok) {
+          const next = { ...this.browser.subscribed };
+          if (wasSubscribed) delete next[modId]; else next[modId] = true;
+          this.browser.subscribed = next;
+        } else {
+          this._browserFlash(this.t('browser.subFail',
+            { error: (res && res.error) || 'unknown' }), true);
+        }
+      } catch (e) {
+        this._browserFlash(this.t('browser.subFail', { error: String(e) }), true);
+      } finally {
+        const next = { ...this.browser.subBusy };
+        delete next[modId];
+        this.browser.subBusy = next;
+      }
+    },
+
+    async browserEndorse(modId) {
+      if (!modId || this.browser.endorseBusy[modId]) return;
+      this.browser.endorseBusy = { ...this.browser.endorseBusy, [modId]: true };
+      try {
+        const res = await window.pywebview.api.modio_endorse(modId, true);
+        if (res && res.ok) {
+          this.browser.endorsed = { ...this.browser.endorsed, [modId]: true };
+        } else {
+          this._browserFlash(this.t('browser.endorseFail',
+            { error: (res && res.error) || 'unknown' }), true);
+        }
+      } catch (e) {
+        this._browserFlash(this.t('browser.endorseFail', { error: String(e) }), true);
+      } finally {
+        const next = { ...this.browser.endorseBusy };
+        delete next[modId];
+        this.browser.endorseBusy = next;
+      }
+    },
+
+    /** Click on a mod.io news card → switch to the right tab (Browser for
+     *  mods, Collections for collections), make sure the listing is loaded,
+     *  then open the detail page directly. Falls back to opening the mod.io
+     *  URL externally if anything goes wrong. */
+    async openModioFromNews(modioId, kind) {
+      if (!modioId) return;
+      const targetTab = (kind === 'collection') ? 'collections' : 'browser';
+      // Need a valid mod.io session — if not, route through selectTab so the
+      // user lands on Settings with the gold flash on the mod.io card.
+      if (!(this.modioStatus && this.modioStatus.token_valid)) {
+        this.selectTab(targetTab, false);
+        return;
+      }
+      // If we're not already on the right tab, switch (this triggers
+      // browserOpen on first visit through the watcher).
+      if (this.currentTab !== targetTab) {
+        this.currentTab = targetTab;
+      }
+      // Wait for the listing to be in flight before drilling in — gives
+      // selectTab/browserOpen a tick to populate the items array so the
+      // stub render works.
+      await this.$nextTick();
+      // Clear any active filters that might hide this exact mod, then open
+      // the detail page directly. browserSelect uses currentTab to decide
+      // mod-vs-collection, which we just set above.
+      this.browser.search = '';
+      this.browser.tagFilter = '';
+      this.browser.authorFilter = { id: 0, name: '' };
+      this.browser.parent = null;
+      await this.browserSelect(modioId, kind === 'collection');
+    },
+
+    /** Drop the preset created by an install_collection, optionally also
+     *  wiping every mod folder bundled in the collection. Two confirms
+     *  so the user can drop the profile alone or take the mods with it. */
+    async browserUninstallCollection(collectionId) {
+      const detail = this.browser.detail;
+      const name = (detail && detail.name) || `collection ${collectionId}`;
+      const presetName = this._collectionPresetName(name, collectionId);
+      // total = bundled mods we currently know about (live load is server-side)
+      const total = (this.browser.dependencies || []).length;
+      if (!confirm(this.t('browser.uninstallConfirm',
+            { name, profile: presetName }))) return;
+      const alsoMods = total > 0 && confirm(this.t('browser.uninstallAlsoMods',
+            { count: total }));
+      try {
+        const res = await window.pywebview.api.modio_uninstall_collection(
+          collectionId, alsoMods);
+        if (res && res.ok) {
+          const removed = (res.mods_removed || []).length;
+          const msg = alsoMods
+            ? this.t('browser.uninstallOkWithMods',
+                { profile: res.profile_name || presetName, count: removed })
+            : this.t('browser.uninstallOk',
+                { profile: res.profile_name || presetName });
+          this._browserFlash(msg, false);
+          // If the deleted preset was the active one, switch to Default —
+          // and apply it so active-profile.txt actually reflects Default
+          // (otherwise the file still points at the gone preset).
+          if (this.profileName === (res.profile_name || presetName)) {
+            await this.switchProfile('Default');
+          } else {
+            await this.refreshMods();
+          }
+          await this._refreshInstalledIds();
+        } else {
+          this._browserFlash(this.t('browser.uninstallFail',
+            { error: (res && res.error) || 'unknown' }), true);
+        }
+      } catch (e) {
+        this._browserFlash(this.t('browser.uninstallFail',
+          { error: String(e) }), true);
+      }
+    },
+
+    async browserInstall(modId) {
+      if (!modId || this.browser.installing[modId]) return;
+      const detail = this.browser.detail;
+      const name = (detail && detail.name) || `mod ${modId}`;
+      // On the Collections tab, the install action covers every bundled
+      // mod and creates a dedicated profile — handled by a separate
+      // backend method below.
+      const isCollection = (this.currentTab === 'collections') && !this.browser.parent;
+      this.browser.installing = { ...this.browser.installing, [modId]: true };
+      try {
+        const res = isCollection
+          ? await window.pywebview.api.modio_install_collection(modId)
+          : await window.pywebview.api.modio_install_mod(modId);
+        if (res && res.ok) {
+          if (isCollection) {
+            const okCount = res.installed || 0;
+            const total = res.total || okCount;
+            const failCount = (res.failed || []).length;
+            const profileName = res.profile_name || name;
+            const okMsg = this.t('browser.collectionInstallOk',
+              { name, count: okCount, total, profile: profileName });
+            const failMsg = failCount
+              ? ' ' + this.t('browser.collectionInstallFailures', { count: failCount })
+              : '';
+            this._browserFlash(okMsg + failMsg, failCount > 0);
+            // The backend already activated this preset on disk — mirror that
+            // in the UI state and persist so a relaunch lands on it too.
+            this.profileName = profileName;
+            try { await window.pywebview.api.update_setting('active_profile_name', profileName); }
+            catch (_) {}
+            // Refresh active mods + presets so the Activation tab shows the
+            // freshly-created profile selected.
+            this.refreshMods();
+          } else {
+            if (res.folder) {
+              this.browser.installedFolders = {
+                ...this.browser.installedFolders, [res.folder]: true };
+            }
+            this.browser.installedIds = {
+              ...this.browser.installedIds, [modId]: true };
+            this._browserFlash(this.t('browser.installOk', { name }), false);
+            this.refreshMods();
+          }
+          // Either way, refresh the persisted markers so the ✓ Installé
+          // badge flips on every newly-installed card.
+          this._refreshInstalledIds();
+        } else {
+          this._browserFlash(this.t('browser.installFail',
+            { error: (res && res.error) || 'unknown' }), true);
+        }
+      } catch (e) {
+        this._browserFlash(this.t('browser.installFail', { error: String(e) }), true);
+      } finally {
+        const next = { ...this.browser.installing };
+        delete next[modId];
+        this.browser.installing = next;
+      }
+    },
+
+    /** Authoritative for regular mods: did the user install this mod through
+     *  the manager? Backed by the persisted _modio_install.json markers
+     *  scanned at every browserFetch.
+     *
+     *  For collections we have no per-mod marker — instead we check whether
+     *  the preset that modio_install_collection would create already exists
+     *  (this.presets is the live preset list refreshed by refreshMods). */
+    browserIsInstalled(mod) {
+      if (!mod) return false;
+      if (this.currentTab === 'collections') {
+        const presetName = this._collectionPresetName(mod.name, mod.id);
+        return Array.isArray(this.presets) && this.presets.includes(presetName);
+      }
+      return !!this.browser.installedIds[mod.id];
+    },
+
+    /** Mirror of the backend safe-name logic in modio_install_collection.
+     *  Keep the two in sync — used only to render the "already installed"
+     *  state on the collection card / detail. */
+    _collectionPresetName(name, id) {
+      let safe = String(name || '').replace(/[^A-Za-z0-9 _\-]/g, '_').trim().slice(0, 50);
+      if (!safe || safe === 'Default' || safe === 'Vanilla') {
+        safe = `Collection_${Number(id) || 0}`;
+      }
+      return safe;
+    },
+
+    /** Tab click handler. Onglets gated by mod.io auth (browser, collections)
+     *  redirect to Settings when no valid token, scrolling straight to the
+     *  mod.io card so the user knows what to fix — instead of showing an
+     *  empty Browser with a small "go connect" message. */
+    selectTab(tabId, isDisabled) {
+      if (isDisabled) return;
+      const needsModio = (tabId === 'browser' || tabId === 'collections');
+      if (needsModio && !(this.modioStatus && this.modioStatus.token_valid)) {
+        this.currentTab = 'settings';
+        // Wait for the Settings template to render, then jump to the mod.io card.
+        // Two nextTicks: one for the x-html re-render, another for layout pass.
+        this.$nextTick(() => this.$nextTick(() => {
+          const el = document.getElementById('settings-modio-card');
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Brief gold pulse so the eye lands on the right card
+            el.classList.add('is-flash');
+            setTimeout(() => el.classList.remove('is-flash'), 1600);
+          }
+        }));
+        return;
+      }
+      this.currentTab = tabId;
+    },
+
+    _browserFlash(msg, isError) {
+      this.browser.flash = msg;
+      this.browser.flashError = !!isError;
+      clearTimeout(this._browserFlashTimer);
+      this._browserFlashTimer = setTimeout(() => {
+        this.browser.flash = '';
+        this.browser.flashError = false;
+      }, 6000);
     },
 
     async setSetting(key, value) {
@@ -772,10 +3763,13 @@ window.annoApp = function () {
       try {
         const res = await window.pywebview.api.load_preset(name);
         if (!res || !res.ok) {
-          alert('Échec du chargement du preset : ' + ((res && res.error) || 'erreur'));
+          alert(this.t('alert.loadPresetFail', { error: (res && res.error) || '?' }));
           return;
         }
         this.profileName = name;
+        // Persist the choice so the next launch lands on the same preset.
+        try { await window.pywebview.api.update_setting('active_profile_name', name); }
+        catch (_) {}
         await this.refreshMods();
       } catch (e) {
         console.error('load_preset threw:', e);
@@ -790,7 +3784,7 @@ window.annoApp = function () {
       try {
         const res = await window.pywebview.api.save_preset(trimmed);
         if (!res || !res.ok) {
-          alert('Échec de la sauvegarde : ' + ((res && res.error) || 'erreur'));
+          alert(this.t('alert.savePresetFail', { error: (res && res.error) || '?' }));
           return;
         }
         this.profileName = trimmed;
@@ -810,11 +3804,13 @@ window.annoApp = function () {
       try {
         const res = await window.pywebview.api.delete_preset(name);
         if (!res || !res.ok) {
-          alert('Échec de la suppression : ' + ((res && res.error) || 'erreur'));
+          alert(this.t('alert.deletePresetFail', { error: (res && res.error) || '?' }));
           return;
         }
-        this.profileName = 'Default';
-        await this.refreshMods();
+        // Apply Default to active-profile.txt too — without this the file
+        // still reflects the just-deleted preset and the user has to bounce
+        // through Vanilla → Default to get the mods re-enabled.
+        await this.switchProfile('Default');
       } catch (e) {
         console.error('delete_preset threw:', e);
       }
@@ -1063,16 +4059,34 @@ window.annoApp = function () {
       try {
         const res = await window.pywebview.api.uninstall_mod(folder);
         if (!res || !res.ok) {
-          alert('Échec de la désinstallation : ' + ((res && res.error) || 'erreur inconnue'));
+          alert(this.t('alert.uninstallFail', { error: (res && res.error) || '?' }));
           return;
         }
         if (this.selectedMod && this.selectedMod.folder === folder) {
           this.selectedModId = null;
         }
         await this.refreshMods();
+        // Drop the mod.io install marker cache so the Browser tab no longer
+        // claims this mod is installed if the user navigates back there.
+        this._refreshInstalledIds();
       } catch (e) {
         console.error('uninstall_mod threw:', e);
       }
+    },
+
+    /** Re-read every _modio_install.json marker from disk and replace
+     *  this.browser.installedIds. Called any time an install/uninstall
+     *  may have happened (entering Browser, after uninstallMod, after
+     *  browserInstall, after a manual browserRefresh). */
+    async _refreshInstalledIds() {
+      try {
+        const r = await window.pywebview.api.modio_installed_ids();
+        if (r && r.ok) {
+          const map = {};
+          for (const id of (r.ids || [])) map[id] = true;
+          this.browser.installedIds = map;
+        }
+      } catch (_) {}
     },
 
     async fetchBannerForSelected() {
@@ -1122,6 +4136,8 @@ window.annoApp = function () {
         case 'install':    return this.installTemplate();
         case 'tweak':      return this.tweakingTemplate();
         case 'news':       return this.newsTemplate();
+        case 'browser':    return this.browserTemplate();
+        case 'collections': return this.browserTemplate();
         default:           return this.placeholderTemplate(tab);
       }
     },
@@ -1167,9 +4183,18 @@ window.annoApp = function () {
       } else if (!n.items.length) {
         body = `<div class="news__empty">${escapeHtml(this.t('news.empty'))}</div>`;
       } else {
-        body = `<div class="news__grid">${n.items.map((item) => `
-          <article class="news-card"
-                   onclick="annoRoot().openExternalUrl('${escapeAttr(item.url || '')}')">
+        body = `<div class="news__grid">${n.items.map((item) => {
+          // mod.io cards deep-link into the in-app Browser/Collections
+          // detail page (we have the ID); other sources still open in
+          // the user's browser since they're external.
+          let click;
+          if (item.modio_id && (item.modio_kind === 'mod' || item.modio_kind === 'collection')) {
+            click = `annoRoot().openModioFromNews(${Number(item.modio_id)}, '${escapeAttr(item.modio_kind)}')`;
+          } else {
+            click = `annoRoot().openExternalUrl('${escapeAttr(item.url || '')}')`;
+          }
+          return `
+          <article class="news-card" onclick="${click}">
             ${item.img_url
                 ? `<div class="news-card__media"><img src="${escapeAttr(item.img_url)}" alt="" loading="lazy" /></div>`
                 : `<div class="news-card__media news-card__media--placeholder"><span>📜</span></div>`}
@@ -1184,13 +4209,429 @@ window.annoApp = function () {
                   ? `<p class="news-card__excerpt">${escapeHtml(item.excerpt)}</p>`
                   : ''}
             </div>
-          </article>`).join('')}</div>`;
+          </article>`;
+        }).join('')}</div>`;
       }
 
       return `
         <div class="news">
           ${toolbar}
           <div class="news__body">${body}</div>
+        </div>`;
+    },
+
+    browserTemplate() {
+      const b = this.browser;
+      const fmtNumber = (n) => {
+        const v = Number(n) || 0;
+        if (v >= 1_000_000) return (v / 1_000_000).toFixed(1) + 'M';
+        if (v >= 1_000)     return (v / 1_000).toFixed(1) + 'K';
+        return String(v);
+      };
+      const fmtDate = (ts) => {
+        const t = Number(ts) || 0;
+        if (!t) return '';
+        try { return new Date(t * 1000).toLocaleDateString(); } catch (_) { return ''; }
+      };
+      const fmtSize = (bytes) => {
+        const v = Number(bytes) || 0;
+        if (v >= 1024 * 1024) return (v / (1024 * 1024)).toFixed(1) + ' MB';
+        if (v >= 1024)        return (v / 1024).toFixed(0) + ' KB';
+        return v + ' B';
+      };
+
+      // Toolbar — search + sort dropdown + refresh
+      const sortOptions = [
+        ['-date_updated', 'browser.sortNewest'],
+        ['-popular',      'browser.sortPopular'],
+        ['-downloads',    'browser.sortDownloads'],
+        ['-rating',       'browser.sortRating'],
+        ['name',          'browser.sortAlpha'],
+      ];
+      // The HUD bottom row already provides the search input and the refresh
+      // button when the Browser tab is active — keep this internal toolbar
+      // focused on what's specific to the Browser (sort + active-search chip
+      // + result counter).
+      // Flatten the tag taxonomy from mod.io into one optgroup per tag
+      // group ("Type", "Difficulty", …). Each option's value is the tag
+      // name itself, which is what mod.io's tags-in= filter matches on.
+      // Collections use a different taxonomy (Category / Tags) that the
+      // /games/{gid}/tags endpoint doesn't expose, so we skip the filter
+      // entirely on that tab rather than show stale mod tags.
+      const tagGroups = this.currentTab === 'collections'
+        ? []
+        : (b.tagsCatalog || []).filter(
+            (g) => Array.isArray(g.tags) && g.tags.length && !g.hidden);
+      const toolbar = `
+        <div class="browser__toolbar">
+          <label class="browser__sort-label">${escapeHtml(this.t('browser.sortBy'))}</label>
+          <select class="browser__sort"
+                  onchange="annoRoot().browserSetSort(this.value)">
+            ${sortOptions.map(([val, key]) => `
+              <option value="${escapeAttr(val)}" ${b.sort === val ? 'selected' : ''}>
+                ${escapeHtml(this.t(key))}
+              </option>`).join('')}
+          </select>
+          ${tagGroups.length ? `
+            <label class="browser__sort-label">${escapeHtml(this.t('browser.tag'))}</label>
+            <select class="browser__sort"
+                    onchange="annoRoot().browserSetTag(this.value)">
+              <option value="" ${b.tagFilter === '' ? 'selected' : ''}>${escapeHtml(this.t('browser.tagAll'))}</option>
+              ${tagGroups.map((g) => `
+                <optgroup label="${escapeAttr(g.name || '')}">
+                  ${g.tags.map((t) => {
+                    const tagName = (t && (t.name || t)) || '';
+                    return `<option value="${escapeAttr(tagName)}" ${b.tagFilter === tagName ? 'selected' : ''}>${escapeHtml(tagName)}</option>`;
+                  }).join('')}
+                </optgroup>`).join('')}
+            </select>` : ''}
+          ${b.search ? `
+            <span class="browser__active-search" title="${escapeAttr(b.search)}">
+              « ${escapeHtml(b.search)} »
+              <button class="browser__clear-search" title="${escapeAttr(this.t('browser.clearSearch'))}"
+                      onclick="annoRoot().browser.search = ''; annoRoot().browser.offset = 0; annoRoot().browserFetch()">✕</button>
+            </span>` : ''}
+          ${b.authorFilter.id ? `
+            <span class="browser__active-search" title="${escapeAttr(b.authorFilter.name)}">
+              ${escapeHtml(this.t('browser.byAuthor', { name: b.authorFilter.name }))}
+              <button class="browser__clear-search" title="${escapeAttr(this.t('browser.clearAuthor'))}"
+                      onclick="annoRoot().browserClearAuthor()">✕</button>
+            </span>` : ''}
+          <span class="browser__count">
+            ${b.loaded && !b.loading
+              ? escapeHtml(this.t('browser.resultsCount',
+                  { shown: b.items.length, total: b.total }))
+              : ''}
+          </span>
+        </div>`;
+
+      // List body — three states: notAuth, error/empty, populated
+      let listBody;
+      if (b.notAuth) {
+        listBody = `
+          <div class="browser__empty">
+            <p>${escapeHtml(this.t('browser.notAuth'))}</p>
+            <button class="settings__btn settings__btn--accent"
+                    onclick="annoRoot().currentTab = 'settings'">
+              ${escapeHtml(this.t('browser.openSettings'))}
+            </button>
+          </div>`;
+      } else if (b.loading && !b.items.length) {
+        listBody = `<div class="browser__empty">${escapeHtml(this.t('browser.loading'))}</div>`;
+      } else if (b.error) {
+        listBody = `<div class="browser__empty browser__empty--error">${escapeHtml(this.t('browser.error', { error: b.error }))}</div>`;
+      } else if (!b.items.length) {
+        listBody = `<div class="browser__empty">${escapeHtml(this.t('browser.empty'))}</div>`;
+      } else {
+        // mod.io-style card grid (responsive, ~280px min). Each card is fully
+        // clickable to open the detail page; the Subscribe button at the
+        // bottom stops propagation so it doesn't also navigate.
+        listBody = `<div class="mod-grid">${b.items.map((m) => {
+          const id          = Number(m.id);
+          const isSubd      = !!b.subscribed[m.id];
+          const wasEndorsed = !!b.endorsed[m.id];
+          const isInstalling = !!b.installing[m.id];
+          const isInstalled  = this.browserIsInstalled(m);
+          const subBusy     = !!b.subBusy[m.id];
+          const endorseBusy = !!b.endorseBusy[m.id];
+          const submittedBy = (m.submitted_by && m.submitted_by.username) || '?';
+          const submittedById = (m.submitted_by && Number(m.submitted_by.id)) || 0;
+          const logoUrl = (m.logo && (m.logo.thumb_320x180 || m.logo.thumb_640x360 || m.logo.original)) || '';
+          const stats = m.stats || {};
+          const modfile = m.modfile || {};
+          const desc = (m.description_plaintext || m.summary || '').trim();
+          const tags = Array.isArray(m.tags) ? m.tags : [];
+          const firstTag = tags.length ? (tags[0].name || '') : '';
+          const moreTags = Math.max(0, tags.length - 1);
+          const dateStr = (() => {
+            const t = Number(m.date_updated) || 0;
+            if (!t) return '';
+            try { return new Date(t * 1000).toLocaleDateString(); } catch (_) { return ''; }
+          })();
+          // Primary CTA at the bottom of the card. This is a manager, not a
+          // discovery site, so the install action is the dominant gesture.
+          const installLabel = isInstalling ? this.t('browser.installing')
+                              : isInstalled ? this.t('browser.update')
+                              : this.t('browser.install');
+          return `
+            <article class="mod-card"
+                     onclick="annoRoot().browserSelect(${id})">
+              <div class="mod-card__media">
+                ${logoUrl
+                    ? `<img src="${escapeAttr(logoUrl)}" alt="" />`
+                    : `<span class="mod-card__placeholder">📦</span>`}
+                <button class="mod-card__hover-action mod-card__hover-action--endorse ${wasEndorsed ? 'is-active' : ''}"
+                        ${endorseBusy || wasEndorsed ? 'disabled' : ''}
+                        title="${escapeAttr(wasEndorsed ? this.t('browser.endorsed') : this.t('browser.endorse'))}"
+                        onclick="event.stopPropagation(); annoRoot().browserEndorse(${id})">♥</button>
+                <button class="mod-card__hover-action mod-card__hover-action--subscribe ${isSubd ? 'is-active' : ''}"
+                        ${subBusy ? 'disabled' : ''}
+                        title="${escapeAttr(isSubd ? this.t('browser.unsubscribe') : this.t('browser.subscribe'))}"
+                        onclick="event.stopPropagation(); annoRoot().browserToggleSubscribe(${id})">${isSubd ? '✓' : '+'}</button>
+              </div>
+              <div class="mod-card__body">
+                <h3 class="mod-card__title">${escapeHtml(m.name || '')}</h3>
+                <div class="mod-card__meta">
+                  ${submittedById
+                      ? `<a class="mod-card__author mod-card__author--link"
+                            title="${escapeAttr(this.t('browser.filterByAuthor'))}"
+                            onclick="event.stopPropagation(); annoRoot().browserSetAuthor(${submittedById}, '${escapeAttr(submittedBy)}')">${escapeHtml(submittedBy)}</a>`
+                      : `<span class="mod-card__author">${escapeHtml(submittedBy)}</span>`}
+                  ${dateStr ? `<span class="mod-card__date">↻ ${escapeHtml(dateStr)}</span>` : ''}
+                </div>
+                ${desc ? `<p class="mod-card__summary">${escapeHtml(desc)}</p>` : ''}
+                <div class="mod-card__tags">
+                  ${firstTag ? `<span class="mod-card__tag">${escapeHtml(firstTag)}</span>` : '<span></span>'}
+                  ${moreTags > 0 ? `<span class="mod-card__more">+ ${moreTags} more</span>` : ''}
+                </div>
+                <div class="mod-card__stats">
+                  ${this.currentTab === 'collections'
+                      ? `<span title="${escapeAttr(this.t('browser.modsTotal', { n: stats.mods_total || 0 }))}">📚 ${escapeHtml(fmtNumber(stats.mods_total || 0))}</span>`
+                      : `<span title="${escapeAttr(this.t('browser.subscribers', { n: stats.subscribers_total || 0 }))}">👥 ${escapeHtml(fmtNumber(stats.subscribers_total || 0))}</span>`}
+                  ${(() => {
+                      // Collections expose total bundle size at the top level,
+                      // regular mods carry it on the active modfile.
+                      const sz = (this.currentTab === 'collections')
+                        ? Number(m.filesize) || 0
+                        : Number((modfile || {}).filesize) || 0;
+                      return sz
+                        ? `<span title="${escapeAttr(this.t('browser.size', { size: fmtSize(sz) }))}">📦 ${escapeHtml(fmtSize(sz))}</span>`
+                        : '';
+                    })()}
+                  <span title="${escapeAttr(this.t('browser.downloads', { n: stats.downloads_total || 0 }))}">⬇ ${escapeHtml(fmtNumber(stats.downloads_total || 0))}</span>
+                </div>
+                <button class="mod-card__install ${isInstalled ? 'is-installed' : ''}"
+                        ${isInstalling ? 'disabled' : ''}
+                        onclick="event.stopPropagation(); annoRoot().browserInstall(${id})">
+                  ${escapeHtml(installLabel)}
+                </button>
+              </div>
+            </article>`;
+        }).join('')}</div>`;
+      }
+
+      // Pagination
+      const page = b.limit > 0 ? Math.floor(b.offset / b.limit) + 1 : 1;
+      const pages = b.limit > 0 ? Math.max(1, Math.ceil(b.total / b.limit)) : 1;
+      const pagination = (b.loaded && !b.notAuth && !b.error && b.items.length) ? `
+        <div class="browser__pagination">
+          <button class="settings__btn settings__btn--small"
+                  ${b.offset <= 0 || b.loading ? 'disabled' : ''}
+                  onclick="annoRoot().browserPrev()">
+            ${escapeHtml(this.t('browser.prev'))}
+          </button>
+          <span class="browser__page">${escapeHtml(this.t('browser.pageOf', { page, total: pages }))}</span>
+          <button class="settings__btn settings__btn--small"
+                  ${(b.offset + b.limit) >= b.total || b.loading ? 'disabled' : ''}
+                  onclick="annoRoot().browserNext()">
+            ${escapeHtml(this.t('browser.next'))}
+          </button>
+        </div>` : '';
+
+      // Two top-level layouts: the cards grid (default) or a full-width
+      // detail page (entered by clicking a card, exited via the back button).
+      if (b.detailOpen) {
+        return `
+          <div class="browser">
+            ${this._renderBrowserDetail(b, fmtNumber, fmtDate, fmtSize)}
+          </div>`;
+      }
+
+      return `
+        <div class="browser">
+          ${toolbar}
+          <div class="browser__scroll">
+            ${listBody}
+            ${pagination}
+          </div>
+        </div>`;
+    },
+
+    /** Compact list of bundled mods on a collection's detail page.
+     *  Each row is clickable: click sends the user back to Browser at the
+     *  matching mod so they can inspect or install it individually. */
+    _renderBrowserDeps(b, fmtNumber, fmtSize) {
+      const heading = `<h3 class="browser-detail__section">${escapeHtml(this.t('browser.bundledMods'))}</h3>`;
+      if (b.dependenciesLoading) {
+        return `${heading}<div class="browser-detail__deps-empty">${escapeHtml(this.t('browser.loading'))}</div>`;
+      }
+      if (!b.dependencies || !b.dependencies.length) {
+        return `${heading}<div class="browser-detail__deps-empty">${escapeHtml(this.t('browser.bundledEmpty'))}</div>`;
+      }
+      return `${heading}
+        <ul class="browser-detail__deps">
+          ${b.dependencies.map((dep) => {
+            const mid = Number(dep.mod_id || dep.id) || 0;
+            const name = dep.name || dep.name_id || `mod ${mid}`;
+            const author = (dep.submitted_by && dep.submitted_by.username) || '';
+            const logo = (dep.logo && (dep.logo.thumb_320x180 || dep.logo.thumb_640x360 || dep.logo.original)) || '';
+            return `
+              <li class="browser-detail__dep"
+                  onclick="annoRoot().browserOpenChildMod(${mid})">
+                <div class="browser-detail__dep-media">
+                  ${logo
+                      ? `<img src="${escapeAttr(logo)}" alt="" />`
+                      : `<span class="browser-detail__dep-ph">📦</span>`}
+                </div>
+                <div class="browser-detail__dep-info">
+                  <span class="browser-detail__dep-name">${escapeHtml(name)}</span>
+                  ${author ? `<span class="browser-detail__dep-author">${escapeHtml(this.t('browser.byAuthor', { name: author }))}</span>` : ''}
+                </div>
+              </li>`;
+          }).join('')}
+        </ul>`;
+    },
+
+    /** Full-width detail page with a back button in the top-left. */
+    _renderBrowserDetail(b, fmtNumber, fmtDate, fmtSize) {
+      const backLabel = b.parent
+        ? this.t('browser.backToCollection')
+        : this.t('browser.back');
+      const backBar = `
+        <div class="browser-detail__back-bar">
+          <button class="settings__btn settings__btn--small"
+                  onclick="annoRoot().browserBack()">
+            ← ${escapeHtml(backLabel)}
+          </button>
+        </div>`;
+      if (!b.detail) {
+        return `${backBar}
+                <div class="browser-detail browser-detail--empty">
+                  <p>${escapeHtml(this.t('browser.detailPick'))}</p>
+                </div>`;
+      }
+      const d = b.detail;
+      const id = Number(d.id) || 0;
+      const author = (d.submitted_by && d.submitted_by.username) || '?';
+      const authorId = (d.submitted_by && Number(d.submitted_by.id)) || 0;
+      const heroUrl = (d.logo && (d.logo.thumb_640x360 || d.logo.original)) || '';
+      const profileUrl = d.profile_url || `https://mod.io/g/anno-117/m/${d.name_id || ''}`;
+      const stats = d.stats || {};
+      const positivePct = (() => {
+        const pos = Number(stats.ratings_positive) || 0;
+        const tot = pos + (Number(stats.ratings_negative) || 0);
+        return tot > 0 ? Math.round((pos / tot) * 100) : null;
+      })();
+      const modfile = d.modfile || {};
+      const isSubscribed = !!b.subscribed[id];
+      const isInstalling = !!b.installing[id];
+      const isInstalled  = this.browserIsInstalled(d);
+      const subBusy      = !!b.subBusy[id];
+      const endorseBusy  = !!b.endorseBusy[id];
+      const wasEndorsed  = !!b.endorsed[id];
+
+      // Collection install puts up a different verb — we're not installing
+      // one mod, we're installing a bunch of them and creating a profile.
+      const isCollectionTab = (this.currentTab === 'collections') && !b.parent;
+      const installLabel = isInstalling
+        ? this.t('browser.installing')
+        : (isCollectionTab
+            ? (isInstalled
+                ? this.t('browser.updateCollection')
+                : this.t('browser.installCollection'))
+            : (isInstalled ? this.t('browser.update') : this.t('browser.install')));
+      const installClass = isInstalled
+        ? 'settings__btn'
+        : 'settings__btn settings__btn--accent';
+      const subLabel = isSubscribed ? this.t('browser.unsubscribe') : this.t('browser.subscribe');
+
+      // Description: prefer the rich HTML mod.io serves (with proper headings,
+      // lists, emphasis) over the flat plaintext form. mod.io strips dangerous
+      // tags server-side, so injecting it into the panel is safe; we still
+      // run it through a small sanitiser as a belt-and-braces measure.
+      const descHtml = d.description ? sanitizeModioHtml(d.description) : '';
+      const descPlain = (d.description_plaintext || d.summary || '').trim();
+
+      // Flash message (success or error) under the actions row
+      const flashHtml = b.flash ? `
+        <div class="browser-detail__flash ${b.flashError ? 'is-error' : 'is-ok'}">
+          ${escapeHtml(b.flash)}
+        </div>` : '';
+
+      // Header layout is image-left + info-right (grid). Endorse and Subscribe
+      // are real buttons in the right column with strong distinctive colours
+      // so the user can see them at a glance without hunting in overlays.
+      const heroBlock = heroUrl
+        ? `<div class="browser-detail__hero"><img src="${escapeAttr(heroUrl)}" alt="" /></div>`
+        : `<div class="browser-detail__hero browser-detail__hero--placeholder"><span>📦</span></div>`;
+
+      return `
+        ${backBar}
+        <div class="browser-detail">
+          <div class="browser-detail__header">
+            ${heroBlock}
+            <div class="browser-detail__head-info">
+              <h2 class="browser-detail__title">${escapeHtml(d.name || '')}</h2>
+              <div class="browser-detail__author">
+                ${escapeHtml(this.t('browser.author', { name: '' })).replace(/\s*$/, '')}
+                ${authorId
+                    ? `<a class="browser-detail__author-link"
+                          title="${escapeAttr(this.t('browser.filterByAuthor'))}"
+                          onclick="annoRoot().browserSetAuthor(${authorId}, '${escapeAttr(author)}')">${escapeHtml(author)}</a>`
+                    : escapeHtml(author)}
+              </div>
+              <div class="browser-detail__stats">
+                <span>⬇ ${escapeHtml(fmtNumber(stats.downloads_total || 0))}</span>
+                ${isCollectionTab
+                    ? `<span title="${escapeAttr(this.t('browser.modsTotal', { n: stats.mods_total || 0 }))}">📚 ${escapeHtml(fmtNumber(stats.mods_total || 0))}</span>`
+                    : `<span>👥 ${escapeHtml(fmtNumber(stats.subscribers_total || 0))}</span>`}
+                ${positivePct !== null ? `<span>♥ ${positivePct}%</span>` : ''}
+              </div>
+              <div class="browser-detail__head-actions">
+                <button class="browser-detail__big-btn browser-detail__big-btn--endorse ${wasEndorsed ? 'is-active' : ''}"
+                        ${endorseBusy || wasEndorsed ? 'disabled' : ''}
+                        onclick="annoRoot().browserEndorse(${id})">
+                  ${escapeHtml(wasEndorsed ? this.t('browser.endorsed') : this.t('browser.endorse'))}
+                </button>
+                <button class="browser-detail__big-btn browser-detail__big-btn--subscribe ${isSubscribed ? 'is-active' : ''}"
+                        ${subBusy ? 'disabled' : ''}
+                        onclick="annoRoot().browserToggleSubscribe(${id})">
+                  ${escapeHtml(isSubscribed ? this.t('browser.subscribed') : subLabel)}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="browser-detail__body">
+            ${d.date_updated ? `<div class="browser-detail__updated">${escapeHtml(this.t('browser.updated', { date: fmtDate(d.date_updated) }))}</div>` : ''}
+
+            <div class="browser-detail__actions">
+              <button class="${installClass}"
+                      ${isInstalling ? 'disabled' : ''}
+                      onclick="annoRoot().browserInstall(${id})">
+                ${isInstalled && !isInstalling ? '✓ ' : ''}${escapeHtml(installLabel)}
+              </button>
+              ${isCollectionTab && isInstalled ? `
+                <button class="settings__btn settings__btn--danger"
+                        onclick="annoRoot().browserUninstallCollection(${id})">
+                  ${escapeHtml(this.t('browser.uninstallCollection'))}
+                </button>` : ''}
+              <button class="settings__btn"
+                      onclick="annoRoot().openExternalUrl('${escapeAttr(profileUrl)}')">
+                ${escapeHtml(this.t('browser.openOnModio'))}
+              </button>
+            </div>
+
+            ${flashHtml}
+
+            ${this.currentTab === 'collections' ? this._renderBrowserDeps(b, fmtNumber, fmtSize) : ''}
+
+            ${modfile.version || modfile.filesize ? `
+              <div class="browser-detail__meta">
+                ${modfile.version ? `<span>${escapeHtml(this.t('browser.version', { v: modfile.version }))}</span>` : ''}
+                ${modfile.filesize ? `<span>${escapeHtml(this.t('browser.size', { size: fmtSize(modfile.filesize) }))}</span>` : ''}
+              </div>` : ''}
+
+            ${descHtml || descPlain ? `
+              <h3 class="browser-detail__section">${escapeHtml(this.t('browser.description'))}</h3>
+              ${descHtml
+                  ? `<div class="browser-detail__desc rich-text">${descHtml}</div>`
+                  : `<pre class="browser-detail__desc">${escapeHtml(descPlain)}</pre>`}` : ''}
+
+            ${modfile.changelog ? `
+              <h3 class="browser-detail__section">${escapeHtml(this.t('browser.changelog'))}</h3>
+              <pre class="browser-detail__changelog">${escapeHtml(modfile.changelog)}</pre>` : ''}
+          </div>
         </div>`;
     },
 
@@ -1399,6 +4840,113 @@ window.annoApp = function () {
         </div>`;
     },
 
+    _renderModioBadge() {
+      const s = this.modioStatus;
+      if (s.token_valid) {
+        return `<span class="settings__badge is-on">${escapeHtml(this.t('modio.badge.connected'))}</span>`;
+      }
+      if (s.api_key_set) {
+        return `<span class="settings__badge is-pending">${escapeHtml(this.t('modio.badge.keyOnly'))}</span>`;
+      }
+      return `<span class="settings__badge is-off">${escapeHtml(this.t('modio.badge.notSet'))}</span>`;
+    },
+
+    _renderModioAuth() {
+      const a = this.modioAuth;
+      const s = this.modioStatus;
+      const error = a.error
+        ? `<div class="settings__inline-error">${escapeHtml(a.error)}</div>` : '';
+
+      // Connected state — show expiry + Disconnect, no auth form
+      if (s.token_valid) {
+        return `
+          <div class="settings__row settings__row--inline modio-connected">
+            <span class="settings__label">${escapeHtml(this.t('modio.session'))}</span>
+            <span class="modio-expiry">${escapeHtml(this.t('modio.expires', { date: s.expires_text || '?' }))}</span>
+            <button class="settings__btn settings__btn--danger settings__btn--small"
+                    onclick="annoRoot().modioDisconnect()">
+              ${escapeHtml(this.t('modio.disconnect'))}
+            </button>
+          </div>`;
+      }
+
+      // No API key — block any auth attempt with a hint
+      if (!s.api_key_set) {
+        return `
+          <div class="settings__inline-hint">
+            ${escapeHtml(this.t('modio.needKeyFirst'))}
+          </div>`;
+      }
+
+      // API key set, no valid token — drive the email→code state machine
+      if (a.step === 'email') {
+        return `
+          <div class="settings__row modio-auth">
+            <label class="settings__label">${escapeHtml(this.t('modio.email'))}</label>
+            <div class="settings__field">
+              <input class="settings__input" id="modio-email-input" type="email"
+                     placeholder="${escapeAttr(this.t('modio.emailPlaceholder'))}"
+                     value="${escapeAttr(a.email)}"
+                     onkeydown="if(event.key==='Enter'){annoRoot().modioSubmitEmail()}" />
+            </div>
+            <label class="settings__radio modio-terms">
+              <input type="checkbox" ${a.termsAgreed ? 'checked' : ''}
+                     onchange="annoRoot().modioAuth.termsAgreed = this.checked" />
+              <span>${escapeHtml(this.t('modio.termsAgree'))}
+                <a class="settings__link"
+                   onclick="annoRoot().openExternalUrl('https://mod.io/terms')">${escapeHtml(this.t('modio.termsLink'))}</a>
+              </span>
+            </label>
+            ${error}
+            <div class="settings__actions">
+              <button class="settings__btn"
+                      onclick="annoRoot().modioCancelConnect()">${escapeHtml(this.t('modio.cancel'))}</button>
+              <button class="settings__btn settings__btn--accent"
+                      ${a.busy ? 'disabled' : ''}
+                      onclick="annoRoot().modioSubmitEmail()">
+                ${escapeHtml(this.t(a.busy ? 'modio.sending' : 'modio.sendCode'))}
+              </button>
+            </div>
+          </div>`;
+      }
+
+      if (a.step === 'code') {
+        return `
+          <div class="settings__row modio-auth">
+            <label class="settings__label">${escapeHtml(this.t('modio.code'))}</label>
+            <div class="settings__inline-hint">
+              ${escapeHtml(this.t('modio.codeSent', { email: a.email }))}
+            </div>
+            <div class="settings__field">
+              <input class="settings__input modio-code" id="modio-code-input"
+                     placeholder="XXXXX" maxlength="5"
+                     value="${escapeAttr(a.code)}"
+                     oninput="this.value = this.value.toUpperCase()"
+                     onkeydown="if(event.key==='Enter'){annoRoot().modioSubmitCode()}" />
+            </div>
+            ${error}
+            <div class="settings__actions">
+              <button class="settings__btn"
+                      onclick="annoRoot().modioCancelConnect()">${escapeHtml(this.t('modio.cancel'))}</button>
+              <button class="settings__btn settings__btn--accent"
+                      ${a.busy ? 'disabled' : ''}
+                      onclick="annoRoot().modioSubmitCode()">
+                ${escapeHtml(this.t(a.busy ? 'modio.connecting' : 'modio.connect'))}
+              </button>
+            </div>
+          </div>`;
+      }
+
+      // Idle, with API key — invite to start the flow
+      return `
+        <div class="settings__row settings__row--inline modio-auth-idle">
+          <button class="settings__btn settings__btn--accent"
+                  onclick="annoRoot().modioStartConnect()">
+            ${escapeHtml(this.t('modio.startConnect'))}
+          </button>
+        </div>`;
+    },
+
     settingsTemplate() {
       const p = this.pathsInfo || {};
       const gameSet = !!(p.game_path && p.game_path_exists);
@@ -1482,13 +5030,11 @@ window.annoApp = function () {
               </div>
             </section>
 
-            <section class="settings__card">
+            <section class="settings__card" id="settings-modio-card">
               <h3 class="settings__title settings__title--with-logo">
                 <img class="settings__logo" src="icons/modio.png" alt="mod.io" />
                 <span>${escapeHtml(this.t('settings.section.modio'))}</span>
-                <span class="settings__badge ${this.settings.modio_api_key ? 'is-on' : 'is-off'}">
-                  ${escapeHtml(this.settings.modio_api_key ? this.t('settings.modio.connected') : this.t('settings.modio.notConnected'))}
-                </span>
+                ${this._renderModioBadge()}
               </h3>
               <p class="settings__hint">${escapeHtml(this.t('settings.modio.hint'))}
                 <a class="settings__link" href="https://mod.io/me/access"
@@ -1508,9 +5054,11 @@ window.annoApp = function () {
                           onclick="annoRoot().saveModioKey($refs.modioKey.value)">${escapeHtml(this.t('settings.modio.save'))}</button>
                   <button class="settings__btn settings__btn--danger"
                           ${this.settings.modio_api_key ? '' : 'disabled'}
-                          onclick="annoRoot().clearModioKey()">${escapeHtml(this.t('settings.modio.disconnect'))}</button>
+                          onclick="annoRoot().clearModioKey()">${escapeHtml(this.t('settings.modio.clearKey'))}</button>
                 </div>
               </div>
+
+              ${this._renderModioAuth()}
             </section>
 
             <section class="settings__card">
@@ -1694,6 +5242,75 @@ function escapeHtml(s) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+/** Sanitise mod.io's user-submitted HTML before injecting it into the
+ *  detail panel. mod.io already strips dangerous tags server-side, but we
+ *  belt-and-braces filter to a known-good allowlist:
+ *    - Allow basic structural + inline tags used by their description
+ *      editor (h1-h4, p, ul/ol/li, strong/b, em/i, br, blockquote, code,
+ *      pre, hr, a). Drop everything else (including style, script, iframe,
+ *      img, on*= attributes).
+ *    - On <a>, keep only http(s) hrefs and force target=_blank rel=noopener.
+ *  Implemented via DOMParser so we don't ship a regex-based sanitiser
+ *  (which is famously hard to get right). */
+const _SAFE_HTML_TAGS = new Set([
+  'h1','h2','h3','h4','h5','h6','p','ul','ol','li','strong','b','em','i',
+  'br','blockquote','code','pre','hr','a','div','span',
+]);
+function sanitizeModioHtml(html) {
+  if (!html) return '';
+  let doc;
+  try {
+    doc = new DOMParser().parseFromString(`<div id="root">${html}</div>`, 'text/html');
+  } catch (_) {
+    return '';
+  }
+  const root = doc.getElementById('root');
+  if (!root) return '';
+  const walk = (node) => {
+    // Iterate over a static copy so removal during the loop is safe.
+    for (const child of Array.from(node.childNodes)) {
+      if (child.nodeType === 1) {
+        const tag = child.tagName.toLowerCase();
+        if (!_SAFE_HTML_TAGS.has(tag)) {
+          // Replace the unsafe element with its (sanitised) text content
+          // so we never lose the user's words, only the markup.
+          const text = doc.createTextNode(child.textContent || '');
+          child.replaceWith(text);
+          continue;
+        }
+        // Strip every attribute except a sanitised href on <a>.
+        const attrs = Array.from(child.attributes);
+        for (const a of attrs) child.removeAttribute(a.name);
+        if (tag === 'a') {
+          // mod.io stores the href in the original markup we just stripped;
+          // recover it from the original DOM via dataset would require a
+          // re-parse. Simpler: walk the original parse first to capture hrefs.
+        }
+        walk(child);
+      } else if (child.nodeType !== 3 /* text */) {
+        // Comments etc. — drop.
+        child.remove();
+      }
+    }
+  };
+
+  // Capture hrefs BEFORE we strip attributes — keyed by element identity.
+  const hrefs = new Map();
+  for (const a of root.querySelectorAll('a')) {
+    const h = a.getAttribute('href') || '';
+    if (/^https?:\/\//i.test(h)) hrefs.set(a, h);
+  }
+  walk(root);
+  // Re-apply hrefs + force safe link attributes.
+  for (const [a, href] of hrefs) {
+    if (!a.isConnected) continue;
+    a.setAttribute('href', href);
+    a.setAttribute('target', '_blank');
+    a.setAttribute('rel', 'noopener noreferrer');
+  }
+  return root.innerHTML;
 }
 
 // For values interpolated INSIDE single-quoted attributes built in template

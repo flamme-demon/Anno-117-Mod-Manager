@@ -116,12 +116,94 @@ def fetch_reddit(timeout: float = 10.0) -> list[dict]:
     return items
 
 
-def fetch_all(include_reddit: bool, parallel: bool = True) -> list[dict]:
+_MODIO_GAME_ID = '11358'
+_MODIO_BASE = f'https://g-{_MODIO_GAME_ID}.modapi.io/v1'
+
+
+def fetch_modio(token: str, timeout: float = 12.0) -> list[dict]:
+    """Pull the most recently added mods + collections from mod.io and turn
+    them into news items. Two requests in parallel:
+    - 8 newest mods  (badge: NEW MOD)
+    - 5 newest collections (badge: NEW COLLECTION)
+    The user must be authenticated — these endpoints reject anonymous
+    requests on per-game bases.
+    """
+    if not token:
+        return []
+    headers = {
+        'Authorization': f'Bearer {token}',
+        'Accept': 'application/json',
+        'X-Modio-Platform': 'Linux',
+    }
+
+    def _hit(endpoint: str, limit: int) -> list[dict]:
+        try:
+            r = requests.get(
+                f'{_MODIO_BASE}/games/{_MODIO_GAME_ID}/{endpoint}',
+                headers=headers,
+                params={'_sort': '-date_added', '_limit': limit},
+                timeout=timeout,
+            )
+            r.raise_for_status()
+            return (r.json() or {}).get('data') or []
+        except Exception as e:
+            print(f'[news] modio {endpoint} fetch failed: {e}', file=sys.stderr)
+            return []
+
+    items: list[dict] = []
+
+    for m in _hit('mods', 8):
+        ts = float(m.get('date_added') or 0)
+        logo = m.get('logo') or {}
+        author = (m.get('submitted_by') or {}).get('username') or '?'
+        items.append({
+            'title':       m.get('name') or 'Untitled',
+            'url':         m.get('profile_url') or f'https://mod.io/g/anno-117-pax-romana/m/{m.get("name_id", "")}',
+            'date':        _fmt_date(ts),
+            'sort_ts':     ts,
+            'excerpt':     _strip_html(m.get('summary') or '') or f'by {author}',
+            'img_url':     logo.get('thumb_320x180') or logo.get('original'),
+            'source':      'modio',
+            'badge_text':  'NEW MOD',
+            'badge_color': '#3d5a30',
+            # Extras the frontend uses to deep-link into the in-app Browser
+            # tab instead of bouncing the user out to mod.io in a browser.
+            'modio_id':    int(m.get('id') or 0),
+            'modio_kind':  'mod',
+        })
+
+    for c in _hit('collections', 5):
+        ts = float(c.get('date_added') or 0)
+        logo = c.get('logo') or {}
+        author = (c.get('submitted_by') or {}).get('username') or '?'
+        mods_total = ((c.get('stats') or {}).get('mods_total')) or 0
+        items.append({
+            'title':       c.get('name') or 'Untitled',
+            'url':         c.get('profile_url') or f'https://mod.io/g/anno-117-pax-romana/c/{c.get("name_id", "")}',
+            'date':        _fmt_date(ts),
+            'sort_ts':     ts,
+            'excerpt':     _strip_html(c.get('summary') or '') or f'by {author} · {mods_total} mods',
+            'img_url':     logo.get('thumb_320x180') or logo.get('original'),
+            'source':      'modio_collection',
+            'badge_text':  'NEW COLLECTION',
+            'badge_color': '#7a6730',
+            'modio_id':    int(c.get('id') or 0),
+            'modio_kind':  'collection',
+        })
+
+    return items
+
+
+def fetch_all(include_reddit: bool, parallel: bool = True,
+              modio_token: str = '') -> list[dict]:
     """Pull every enabled source (in parallel by default) and return one
-    chronologically-sorted list."""
+    chronologically-sorted list. ``modio_token`` is optional — when present
+    we also surface new mods + collections from mod.io as news cards."""
     workers: list[Callable[[], list[dict]]] = [fetch_anno_union]
     if include_reddit:
         workers.append(fetch_reddit)
+    if modio_token:
+        workers.append(lambda: fetch_modio(modio_token))
 
     if not parallel or len(workers) == 1:
         out: list[dict] = []

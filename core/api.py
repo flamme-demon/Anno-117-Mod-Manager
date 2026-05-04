@@ -22,6 +22,7 @@ from . import files as files_module
 from . import i18n as i18n_module
 from . import installer as installer_module
 from . import launcher as launcher_module
+from . import modio as modio_module
 from . import mods as mods_module
 from . import news as news_module
 from . import options as options_module
@@ -83,7 +84,7 @@ class Api:
             'selected_language', 'jump_to_activation', 'show_tooltips',
             'show_reddit_news', 'use_mod_browser', 'enable_new_mods',
             'mod_location_mode', 'modio_api_key', 'modio_declined',
-            'last_seen_news_ts',
+            'last_seen_news_ts', 'active_profile_name',
         }
         if key not in allowed:
             return {'ok': False, 'error': f'setting not writable from UI: {key}'}
@@ -315,23 +316,493 @@ class Api:
                 return {'ok': False, 'error': str(e)}
         return {'ok': False, 'error': 'mod not found'}
 
+    # ── mod.io OAuth ──────────────────────────────────────────────────────────
+    def modio_status(self) -> dict:
+        """Return what the UI needs to render the connection state: whether
+        an API key is set, whether we hold a non-expired bearer token, and
+        the human-readable expiry date."""
+        import datetime as _dt
+        api_key = bool(self.settings.get('modio_api_key'))
+        token = self.settings.get('modio_token', '')
+        expires = int(self.settings.get('modio_token_expires') or 0)
+        valid = bool(token) and modio_module.is_token_valid(expires)
+        expiry_text = ''
+        if expires:
+            try:
+                expiry_text = _dt.datetime.fromtimestamp(expires).strftime('%Y-%m-%d %H:%M')
+            except Exception:
+                pass
+        return {
+            'api_key_set': api_key,
+            'has_token': bool(token),
+            'token_valid': valid,
+            'expires_ts': expires,
+            'expires_text': expiry_text,
+            'terms_agreed': bool(self.settings.get('modio_terms_agreed', False)),
+        }
+
+    def modio_email_request(self, email: str) -> dict:
+        """Step 1 of OAuth: ask mod.io to send a security code by email."""
+        api_key = self.settings.get('modio_api_key', '')
+        return modio_module.email_request(api_key, email)
+
+    def modio_email_exchange(self, code: str, terms_agreed: bool) -> dict:
+        """Step 2: trade the security code for a bearer token, then persist."""
+        api_key = self.settings.get('modio_api_key', '')
+        res = modio_module.email_exchange(api_key, code, bool(terms_agreed))
+        if not res.get('ok'):
+            # 11074 means terms updated server-side; reset our local flag so
+            # the UI re-collects agreement on the next attempt.
+            if res.get('error_ref') == modio_module.ERR_TERMS_UPDATED:
+                self.settings['modio_terms_agreed'] = False
+                self._save_settings()
+            return res
+        self.settings['modio_token'] = res['access_token']
+        self.settings['modio_token_expires'] = res['date_expires']
+        self.settings['modio_terms_agreed'] = bool(terms_agreed)
+        self._save_settings()
+        # Drop the news cache so the next refresh picks up the mod.io feeds
+        # that previously needed a token to work.
+        self._news_cache = {'items': [], 'fetched_at': 0.0, 'reddit': None}
+        return {'ok': True, 'expires_ts': res['date_expires']}
+
+    def modio_disconnect(self) -> dict:
+        """Forget the bearer token (keeps the API key around — disconnect ≠
+        clearing the user's mod.io account binding)."""
+        self.settings['modio_token'] = ''
+        self.settings['modio_token_expires'] = 0
+        ok, err = self._save_settings()
+        return {'ok': ok, 'error': err}
+
+    # ── mod.io browsing ───────────────────────────────────────────────────────
+    def _modio_token(self) -> str:
+        """Return a still-valid bearer token, or '' if the user must re-auth.
+        Browsing endpoints uniformly return {ok: False, error: 'not authenticated'}
+        when this is empty, so the UI can prompt for a reconnect."""
+        token = self.settings.get('modio_token', '')
+        expires = int(self.settings.get('modio_token_expires') or 0)
+        return token if token and modio_module.is_token_valid(expires) else ''
+
+    def modio_browse(self, search: str = '', tags: list[str] | None = None,
+                     limit: int = 30, offset: int = 0,
+                     sort: str = '-date_updated',
+                     submitted_by: int = 0,
+                     collections: bool = False) -> dict:
+        """Paginated mod or collection search. Frontend passes the search
+        string + optional tag list + optional author; we forward to mod.io
+        and return the raw page envelope. ``collections`` flips the URL
+        to mod.io's dedicated /collections endpoint."""
+        token = self._modio_token()
+        if not token:
+            return {'ok': False, 'error': 'not authenticated'}
+        return modio_module.list_mods(token, search=search, tags=tags or None,
+                                      submitted_by=int(submitted_by or 0),
+                                      collections=bool(collections),
+                                      limit=int(limit), offset=int(offset), sort=sort)
+
+    def modio_get(self, mod_id: int, collection: bool = False) -> dict:
+        """Full mod or collection record (description_plaintext, modfile,
+        media, etc.). ``collection=True`` flips the URL to /collections."""
+        token = self._modio_token()
+        if not token:
+            return {'ok': False, 'error': 'not authenticated'}
+        return modio_module.get_mod(token, int(mod_id), collection=bool(collection))
+
+    def modio_dependencies(self, mod_id: int, collection: bool = False) -> dict:
+        """Mods bundled by ``mod_id`` (its dependencies). The Browser uses
+        this to render the "Mods inclus" list on a collection's detail page."""
+        token = self._modio_token()
+        if not token:
+            return {'ok': False, 'error': 'not authenticated'}
+        return modio_module.list_dependencies(token, int(mod_id),
+                                              collection=bool(collection))
+
+    def modio_subscribed(self) -> dict:
+        """List of subscribed mods (Anno-117-scoped). Used by the browser to
+        flag rows already in the user's library."""
+        token = self._modio_token()
+        if not token:
+            return {'ok': False, 'error': 'not authenticated'}
+        return modio_module.list_subscribed(token)
+
+    def modio_tags(self) -> dict:
+        """List of tag groups defined for Anno 117 — feeds the Browser's
+        filter-by-tag dropdown so the choices match what the game actually
+        exposes (no hard-coded list to drift out of sync)."""
+        api_key = self.settings.get('modio_api_key', '')
+        return modio_module.list_game_tags(api_key)
+
+    def modio_my_ratings(self) -> dict:
+        """Per-mod rating cast by this user — what the Browser uses to
+        light up the heart on mods already endorsed (the mod summary
+        doesn't include user_rating, only /me/ratings does)."""
+        token = self._modio_token()
+        if not token:
+            return {'ok': False, 'error': 'not authenticated'}
+        return modio_module.list_my_ratings(token)
+
+    def modio_installed_ids(self) -> dict:
+        """Walk every installed mod folder and read its ``_modio_install.json``
+        marker (written by ``modio_install_mod``) to build the live set of
+        mod.io IDs currently on disk. Self-healing: a manual rm -rf of the
+        folder takes the marker with it, so the Browser instantly stops
+        showing "Installed" for that mod — no stale settings to clean up."""
+        ids: list[int] = []
+        try:
+            for m in self.list_mods():
+                folder = m.get('path') or ''
+                if not folder:
+                    continue
+                meta_path = os.path.join(folder, '_modio_install.json')
+                if not os.path.isfile(meta_path):
+                    continue
+                try:
+                    with open(meta_path, 'r', encoding='utf-8') as f:
+                        meta = json.load(f) or {}
+                except (OSError, ValueError):
+                    continue
+                mid = meta.get('mod_id')
+                if isinstance(mid, int) and mid > 0:
+                    ids.append(mid)
+        except Exception as e:
+            return {'ok': False, 'error': str(e), 'ids': []}
+        return {'ok': True, 'ids': ids}
+
+    def modio_subscribe(self, mod_id: int) -> dict:
+        token = self._modio_token()
+        if not token:
+            return {'ok': False, 'error': 'not authenticated'}
+        return modio_module.subscribe(token, int(mod_id))
+
+    def modio_unsubscribe(self, mod_id: int) -> dict:
+        token = self._modio_token()
+        if not token:
+            return {'ok': False, 'error': 'not authenticated'}
+        return modio_module.unsubscribe(token, int(mod_id))
+
+    def modio_endorse(self, mod_id: int, positive: bool) -> dict:
+        token = self._modio_token()
+        if not token:
+            return {'ok': False, 'error': 'not authenticated'}
+        return modio_module.endorse(token, int(mod_id), bool(positive))
+
+    def modio_uninstall_collection(self, collection_id: int,
+                                   also_remove_mods: bool = False) -> dict:
+        """Reverse modio_install_collection. Always deletes the preset
+        named after the collection. When ``also_remove_mods`` is True,
+        also wipes every mod folder that was bundled in the collection
+        (resolved live via the /collections/{id}/mods endpoint, then
+        matched against the local install via the mod.io ID stored in
+        each mod folder's _modio_install.json marker).
+
+        Returns:
+          {ok, profile_name, profile_removed, mods_removed: [folders]}"""
+        import re as _re
+        token = self._modio_token()
+        if not token:
+            return {'ok': False, 'error': 'not authenticated'}
+
+        # 1. Resolve the collection name to find which preset to drop.
+        coll_res = modio_module.get_mod(token, int(collection_id), collection=True)
+        if not coll_res.get('ok'):
+            return coll_res
+        coll = coll_res.get('mod') or {}
+        collection_name = (coll.get('name') or '').strip() or f'Collection {collection_id}'
+        safe_name = _re.sub(r'[^A-Za-z0-9 _\-]', '_', collection_name).strip()[:50]
+        if not safe_name or safe_name in ('Default', 'Vanilla'):
+            safe_name = f'Collection_{int(collection_id)}'
+
+        # 2. Optionally fetch the bundled mod IDs to know what to wipe.
+        mods_to_wipe: list[int] = []
+        if also_remove_mods:
+            deps = modio_module.list_dependencies(token, int(collection_id),
+                                                  collection=True)
+            if deps.get('ok'):
+                for m in (deps.get('data') or []):
+                    mid = int(m.get('id') or 0)
+                    if mid:
+                        mods_to_wipe.append(mid)
+
+        # 3. Wipe each mod folder whose _modio_install.json marker matches
+        #    a wanted ID. The folder + marker disappear together.
+        removed_folders: list[str] = []
+        if mods_to_wipe:
+            wipe_set = set(mods_to_wipe)
+            for m in self.list_mods():
+                folder = m.get('path') or ''
+                if not folder or not os.path.isdir(folder):
+                    continue
+                meta_path = os.path.join(folder, '_modio_install.json')
+                if not os.path.isfile(meta_path):
+                    continue
+                try:
+                    with open(meta_path, 'r', encoding='utf-8') as f:
+                        meta = json.load(f) or {}
+                except (OSError, ValueError):
+                    continue
+                mid = meta.get('mod_id')
+                if not isinstance(mid, int) or mid not in wipe_set:
+                    continue
+                # Build the allowed-roots list the same way uninstall_mod does
+                roots: list[str] = []
+                custom_docs = self.settings.get('custom_docs_path', '')
+                game_path = self.settings.get('game_path', '')
+                gmr = paths_module.game_mods_root(game_path) if game_path else ''
+                dmr = paths_module.documents_mods_root(custom_docs)
+                if gmr: roots.append(gmr)
+                if dmr: roots.append(dmr)
+                ok, _err = files_module.safe_rmtree(folder, roots)
+                if ok:
+                    removed_folders.append(os.path.basename(folder))
+
+        # 4. Drop the preset file (no error if it doesn't exist anymore —
+        #    user may have already deleted it from Activation).
+        preset_path = os.path.join(self.presets_dir, f'{safe_name}.txt')
+        profile_removed = False
+        if os.path.isfile(preset_path):
+            try:
+                os.remove(preset_path)
+                profile_removed = True
+            except OSError:
+                pass
+
+        # 5. If the active profile was this preset, switch back to Default
+        #    so the Activation tab doesn't reference a now-missing file.
+        # (Reading active-profile.txt is overkill — the dropdown will just
+        # re-render from list_presets which no longer includes it.)
+
+        return {
+            'ok': True,
+            'profile_name': safe_name,
+            'profile_removed': profile_removed,
+            'mods_removed': removed_folders,
+        }
+
+    def modio_install_collection(self, collection_id: int) -> dict:
+        """Install every mod a collection bundles, then create + activate a
+        new preset named after the collection that has only those mods on.
+
+        Returns:
+          {ok, profile_name, total, installed, failed: [{name, error}]}
+
+        ``Default`` and ``Vanilla`` are reserved preset names — if a
+        collection is called either, we fall back to ``Collection_<id>``."""
+        import re as _re
+        token = self._modio_token()
+        if not token:
+            return {'ok': False, 'error': 'not authenticated'}
+
+        # 1. Resolve the collection record (we need its name, even if it
+        #    fails on a couple of bundled mods we still want a sensible
+        #    preset to land in).
+        coll_res = modio_module.get_mod(token, int(collection_id), collection=True)
+        if not coll_res.get('ok'):
+            return coll_res
+        coll = coll_res.get('mod') or {}
+        collection_name = (coll.get('name') or '').strip() or f'Collection {collection_id}'
+
+        # 2. List the bundled mods.
+        deps_res = modio_module.list_dependencies(token, int(collection_id), collection=True)
+        if not deps_res.get('ok'):
+            return deps_res
+        bundled = deps_res.get('data') or []
+        if not bundled:
+            return {'ok': False, 'error': 'collection lists no bundled mods'}
+
+        # 3. Install each one. Collect the *local* ModID parsed from
+        #    modinfo.json — that's what active-profile.txt references,
+        #    not the mod.io numeric ID.
+        installed_local_ids: list[str] = []
+        failed: list[dict] = []
+        for m in bundled:
+            mid = int(m.get('id') or 0)
+            if not mid:
+                continue
+            res = self.modio_install_mod(mid)
+            if res.get('ok'):
+                local_id = str(res.get('mod_id') or '').strip()
+                if local_id and local_id not in installed_local_ids:
+                    installed_local_ids.append(local_id)
+            else:
+                failed.append({
+                    'name': m.get('name', f'mod {mid}'),
+                    'error': str(res.get('error') or 'unknown'),
+                })
+
+        # 4. Sanitise the preset name to match what is_valid_preset_name
+        #    accepts: [A-Za-z0-9 _-] only. Anything else (parentheses,
+        #    accents, colons, dots, ...) becomes an underscore so the file
+        #    we write here is also one we can later load and delete.
+        safe_name = _re.sub(r'[^A-Za-z0-9 _\-]', '_', collection_name).strip()[:50]
+        if not safe_name or safe_name in ('Default', 'Vanilla'):
+            safe_name = f'Collection_{int(collection_id)}'
+
+        # 5. Write the preset file directly (one mod_id per line + the
+        #    EnableNewMods sentinel) — no need to round-trip through
+        #    save_preset which only copies the active profile.
+        try:
+            os.makedirs(self.presets_dir, exist_ok=True)
+            preset_path = os.path.join(self.presets_dir, f'{safe_name}.txt')
+            with open(preset_path, 'w', encoding='utf-8') as f:
+                for mid in installed_local_ids:
+                    f.write(f'{mid}\n')
+                # Don't auto-enable mods that aren't in the collection
+                f.write('EnableNewMods false\n')
+        except OSError as e:
+            return {
+                'ok': False,
+                'error': f'cannot write preset: {e}',
+                'profile_name': safe_name,
+                'installed': len(installed_local_ids),
+                'total': len(bundled),
+                'failed': failed,
+            }
+
+        # 6. Apply the preset to the active profile so the user lands
+        #    straight on the collection.
+        profile_path = self._active_profile_path()
+        all_ids = [m['id'] for m in self.list_mods()]
+        profile_module.load_preset(self.presets_dir, profile_path,
+                                   safe_name, all_ids)
+
+        return {
+            'ok': True,
+            'profile_name': safe_name,
+            'total': len(bundled),
+            'installed': len(installed_local_ids),
+            'failed': failed,
+        }
+
+    def modio_install_mod(self, mod_id: int) -> dict:
+        """Download the latest modfile of ``mod_id`` and install it. Always
+        allow_overwrite=True so updates from mod.io replace the previous
+        version cleanly."""
+        token = self._modio_token()
+        if not token:
+            return {'ok': False, 'error': 'not authenticated'}
+        target = self._mod_install_target()
+        if not target:
+            return {'ok': False, 'error': 'no mods folder configured'}
+        # 1. Resolve the mod → modfile.binary_url
+        meta = modio_module.get_mod(token, int(mod_id))
+        if not meta.get('ok'):
+            return meta
+        mod = meta.get('mod') or {}
+        modfile = mod.get('modfile') or {}
+        download = modfile.get('download') or {}
+        url = download.get('binary_url') or modfile.get('binary_url') or ''
+        if not url:
+            return {'ok': False, 'error': 'no downloadable modfile (mod has no published file?)'}
+        # 2. Stream the binary into a temp .zip, then run the regular installer
+        try:
+            with tempfile.NamedTemporaryFile(prefix='_modio_', suffix='.zip',
+                                             delete=False) as tf:
+                tmp_path = tf.name
+        except OSError as e:
+            return {'ok': False, 'error': f'cannot create temp file: {e}'}
+        try:
+            dl = modio_module.download_modfile(url, tmp_path)
+            if not dl.get('ok'):
+                return dl
+            res = installer_module.install_zip(tmp_path, target, allow_overwrite=True)
+            # Drop a small marker file inside the mod folder so we can prove
+            # later — even after the user manually deletes the folder — which
+            # mod.io record this install came from. Self-cleaning: deleting
+            # the folder removes the marker too, so the Browser tab notices
+            # the install is gone on the next refresh.
+            if res.get('ok') and res.get('folder'):
+                meta = {
+                    'mod_id': int(mod_id),
+                    'name_id': (mod.get('name_id') or ''),
+                    'name': (mod.get('name') or ''),
+                    'modfile_id': int(modfile.get('id') or 0),
+                    'version': str(modfile.get('version') or ''),
+                    'installed_at': int(__import__('time').time()),
+                }
+                meta_path = os.path.join(target, res['folder'], '_modio_install.json')
+                try:
+                    with open(meta_path, 'w', encoding='utf-8') as f:
+                        json.dump(meta, f, indent=2, ensure_ascii=False)
+                except OSError:
+                    pass  # not fatal — the install succeeded
+            return res
+        finally:
+            try:
+                os.remove(tmp_path)
+            except OSError:
+                pass
+
+    # ── release check ─────────────────────────────────────────────────────────
+    def check_latest_release(self) -> dict:
+        """Hit the GitHub releases API and compare its latest tag against
+        the bundled version. Returns:
+          {ok, current, latest, up_to_date, url, error?}
+        Never blocks / raises into the JS bridge — failures are reported
+        as ok=False with an error string.
+        """
+        import _version
+        try:
+            import requests
+            r = requests.get(
+                'https://api.github.com/repos/taludas/anno-117-mod-manager/releases/latest',
+                headers={'Accept': 'application/vnd.github+json',
+                         'User-Agent': 'Anno117ModManager'},
+                timeout=8,
+            )
+            if r.status_code != 200:
+                return {'ok': False,
+                        'error': f'GitHub HTTP {r.status_code}',
+                        'current': _version.__VERSION__}
+            data = r.json() or {}
+        except Exception as e:
+            return {'ok': False, 'error': str(e),
+                    'current': _version.__VERSION__}
+        tag = (data.get('tag_name') or '').lstrip('vV').strip()
+        # Tolerant version compare: split on dots, compare as ints when
+        # possible, fall back to string equality otherwise.
+        def _parse(v: str) -> tuple:
+            parts = []
+            for p in (v or '').split('.'):
+                try: parts.append(int(p))
+                except ValueError: parts.append(p)
+            return tuple(parts)
+        current = _version.__VERSION__
+        try:
+            up_to_date = _parse(tag) <= _parse(current)
+        except TypeError:
+            up_to_date = (tag == current)
+        return {
+            'ok': True,
+            'current': current,
+            'latest': tag or current,
+            'up_to_date': up_to_date,
+            'url': data.get('html_url') or 'https://github.com/taludas/anno-117-mod-manager/releases',
+        }
+
     # ── news ──────────────────────────────────────────────────────────────────
     def fetch_news(self, force_refresh: bool = False) -> dict:
-        """Return the merged news feed. Cached for 10 minutes per (reddit-on/off)
-        combination — pass ``force_refresh=True`` to bypass the cache."""
+        """Return the merged news feed. Cached for 10 minutes per
+        (reddit-on/off, modio-on/off) combination — pass
+        ``force_refresh=True`` to bypass the cache."""
         import time
         include_reddit = bool(self.settings.get('show_reddit_news', False))
+        modio_token = self._modio_token()  # '' when not connected → no modio cards
         cache = self._news_cache
         ttl_ok = (time.time() - cache.get('fetched_at', 0.0)) < 600
+        cache_key = (include_reddit, bool(modio_token))
         if (not force_refresh
                 and ttl_ok
-                and cache.get('reddit') == include_reddit
+                and cache.get('key') == cache_key
                 and cache.get('items')):
             return {'ok': True, 'items': cache['items'], 'cached': True}
-        items = news_module.fetch_all(include_reddit=include_reddit, parallel=True)
+        items = news_module.fetch_all(include_reddit=include_reddit,
+                                      parallel=True,
+                                      modio_token=modio_token)
         self._news_cache = {
             'items': items,
             'fetched_at': time.time(),
+            'key': cache_key,
+            # Legacy field kept for the old reset path below; can be dropped later.
             'reddit': include_reddit,
         }
         return {'ok': True, 'items': items, 'cached': False}

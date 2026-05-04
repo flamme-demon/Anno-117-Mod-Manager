@@ -27,6 +27,23 @@ def is_valid_preset_name(name: str) -> bool:
     return bool(name) and bool(_VALID_PRESET.match(name)) and name not in RESERVED_PRESETS
 
 
+def _safe_existing_preset(presets_dir: str, name: str) -> str | None:
+    """Resolve presets/<name>.txt safely (no path traversal) and return the
+    absolute path only if the file exists. Used by load/delete so a preset
+    with a name the strict validator rejects (legacy or imported file) is
+    still operable — the only real constraint is that it stays inside
+    ``presets_dir`` and isn't a reserved virtual name."""
+    if not name or name in RESERVED_PRESETS or not presets_dir:
+        return None
+    if '/' in name or '\\' in name or name in ('.', '..') or name.startswith('.'):
+        return None
+    base = os.path.realpath(presets_dir)
+    candidate = os.path.realpath(os.path.join(presets_dir, f'{name}.txt'))
+    if not candidate.startswith(base + os.sep):
+        return None
+    return candidate if os.path.isfile(candidate) else None
+
+
 def list_presets(presets_dir: str) -> list[str]:
     """Return the names (without .txt) of user-saved presets in lexical order."""
     if not presets_dir or not os.path.isdir(presets_dir):
@@ -57,11 +74,11 @@ def save_preset(presets_dir: str, profile_path: str, name: str) -> tuple[bool, s
 
 
 def delete_preset(presets_dir: str, name: str) -> tuple[bool, str]:
-    """Remove presets/<name>.txt."""
-    if not is_valid_preset_name(name):
-        return False, 'invalid preset name'
-    target = os.path.join(presets_dir, f'{name}.txt')
-    if not os.path.exists(target):
+    """Remove presets/<name>.txt. Accepts any name that resolves to an
+    existing preset file inside ``presets_dir`` — useful for cleaning up
+    legacy presets whose names the current strict validator rejects."""
+    target = _safe_existing_preset(presets_dir, name)
+    if not target:
         return False, 'preset not found'
     try:
         os.remove(target)
@@ -80,10 +97,8 @@ def load_preset(presets_dir: str, profile_path: str, name: str, all_mod_ids: lis
         return write_set_all(profile_path, all_mod_ids, active=False)
     if name == 'Default':
         return write_set_all(profile_path, all_mod_ids, active=True)
-    if not is_valid_preset_name(name):
-        return False, 'invalid preset name'
-    src = os.path.join(presets_dir, f'{name}.txt')
-    if not os.path.exists(src):
+    src = _safe_existing_preset(presets_dir, name)
+    if not src:
         return False, 'preset not found'
     try:
         with open(src, 'r', encoding='utf-8') as f:

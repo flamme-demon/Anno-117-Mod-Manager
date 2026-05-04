@@ -1,8 +1,8 @@
 /* Manual Install tab — centered drop zone with click-to-browse + status. */
 
+/* No internal scroll — see settings.css for the rationale. The outer
+   .main > div is the scroll container so re-renders preserve scrollTop. */
 .install {
-  height: 100%;
-  overflow-y: auto;
   padding: 32px 28px 36px;
 }
 

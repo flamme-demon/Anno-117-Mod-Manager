@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="css/tabs/install.css" />
   <link rel="stylesheet" href="css/tabs/tweak.css" />
   <link rel="stylesheet" href="css/tabs/news.css" />
+  <link rel="stylesheet" href="css/tabs/browser.css" />
   <!-- Load order matters: app.js must define annoApp() *before* alpine.min.js
        calls Alpine.start() on DOMContentLoaded, otherwise x-data="annoApp()"
        resolves to undefined and the whole tree silently fails to render. -->
@@ -26,13 +27,44 @@
       <span class="title-bar__roman">ANNO 117</span>
       <span class="title-bar__sub">Mod Manager</span>
     </h1>
-    <span class="title-bar__version" x-text="version ? 'v' + version : ''"></span>
+    <span class="title-bar__version"
+          :class="release.checked ? (release.up_to_date ? 'is-up-to-date' : 'is-stale') : ''"
+          :title="release.checked
+                    ? (release.up_to_date
+                        ? 'À jour (v' + version + ')'
+                        : 'Nouvelle version disponible : v' + release.latest + ' (vous avez v' + version + ')')
+                    : ''"
+          @click="release.checked && !release.up_to_date && openExternalUrl(release.url)"
+          x-text="version ? 'v' + version : ''"></span>
+
+    <!-- Community/dev links — Discord, GitHub, Ko-fi. Open in the user's
+         browser via the same router that News uses. -->
+    <div class="title-bar__links">
+      <a class="title-bar__link" title="Discord"
+         @click="openExternalUrl('https://discord.gg/m4e7ZanMVp')">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+          <path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09a.1.1 0 0 0-.07-.03c-1.5.26-2.93.71-4.27 1.33a.08.08 0 0 0-.03.03C2.07 9.46 1.33 13.46 1.7 17.42a.1.1 0 0 0 .04.07c1.81 1.34 3.56 2.15 5.29 2.69a.1.1 0 0 0 .1-.03c.41-.56.77-1.15 1.08-1.77a.1.1 0 0 0-.05-.13c-.58-.22-1.13-.49-1.66-.79a.1.1 0 0 1-.01-.16l.32-.25a.07.07 0 0 1 .07-.01c3.48 1.59 7.25 1.59 10.69 0a.07.07 0 0 1 .07.01l.33.25c.05.04.05.13-.01.16-.53.31-1.08.57-1.66.79a.1.1 0 0 0-.05.13c.32.62.68 1.21 1.08 1.77a.1.1 0 0 0 .1.03c1.74-.54 3.49-1.35 5.3-2.69a.1.1 0 0 0 .04-.07c.44-4.58-.74-8.55-3.13-12.06a.07.07 0 0 0-.04-.03zM8.52 15.01c-1.04 0-1.9-.95-1.9-2.12 0-1.17.84-2.13 1.9-2.13 1.07 0 1.92.96 1.9 2.13 0 1.17-.84 2.12-1.9 2.12zm7.04 0c-1.04 0-1.9-.95-1.9-2.12 0-1.17.84-2.13 1.9-2.13 1.07 0 1.92.96 1.9 2.13 0 1.17-.83 2.12-1.9 2.12z"/>
+        </svg>
+      </a>
+      <a class="title-bar__link" title="GitHub"
+         @click="openExternalUrl('https://github.com/taludas/anno-117-mod-manager')">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+          <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2.18c-3.2.69-3.87-1.37-3.87-1.37-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.95.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.16 1.18a10.95 10.95 0 0 1 5.75 0c2.2-1.49 3.16-1.18 3.16-1.18.62 1.58.23 2.75.11 3.04.74.8 1.18 1.82 1.18 3.08 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.05.78 2.12v3.14c0 .31.21.68.79.56C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/>
+        </svg>
+      </a>
+      <a class="title-bar__link title-bar__link--kofi" title="Ko-fi"
+         @click="openExternalUrl('https://ko-fi.com/W7W8L558T')">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+          <path d="M3 4h13.5a4.5 4.5 0 0 1 4.5 4.5v.5a4.5 4.5 0 0 1-4 4.47 5 5 0 0 1-4.96 4.03H7a4 4 0 0 1-4-4V4zm14 7a2.5 2.5 0 0 0 2-2.45V8.5A2.5 2.5 0 0 0 16.5 6H17v5zm-9.5-3a1.5 1.5 0 0 0-1.5 1.5c0 .9.62 1.78 1.45 2.6.6.6 1.27 1.07 1.55 1.25.28-.18.95-.65 1.55-1.25.83-.82 1.45-1.7 1.45-2.6A1.5 1.5 0 0 0 11 8c-.6 0-1.16.36-1.5.93A1.74 1.74 0 0 0 7.5 8z"/>
+        </svg>
+      </a>
+    </div>
 
     <!-- Round flag button + popover for the language picker. -->
     <div class="lang-picker" @click.outside="langOpen = false">
       <button class="lang-picker__btn"
               @click="langOpen = !langOpen"
-              :title="currentLanguage ? currentLanguage.name : 'Langue'">
+              :title="currentLanguage ? currentLanguage.name : t('hud.language')">
         <span class="lang-picker__flag" x-text="currentLanguage ? currentLanguage.flag : '🌐'"></span>
       </button>
       <div class="lang-picker__menu" x-show="langOpen" x-cloak>
@@ -72,7 +104,7 @@
                 class="toolbar__tab"
                 :class="{ 'is-active': currentTab === tab.id, 'is-disabled': tab.disabled }"
                 :title="tab.label"
-                @click="!tab.disabled && (currentTab = tab.id)">
+                @click="selectTab(tab.id, tab.disabled)">
                 <img class="toolbar__icon" :src="tab.img" :alt="tab.label" />
               </button>
             </template>
@@ -84,7 +116,7 @@
                 class="toolbar__tab"
                 :class="{ 'is-active': currentTab === tab.id, 'is-disabled': tab.disabled }"
                 :title="tab.label"
-                @click="!tab.disabled && (currentTab = tab.id)">
+                @click="selectTab(tab.id, tab.disabled)">
                 <img class="toolbar__icon" :src="tab.img" :alt="tab.label" />
               </button>
             </template>
@@ -99,22 +131,24 @@
             <div class="toolbar__cup">
               <button class="toolbar__round"
                       @click="currentTab = 'settings'"
-                      title="Paramètres">
-                <img class="toolbar__round-icon" src="icons/settings.png" alt="Paramètres" />
+                      :title="t('hud.settings')">
+                <img class="toolbar__round-icon" src="icons/settings.png" :alt="t('hud.settings')" />
               </button>
             </div>
-            <!-- Refresh only makes sense when there's a mod list visible -->
-            <div class="toolbar__cup" x-show="currentTab === 'activation'">
+            <!-- Refresh: refreshMods() on Activation, browserRefresh() on
+                 Browser/Collections (both share the same state). -->
+            <div class="toolbar__cup" x-show="currentTab === 'activation' || currentTab === 'browser' || currentTab === 'collections'">
               <button class="toolbar__round"
-                      @click="refreshMods()"
-                      title="Rafraîchir la liste des mods">
-                <img class="toolbar__round-icon" src="icons/refresh.png" alt="Rafraîchir" />
+                      @click="(currentTab === 'browser' || currentTab === 'collections') ? browserRefresh() : refreshMods()"
+                      :title="(currentTab === 'browser' || currentTab === 'collections') ? t('browser.refresh') : t('hud.refreshMods')">
+                <img class="toolbar__round-icon" src="icons/refresh.png" alt="" />
               </button>
             </div>
           </div>
 
-          <!-- Search filters the activation list, hide it elsewhere -->
-          <div class="toolbar__search" x-show="currentTab === 'activation'">
+          <!-- Search filters the Activation list (live, x-model) and submits a
+               mod.io query on Enter when on Browser or Collections. -->
+          <div class="toolbar__search" x-show="currentTab === 'activation' || currentTab === 'browser' || currentTab === 'collections'">
             <svg class="toolbar__search-icon" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="2"
                  stroke-linecap="round" stroke-linejoin="round">
@@ -123,11 +157,13 @@
             </svg>
             <input class="toolbar__search-input"
                    type="text"
-                   placeholder="Rechercher un mod…"
-                   x-model="search" />
+                   :placeholder="(currentTab === 'browser' || currentTab === 'collections') ? t('browser.searchPlaceholder') : t('hud.searchMod')"
+                   :value="(currentTab === 'browser' || currentTab === 'collections') ? browser.search : search"
+                   @input="(currentTab === 'browser' || currentTab === 'collections') ? null : (search = $event.target.value)"
+                   @keydown.enter="(currentTab === 'browser' || currentTab === 'collections') && (browser.search = $event.target.value, browser.offset = 0, browserFetch())" />
           </div>
           <!-- Spacer to keep the launch button anchored right when the search is hidden -->
-          <div class="toolbar__bottom-spacer" x-show="currentTab !== 'activation'"></div>
+          <div class="toolbar__bottom-spacer" x-show="currentTab !== 'activation' && currentTab !== 'browser' && currentTab !== 'collections'"></div>
 
           <div class="toolbar__group toolbar__group--utility">
             <div class="toolbar__cup">

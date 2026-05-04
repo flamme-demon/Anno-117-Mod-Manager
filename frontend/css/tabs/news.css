@@ -68,7 +68,23 @@
 .news__body {
   flex: 1;
   min-height: 0;
-  overflow-y: auto;
+  /* overflow-y: scroll (not auto) so the bar's geometry is permanent —
+     keeps card hovers from jiggling the grid. Same fix as Browser. */
+  overflow-y: scroll;
+}
+.news__body::-webkit-scrollbar {
+  width: 12px;
+}
+.news__body::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.30);
+}
+.news__body::-webkit-scrollbar-thumb {
+  background: #3a4150;
+  border: 2px solid #1a1d24;
+  border-radius: 6px;
+}
+.news__body::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-dim);
 }
 
 .news__empty {

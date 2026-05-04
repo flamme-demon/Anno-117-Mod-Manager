@@ -2,9 +2,10 @@
    the Activation table (gradient #252a33→#1e2128, gold caption titles, blue
    inset highlight). */
 
+/* No internal scroll: the outer .main > div is the scroll container so that
+   Alpine's x-html re-render (which replaces this element) doesn't reset
+   scrollTop. Just let content grow naturally. */
 .settings {
-  height: 100%;
-  overflow-y: auto;
   padding: 24px 28px 36px;
 }
 
@@ -24,6 +25,21 @@
   box-shadow:
     inset 0 1px 0 rgba(148, 178, 236, 0.06),
     0 4px 14px rgba(0, 0, 0, 0.25);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+/* Brief gold halo when redirected from a gated tab (e.g. Browser without
+   a valid mod.io token) so the user sees exactly which section to act on. */
+.settings__card.is-flash {
+  border-color: var(--gold);
+  box-shadow:
+    inset 0 1px 0 rgba(148, 178, 236, 0.06),
+    0 0 0 2px rgba(200, 169, 77, 0.45),
+    0 6px 22px rgba(200, 169, 77, 0.20);
+  animation: settings-card-flash 1.6s ease-out;
+}
+@keyframes settings-card-flash {
+  0%   { box-shadow: inset 0 1px 0 rgba(148, 178, 236, 0.06), 0 0 0 4px rgba(200, 169, 77, 0.55), 0 8px 28px rgba(200, 169, 77, 0.30); }
+  100% { box-shadow: inset 0 1px 0 rgba(148, 178, 236, 0.06), 0 0 0 0 rgba(200, 169, 77, 0.0),   0 4px 14px rgba(0, 0, 0, 0.25); }
 }
 
 .settings__hint {
@@ -113,6 +129,65 @@
 .settings__badge.is-off::before {
   content: '○ ';
   color: #ffb6b6;
+}
+/* Pending state — API key set but not yet authenticated */
+.settings__badge.is-pending {
+  color: #ffe7b6;
+  background: linear-gradient(180deg, #c8a94d 0%, #7a6730 100%);
+  border-color: #4d3f1c;
+}
+
+/* mod.io OAuth inline form bits */
+.settings__inline-hint {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-style: italic;
+  color: var(--gold-dim);
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.20);
+  border-left: 2px solid var(--gold-dim);
+  border-radius: 4px;
+  margin-top: 8px;
+}
+.settings__inline-error {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: #ffd6d6;
+  padding: 8px 12px;
+  background: rgba(192, 57, 43, 0.20);
+  border: 1px solid #c25555;
+  border-radius: 4px;
+}
+
+.modio-auth, .modio-auth-idle, .modio-connected {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed #2a2e36;
+}
+
+.modio-expiry {
+  font-family: monospace;
+  font-size: 12px;
+  color: #c4c6d0;
+  background: rgba(0, 0, 0, 0.30);
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.modio-terms {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.modio-code {
+  font-family: 'Consolas', 'Cascadia Mono', monospace !important;
+  font-size: 22px !important;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  text-align: center;
+  color: #6e9659 !important;
+  width: 200px;
+  font-weight: bold;
 }
 
 /* Vertical row (label · field · actions) */
