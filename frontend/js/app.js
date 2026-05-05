@@ -117,6 +117,12 @@ const TRANSLATIONS = {
     'tweak.resetAll':               'Reset all',
     'tweak.resetModConfirm':        'Reset all options for this mod to their defaults?',
     'tweak.resetAllConfirm':        'Reset every mod’s options? The active-options.jsonc file will be deleted.',
+    'tweak.colorPicker.open':       'Open colour picker',
+    'tweak.colorPicker.title':      'Colour picker',
+    'tweak.colorPicker.before':     'Before',
+    'tweak.colorPicker.after':      'After',
+    'tweak.colorPicker.cancel':     'Cancel',
+    'tweak.colorPicker.apply':      'Apply',
     'news.refresh':                 '↻ Refresh',
     'news.loading':                 'Fetching latest posts…',
     'news.empty':                   'No news to display.',
@@ -324,6 +330,12 @@ const TRANSLATIONS = {
     'tweak.resetAll':               'Tout réinitialiser',
     'tweak.resetModConfirm':        'Réinitialiser toutes les options de ce mod aux valeurs par défaut ?',
     'tweak.resetAllConfirm':        'Réinitialiser les options de tous les mods ? Le fichier active-options.jsonc sera supprimé.',
+    'tweak.colorPicker.open':       'Ouvrir le sélecteur de couleur',
+    'tweak.colorPicker.title':      'Sélecteur de couleur',
+    'tweak.colorPicker.before':     'Avant',
+    'tweak.colorPicker.after':      'Après',
+    'tweak.colorPicker.cancel':     'Annuler',
+    'tweak.colorPicker.apply':      'Appliquer',
     'news.refresh':                 '↻ Rafraîchir',
     'news.loading':                 'Récupération des dernières actualités…',
     'news.empty':                   'Aucune actualité à afficher.',
@@ -2530,6 +2542,20 @@ window.annoApp = function () {
       values: {},               // current values (saved or default per option)
       saving: '',               // key being saved (lights up the row briefly)
     },
+    // In-app colour picker state — single global popover positioned near the
+    // swatch that opened it. Kept on Alpine root so the popover can live
+    // outside the tweak DOM (which is itself rendered via x-html and would
+    // otherwise nuke the picker on every value change).
+    colorPicker: {
+      open: false,
+      key: '',                  // tweak option key being edited
+      h: 0, s: 0, v: 0,         // HSV state of the current preview
+      alpha: 0xFF,              // preserved from the previous int
+      prevHex: '#000000',       // colour the picker was opened with (for the "before" swatch)
+      x: 0, y: 0,               // fixed-position coords of the popover anchor
+      drag: null,               // 'sv' | 'hue' while a drag is in flight
+      palette: ANNO_PALETTE,    // in-game banner palette (alias for x-for binding)
+    },
     news: { items: [], loading: false, error: '', cached: false, loaded: false },
     _newsTimer: null,           // background poll started on first News open
     browser: {
@@ -3608,6 +3634,123 @@ window.annoApp = function () {
       }
     },
 
+    // Bridge from a hex `#RRGGBB` back to the signed int ARGB string the mod
+    // expects. Reads the current int value first to preserve its alpha, then
+    // delegates to setTweakOption so the text field, optimistic update and
+    // pywebview save go through the same path as a manual edit.
+    async setTweakColorOption(key, hex) {
+      const prev = this.tweak.values[key];
+      const intStr = hexToArgbIntStr(hex, prev);
+      if (intStr === null) return;
+      const text = document.querySelector('input.tweak-color__text[data-key="' + key + '"]');
+      if (text) text.value = intStr;
+      await this.setTweakOption(key, intStr);
+    },
+
+    // ── In-app colour picker ──────────────────────────────────────────────
+    // Open the popover anchored above the swatch that triggered it. Initial
+    // HSV is derived from the current int value (alpha extracted and stored
+    // separately so a later commit preserves it).
+    openColorPicker(key, intStr, evt) {
+      const cp = this.colorPicker;
+      cp.key = key;
+      const n = parseInt(intStr, 10);
+      const u = Number.isFinite(n) ? (n >>> 0) : 0xFF000000;
+      cp.alpha = (u >>> 24) & 0xFF;
+      if (cp.alpha === 0) cp.alpha = 0xFF;
+      const r = (u >> 16) & 0xFF, g = (u >> 8) & 0xFF, b = u & 0xFF;
+      const [h, s, v] = rgbToHsv(r, g, b);
+      cp.h = h; cp.s = s; cp.v = v;
+      cp.prevHex = rgbToHex(r, g, b);
+      // Anchor: prefer the swatch's bounding box; fall back to mouse coords.
+      // Popover is 260×340-ish, position above-left of the swatch unless that
+      // would clip off the viewport.
+      const PANEL_W = 268, PANEL_H = 520;
+      let ax = 0, ay = 0;
+      if (evt && evt.currentTarget && evt.currentTarget.getBoundingClientRect) {
+        const r2 = evt.currentTarget.getBoundingClientRect();
+        ax = r2.left;
+        ay = r2.top - PANEL_H - 8;
+      } else if (evt) {
+        ax = evt.clientX; ay = evt.clientY - PANEL_H - 8;
+      }
+      const vw = window.innerWidth, vh = window.innerHeight;
+      cp.x = Math.max(8, Math.min(ax, vw - PANEL_W - 8));
+      cp.y = Math.max(8, Math.min(ay, vh - PANEL_H - 8));
+      cp.open = true;
+    },
+    closeColorPicker() {
+      this.colorPicker.open = false;
+      this.colorPicker.drag = null;
+    },
+    // Live hex/int previews used by the picker UI bindings.
+    cpHex() {
+      const [r, g, b] = hsvToRgb(this.colorPicker.h, this.colorPicker.s, this.colorPicker.v);
+      return rgbToHex(r, g, b);
+    },
+    cpInt() {
+      return hexToArgbIntStr(this.cpHex(), String(((this.colorPicker.alpha << 24) | 0) | 0));
+    },
+    // Background colour of the SV square = pure hue (s=1, v=1) so the WYSIWYG
+    // gradients (white→hue, transparent→black) overlay cleanly on top.
+    cpHueColor() {
+      const [r, g, b] = hsvToRgb(this.colorPicker.h, 1, 1);
+      return rgbToHex(r, g, b);
+    },
+    cpSetHex(hex) {
+      const m = /^#?([0-9a-f]{6})$/i.exec((hex || '').trim());
+      if (!m) return;
+      const [r, g, b] = hexToRgb('#' + m[1]);
+      const [h, s, v] = rgbToHsv(r, g, b);
+      this.colorPicker.h = h; this.colorPicker.s = s; this.colorPicker.v = v;
+    },
+    cpSetInt(intStr) {
+      const n = parseInt(intStr, 10);
+      if (!Number.isFinite(n)) return;
+      const u = n >>> 0;
+      const a = (u >>> 24) & 0xFF;
+      if (a !== 0) this.colorPicker.alpha = a;
+      this.cpSetHex(argbIntToHex(intStr));
+    },
+    // Pointer-driven SV/hue manipulation. Single global handler attached on
+    // mousedown and torn down on mouseup so we don't leak listeners or steal
+    // pointer events from the rest of the app.
+    cpStartDrag(target, evt) {
+      this.colorPicker.drag = target;
+      this.cpUpdateFromEvent(evt);
+      const move = (e) => this.cpUpdateFromEvent(e);
+      const up = () => {
+        this.colorPicker.drag = null;
+        document.removeEventListener('mousemove', move);
+        document.removeEventListener('mouseup', up);
+      };
+      document.addEventListener('mousemove', move);
+      document.addEventListener('mouseup', up);
+      evt.preventDefault();
+    },
+    cpUpdateFromEvent(evt) {
+      const drag = this.colorPicker.drag;
+      if (!drag) return;
+      const sel = drag === 'sv' ? '.color-picker__sv' : '.color-picker__hue';
+      const el = document.querySelector(sel);
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const x = Math.max(0, Math.min(1, (evt.clientX - r.left) / r.width));
+      const y = Math.max(0, Math.min(1, (evt.clientY - r.top) / r.height));
+      if (drag === 'sv') {
+        this.colorPicker.s = x;
+        this.colorPicker.v = 1 - y;
+      } else {
+        this.colorPicker.h = y * 360;
+      }
+    },
+    async commitColorPicker() {
+      const key = this.colorPicker.key;
+      const hex = this.cpHex();
+      this.closeColorPicker();
+      if (key) await this.setTweakColorOption(key, hex);
+    },
+
     async resetTweakMod() {
       const id = this.tweak.selectedId;
       if (!id) return;
@@ -4631,10 +4774,32 @@ window.annoApp = function () {
             if (lbl) hint = String(lbl);
 
           } else { // text fallback
-            control = `
-              <input class="tweak-control" type="text"
-                     value="${escapeAttr(current)}"
-                     onchange="annoRoot().setTweakOption('${escapeAttr(key)}', this.value)" />`;
+            // Mods that name an option after a colour ("color"/"colour", any
+            // case) get a native colour picker glued to the text field. The
+            // text input stays editable for power users who want to type a
+            // raw signed-int ARGB value directly.
+            const isColor = /colou?r/i.test(key) || /colou?r/i.test(label);
+            if (isColor) {
+              const hex = argbIntToHex(current);
+              control = `
+                <div class="tweak-color">
+                  <button type="button"
+                          class="tweak-color__swatch"
+                          title="${escapeAttr(this.t('tweak.colorPicker.open'))}"
+                          style="background:${hex}"
+                          onclick="annoRoot().openColorPicker('${escapeAttr(key)}', this.nextElementSibling.value, event)"></button>
+                  <input class="tweak-control tweak-color__text" type="text"
+                         data-key="${escapeAttr(key)}"
+                         value="${escapeAttr(current)}"
+                         oninput="var h=window.argbIntToHex(this.value); if(h) this.previousElementSibling.style.background=h"
+                         onchange="annoRoot().setTweakOption('${escapeAttr(key)}', this.value)" />
+                </div>`;
+            } else {
+              control = `
+                <input class="tweak-control" type="text"
+                       value="${escapeAttr(current)}"
+                       onchange="annoRoot().setTweakOption('${escapeAttr(key)}', this.value)" />`;
+            }
             if (labels.length) hint = String(labels[0]);
           }
 
@@ -5259,6 +5424,89 @@ function escapeAttr(s) {
 function basename(p) {
   if (!p) return '';
   return p.split(/[\\/]/).pop();
+}
+
+// In-game player-banner palette from Anno 117 — eyeballed off the colour
+// picker screen so the picker offers the same shortcuts a player sees in
+//-game. Order roughly mirrors the in-game grid (6 columns × 5 rows).
+// Swap individual values if/when extracted from the game files.
+const ANNO_PALETTE = [
+  '#3960a8', '#6f3a7e', '#d4b133', '#4f9b5b', '#4fb3ce', '#c33531',
+  '#2a1c1a', '#d4751b', '#2c3563', '#d83435', '#4ec535', '#2972d3',
+  '#f0d34a', '#cc4ec0', '#4ec5b8', '#1e1c19', '#d8d8c8', '#1d6d80',
+  '#e8a6c5', '#d39c5c', '#4dba47', '#d3d33c', '#b9d651', '#1a3260',
+  '#2a5036', '#b27ec8', '#696969', '#1a4d4a', '#6e2828', '#2a677a',
+];
+
+// HSV/RGB conversion utilities used by the in-app colour picker. HSV is the
+// natural model for the picker UI (saturation/value square + hue slider) but
+// the wire format is RGB hex, so every interaction round-trips through both.
+function hsvToRgb(h, s, v) {
+  h = ((h % 360) + 360) % 360;
+  const c = v * s;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = v - c;
+  let r = 0, g = 0, b = 0;
+  if (h < 60)       { r = c; g = x; }
+  else if (h < 120) { r = x; g = c; }
+  else if (h < 180) { g = c; b = x; }
+  else if (h < 240) { g = x; b = c; }
+  else if (h < 300) { r = x; b = c; }
+  else              { r = c; b = x; }
+  return [Math.round((r + m) * 255), Math.round((g + m) * 255), Math.round((b + m) * 255)];
+}
+function rgbToHsv(r, g, b) {
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  const d = max - min;
+  let h = 0;
+  if (d > 0) {
+    if (max === r)      h = ((g - b) / d) % 6;
+    else if (max === g) h = (b - r) / d + 2;
+    else                h = (r - g) / d + 4;
+    h *= 60;
+    if (h < 0) h += 360;
+  }
+  return [h, max === 0 ? 0 : d / max, max];
+}
+function hexToRgb(hex) {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex || '');
+  if (!m) return [0, 0, 0];
+  const n = parseInt(m[1], 16);
+  return [(n >> 16) & 0xFF, (n >> 8) & 0xFF, n & 0xFF];
+}
+function rgbToHex(r, g, b) {
+  return '#' + [r, g, b].map((x) => Math.max(0, Math.min(255, Math.round(x))).toString(16).padStart(2, '0')).join('');
+}
+
+// Mod option colour values are stored as signed 32-bit ARGB ints
+// (Color.toArgb() style — e.g. -736208 = 0xFFF4C0F0 = pink). The tweak UI
+// renders an in-app colour picker alongside the raw int field so users can
+// pick a colour visually, but the canonical storage stays an int string.
+function argbIntToHex(intStr) {
+  const n = parseInt(intStr, 10);
+  if (!Number.isFinite(n)) return '#000000';
+  const u = n >>> 0;
+  const r = (u >> 16) & 0xFF;
+  const g = (u >> 8) & 0xFF;
+  const b = u & 0xFF;
+  return '#' + [r, g, b].map((x) => x.toString(16).padStart(2, '0')).join('');
+}
+// Round-trip back to the int string. Alpha is preserved from the previous
+// value when present (so a mod that one day uses a non-FF alpha keeps it),
+// with a 0xFF fallback when the previous value was 0/invalid (the picker
+// has no alpha channel anyway, so emitting transparent would look broken).
+function hexToArgbIntStr(hex, prevIntStr) {
+  const m = /^#([0-9a-f]{6})$/i.exec(hex || '');
+  if (!m) return null;
+  const rgb = parseInt(m[1], 16);
+  let alpha = 0xFF;
+  const prev = parseInt(prevIntStr, 10);
+  if (Number.isFinite(prev)) {
+    const a = (prev >>> 24) & 0xFF;
+    if (a !== 0) alpha = a;
+  }
+  return String(((alpha << 24) | rgb) | 0);
 }
 
 // Returns the Alpine root scope so the inline event handlers in the injected

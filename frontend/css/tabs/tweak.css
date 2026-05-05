@@ -288,3 +288,266 @@
   letter-spacing: 0.12em;
   color: var(--gold);
 }
+
+/* Colour row — clickable swatch (opens the in-app picker popover) glued to
+   the left of the int text field, reading as one composite control. The
+   text input stays editable for power users entering raw signed-int ARGB
+   values directly; live edits there repaint the swatch via inline JS. */
+.tweak-color {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 0;
+  width: fit-content;
+  max-width: 100%;
+  border: 1px solid #3a4150;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #1a1d24;
+}
+.tweak-color__swatch {
+  width: 36px;
+  min-height: 32px;
+  padding: 0;
+  border: none;
+  border-right: 1px solid #3a4150;
+  cursor: pointer;
+  /* Subtle inner highlight so the swatch reads as a recessed plate even
+     when the colour is mid-tone (no contrast against the dark frame). */
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.4),
+              inset 0 0 6px rgba(0, 0, 0, 0.5);
+}
+.tweak-color__swatch:hover {
+  filter: brightness(1.1);
+}
+.tweak-color__text {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+.tweak-color__text:focus {
+  outline: 1px solid var(--gold);
+  outline-offset: -1px;
+}
+
+/* ── In-app colour picker popover ───────────────────────────────────────── */
+
+.color-picker {
+  position: fixed;
+  z-index: 1000;
+  width: 268px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: linear-gradient(180deg, #2c3850 0%, #1f2734 100%);
+  border: 1px solid var(--gold-faint);
+  border-radius: 8px;
+  box-shadow:
+    inset 0 1px 0 rgba(148, 178, 236, 0.08),
+    inset 0 0 1px 0 rgba(200, 169, 77, 0.3),
+    0 8px 24px rgba(0, 0, 0, 0.6);
+  font-family: var(--font-body);
+  color: var(--cream);
+}
+
+.color-picker__title {
+  font-family: var(--font-title);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  text-align: center;
+  border-bottom: 1px solid rgba(200, 169, 77, 0.2);
+  padding-bottom: 8px;
+}
+
+.color-picker__row {
+  display: flex;
+  gap: 10px;
+  height: 180px;
+}
+
+/* Saturation × Value square — three stacked layers: hue background (set via
+   inline style), white→transparent left-to-right (saturation), then
+   transparent→black top-to-bottom (value). The cursor is a small ring
+   filled with the live colour. */
+.color-picker__sv {
+  position: relative;
+  flex: 1;
+  border: 1px solid #181c26;
+  border-radius: 4px;
+  cursor: crosshair;
+  overflow: hidden;
+  user-select: none;
+}
+.color-picker__sv-white,
+.color-picker__sv-black {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.color-picker__sv-white {
+  background: linear-gradient(to right, #fff, transparent);
+}
+.color-picker__sv-black {
+  background: linear-gradient(to bottom, transparent, #000);
+}
+.color-picker__sv-cursor {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+/* Hue rail — vertical 360° gradient with a flat horizontal cursor. */
+.color-picker__hue {
+  position: relative;
+  width: 18px;
+  border: 1px solid #181c26;
+  border-radius: 4px;
+  background: linear-gradient(to bottom,
+    #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%,
+    #00f 67%, #f0f 83%, #f00 100%);
+  cursor: ns-resize;
+  user-select: none;
+}
+.color-picker__hue-cursor {
+  position: absolute;
+  left: -3px;
+  right: -3px;
+  height: 4px;
+  margin-top: -2px;
+  background: var(--cream);
+  border: 1px solid #181c26;
+  border-radius: 2px;
+  pointer-events: none;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Before/After swatches let the user judge the new colour against the one
+   they started with — same trick OS pickers use to prevent regret. */
+.color-picker__compare {
+  display: flex;
+  gap: 8px;
+}
+.color-picker__compare-cell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.color-picker__compare-label {
+  font-family: var(--font-title);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  text-align: center;
+}
+.color-picker__compare-swatch {
+  height: 22px;
+  border: 1px solid #181c26;
+  border-radius: 3px;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.4);
+}
+
+.color-picker__inputs {
+  display: flex;
+  gap: 8px;
+}
+.color-picker__field {
+  flex: 1;
+  /* Without this, the default min-width:auto on flex children makes the
+     input refuse to shrink below its intrinsic content width — the INT
+     field (e.g. -2147483648) was overflowing the popover on the right. */
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+}
+.color-picker__field input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  background: #1a1d24;
+  border: 1px solid #3a4150;
+  border-radius: 4px;
+  padding: 5px 8px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--cream);
+  letter-spacing: 0.04em;
+}
+.color-picker__field input:focus {
+  outline: 1px solid var(--gold);
+  outline-offset: -1px;
+}
+
+/* In-game palette grid — round swatches mirroring the Anno 117 colour
+   picker. Six per row keeps the popover compact; selected swatch gets a
+   gold ring so the user sees their current pick at a glance. */
+.color-picker__palette {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  padding: 8px 2px 4px;
+  border-top: 1px solid rgba(200, 169, 77, 0.15);
+}
+.color-picker__swatch {
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 1px solid #181c26;
+  border-radius: 50%;
+  cursor: pointer;
+  /* Glossy dome highlight + inner shadow so each swatch reads as the same
+     in-game enamel button as the toolbar discs. */
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.25),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.4);
+}
+.color-picker__swatch:hover {
+  filter: brightness(1.15);
+}
+.color-picker__swatch.is-selected {
+  /* Double ring (dark inner + gold outer) so the selection survives both
+     bright and dark swatch fills. */
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.25),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.4),
+    0 0 0 2px var(--gold);
+}
+
+.color-picker__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding-top: 4px;
+  border-top: 1px solid rgba(200, 169, 77, 0.15);
+}
+.color-picker__btn {
+  padding: 6px 14px;
+  border: 1px solid #181c26;
+  border-radius: 4px;
+  background: linear-gradient(to bottom, #49566a 0%, #323e53 70%);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  box-shadow: inset 0 0 1px 0 rgba(148, 178, 236, 0.4);
+}
+.color-picker__btn:hover {
+  filter: brightness(1.15);
+}
+.color-picker__btn--primary {
+  background: radial-gradient(circle, #a05779 0%, #501f36 70%);
+}

@@ -106,6 +106,7 @@
                 :title="tab.label"
                 @click="selectTab(tab.id, tab.disabled)">
                 <img class="toolbar__icon" :src="tab.img" :alt="tab.label" />
+                <span class="toolbar__tab-label" x-text="tab.label"></span>
               </button>
             </template>
           </div>
@@ -118,6 +119,7 @@
                 :title="tab.label"
                 @click="selectTab(tab.id, tab.disabled)">
                 <img class="toolbar__icon" :src="tab.img" :alt="tab.label" />
+                <span class="toolbar__tab-label" x-text="tab.label"></span>
               </button>
             </template>
           </div>
@@ -194,6 +196,83 @@
 
       </div>
     </footer>
+
+    <!-- Custom in-app colour picker popover. Lives at root so it can hover
+         over the tweak rows (which are themselves rendered via x-html and
+         would otherwise destroy any picker DOM on every value change).
+         Opened via openColorPicker() from the swatch button in the tweak
+         form, dismissed on outside click or ESC. -->
+    <div class="color-picker"
+         x-show="colorPicker.open"
+         x-cloak
+         @click.outside="closeColorPicker()"
+         @keydown.escape.window="closeColorPicker()"
+         :style="`top:${colorPicker.y}px; left:${colorPicker.x}px;`">
+      <div class="color-picker__title" x-text="t('tweak.colorPicker.title')"></div>
+
+      <div class="color-picker__row">
+        <div class="color-picker__sv"
+             :style="`background-color:${cpHueColor()}`"
+             @mousedown="cpStartDrag('sv', $event)">
+          <div class="color-picker__sv-white"></div>
+          <div class="color-picker__sv-black"></div>
+          <div class="color-picker__sv-cursor"
+               :style="`left:${colorPicker.s*100}%; top:${(1-colorPicker.v)*100}%; background:${cpHex()}`"></div>
+        </div>
+        <div class="color-picker__hue"
+             @mousedown="cpStartDrag('hue', $event)">
+          <div class="color-picker__hue-cursor"
+               :style="`top:${colorPicker.h/360*100}%`"></div>
+        </div>
+      </div>
+
+      <div class="color-picker__compare">
+        <div class="color-picker__compare-cell">
+          <div class="color-picker__compare-label" x-text="t('tweak.colorPicker.before')"></div>
+          <div class="color-picker__compare-swatch"
+               :style="`background:${colorPicker.prevHex}`"></div>
+        </div>
+        <div class="color-picker__compare-cell">
+          <div class="color-picker__compare-label" x-text="t('tweak.colorPicker.after')"></div>
+          <div class="color-picker__compare-swatch"
+               :style="`background:${cpHex()}`"></div>
+        </div>
+      </div>
+
+      <div class="color-picker__inputs">
+        <label class="color-picker__field">
+          <span>HEX</span>
+          <input type="text" :value="cpHex()" @change="cpSetHex($event.target.value)" />
+        </label>
+        <label class="color-picker__field">
+          <span>INT</span>
+          <input type="text" :value="cpInt()" @change="cpSetInt($event.target.value)" />
+        </label>
+      </div>
+
+      <!-- In-game player banner palette: one click previews the colour in
+           the SV/hue state, Apply commits as usual. Selected swatch ringed
+           in gold so the user sees what's currently picked. -->
+      <div class="color-picker__palette">
+        <template x-for="hex in colorPicker.palette" :key="hex">
+          <button type="button"
+                  class="color-picker__swatch"
+                  :class="{ 'is-selected': cpHex().toLowerCase() === hex.toLowerCase() }"
+                  :style="`background:${hex}`"
+                  :title="hex.toUpperCase()"
+                  @click="cpSetHex(hex)"></button>
+        </template>
+      </div>
+
+      <div class="color-picker__actions">
+        <button class="color-picker__btn"
+                @click="closeColorPicker()"
+                x-text="t('tweak.colorPicker.cancel')"></button>
+        <button class="color-picker__btn color-picker__btn--primary"
+                @click="commitColorPicker()"
+                x-text="t('tweak.colorPicker.apply')"></button>
+      </div>
+    </div>
 
   </div>
 

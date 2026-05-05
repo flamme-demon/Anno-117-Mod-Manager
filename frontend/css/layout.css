@@ -262,6 +262,13 @@
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
+  /* Stable pill width — without this the pill hugs whichever row is widest,
+     so the active-tab cartouche expanding/contracting in the top row was
+     visibly shifting the utility row's settings/refresh/folder/launch
+     buttons (which are laid out with justify-content: space-between).
+     640px comfortably hosts the top row even when the active tab hits its
+     200px max-width, so the bottom row never reflows. */
+  min-width: 640px;
   /* Pill background = annolayouts' rgb(38,47,64) with a subtle vertical
      gradient for depth. */
   background: linear-gradient(to bottom, #2c3850 0%, #262f40 60%, #1f2734 100%);
@@ -422,12 +429,21 @@
   filter: brightness(1.15);
 }
 .toolbar__tab.is-active {
-  /* Active tab rises above the pill — burgundy palette matching annolayouts'
-     selected entry (rgb(160,87,121) → rgb(80,31,54)). */
-  width: 60px;
+  /* Active tab rises above the pill AND stretches sideways to host its
+     label below the icon — the tile becomes a small cartouche. width:auto
+     with min-width keeps short labels (Log, News) from collapsing into
+     squares while letting longer ones (Aktivierung, Przeglądarka modów)
+     breathe. Burgundy palette matching annolayouts' selected entry. */
+  width: auto;
+  min-width: 64px;
+  max-width: 200px;
   height: 68px;
+  padding: 6px 14px 7px;
   margin-top: -8px;
   margin-bottom: -2px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
   background: radial-gradient(circle, #a05779 0%, #501f36 70%);
   border-radius: 9px;
   box-shadow:
@@ -437,8 +453,34 @@
   z-index: 2;
 }
 .toolbar__tab.is-active .toolbar__icon {
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
+}
+
+/* Label hidden on inactive tabs (icon-only). Inside the active tab it sits
+   beneath the icon as a cream small-caps caption with a thin gold rule
+   above it — small carved cartouche feel, matches annolayouts' insignia
+   typography rather than a flat sans-serif label. */
+.toolbar__tab-label {
+  display: none;
+}
+.toolbar__tab.is-active .toolbar__tab-label {
+  display: block;
+  max-width: 100%;
+  padding-top: 2px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cream);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  /* Thin gold rule between icon and label — reads as the engraved bar on a
+     Roman cartouche separating a glyph from its name. */
+  border-top: 1px solid var(--gold-faint);
 }
 
 /* Circular button — used in the bottom pill for utility actions (refresh,
