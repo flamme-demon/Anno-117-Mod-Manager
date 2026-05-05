@@ -293,11 +293,15 @@
 .toolbar__hud-row {
   display: flex;
   align-items: center;
-  /* Each row gets its own GPU compositing layer so a hover repaint on the
-     top row doesn't trigger a recompose of the bottom row (which was
-     visibly knocking out the round buttons' shadows). */
-  will-change: transform;
-  transform: translateZ(0);
+  /* Used to force a GPU layer here (translateZ + will-change) to keep the
+     round buttons' shadows from being knocked out on hover repaint, but
+     that broke sub-pixel anti-aliasing on every text in the app on
+     WebKit2GTK 2.50 (in-game HUD font ended up looking blurry).
+     `isolation: isolate` gives us a fresh stacking context for the row
+     without forcing the layer onto the GPU, which is enough now that the
+     pill has a stable min-width and the bottom row doesn't reflow when
+     the active tab grows. */
+  isolation: isolate;
 }
 
 .toolbar__hud-row--top {
@@ -512,6 +516,13 @@
   margin-bottom: 0;
   position: relative;
   z-index: 2;
+  /* Force a dedicated compositing layer ONLY for the cups so the round
+     buttons' shadows survive a hover repaint elsewhere on the toolbar
+     (the row used to carry this trick but it bled the GPU layer onto
+     every label and broke text sub-pixel rendering). Surgical here =
+     shadows preserved + text in the row stays sharp. */
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 /* Subsequent cups slide left over the previous one (same -12px overlap as

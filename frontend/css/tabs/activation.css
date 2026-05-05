@@ -249,13 +249,53 @@
    checkbox · medallion · category · name(+version below) · size · status */
 .mod-row {
   display: grid;
-  grid-template-columns: 24px 36px 140px 1fr 80px 70px;
+  /* Last column hosts the per-row actions (Update / Uninstall / info
+     bullet). Header has a matching empty cell to keep alignment. */
+  grid-template-columns: 24px 36px 140px 1fr 80px 70px 80px;
   align-items: center;
   gap: 14px;
   padding: 10px 18px;
   border-bottom: 1px solid #2a2e36;
   cursor: pointer;
   transition: background 80ms ease;
+}
+
+/* Per-row actions cell — three small icon-buttons at most. The whole cell
+   has stopPropagation so clicks here don't bubble up to selectMod(). */
+.mod-row__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+.mod-row__action {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid #181c26;
+  border-radius: 4px;
+  background: linear-gradient(to bottom, #49566a 0%, #323e53 70%);
+  color: var(--cream);
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: inset 0 0 1px 0 rgba(148, 178, 236, 0.4);
+  transition: filter 80ms ease;
+}
+.mod-row__action:hover { filter: brightness(1.2); }
+.mod-row__action--update {
+  background: linear-gradient(to bottom, #6b8a52 0%, #3d5a30 70%);
+}
+.mod-row__action--uninstall {
+  background: linear-gradient(to bottom, #8a3f3f 0%, #5c2828 70%);
+}
+.mod-row__info {
+  font-size: 14px;
+  color: var(--gold-dim);
+  cursor: help;
+  user-select: none;
 }
 .mod-row__category-cell {
   font-family: var(--font-title);
@@ -504,7 +544,8 @@
 }
 .mod-detail__section p {
   margin: 0;
-  font-size: 13px;
+  /* Honours the Settings → Reading text size choice (theme.css). */
+  font-size: calc(13px * var(--reading-scale));
   line-height: 1.55;
   color: #c4c6d0;
 }

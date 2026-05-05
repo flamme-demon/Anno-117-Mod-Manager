@@ -20,6 +20,13 @@
 }
 
 :root {
+  /* Reading-text scale — multiplied into font-size of long-prose
+     containers (news reader, mod descriptions). UI controls (HUD, cards,
+     toolbar) keep fixed sizes so the layout grid stays stable; only the
+     scrolling-text zones grow. Toggled by a body class set in setSetting
+     ('text_scale'). Default = 1 = "small". */
+  --reading-scale: 1;
+
   /* Navy "command" palette */
   --navy-darkest: #0a1626;
   --navy-dark: #0e1b2e;
@@ -105,3 +112,11 @@ button.is-disabled {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--gold);
 }
+
+/* Reading text size classes set on <body> by applyTextScale(). The
+   variable cascades into the prose containers that opt in (news reader,
+   mod descriptions). Heading sizes inside those containers are also
+   scaled because their font-size rules use calc(... * var(--reading-scale)). */
+body.text-scale-small  { --reading-scale: 1; }
+body.text-scale-medium { --reading-scale: 1.25; }
+body.text-scale-large  { --reading-scale: 1.5; }

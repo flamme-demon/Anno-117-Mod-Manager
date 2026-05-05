@@ -67,6 +67,32 @@
   color: #e6e8ee;
 }
 
+/* "My Subscriptions" toggle — same pill geometry as the sort dropdown so
+   the two read as a continuation of the toolbar. Off state is the neutral
+   navy disc; active state flips to the burgundy palette of the active
+   toolbar tab so the user sees they're filtered. */
+.browser__toggle {
+  appearance: none;
+  background:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.16) 0%, transparent 55%),
+    radial-gradient(circle, #49566a 0%, #323e53 70%);
+  border: 2px solid #181c26;
+  border-radius: 18px;
+  padding: 6px 16px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: #e6e8ee;
+  box-shadow: inset 0 0 2px 0 #94b2ec;
+  cursor: pointer;
+}
+.browser__toggle:hover { filter: brightness(1.15); }
+.browser__toggle.is-active {
+  background:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.16) 0%, transparent 55%),
+    radial-gradient(circle, #a05779 0%, #501f36 70%);
+}
+
 .browser__active-search {
   display: inline-flex;
   align-items: center;
@@ -308,7 +334,10 @@
 
 .mod-card__summary {
   margin: 0;
-  font-size: 13px;
+  /* Honours the Settings → Reading text size choice (theme.css). The
+     line-clamp keeps the card height bounded — growing the font just
+     shortens what's visible. */
+  font-size: calc(13px * var(--reading-scale));
   line-height: 1.45;
   color: #c4c6d0;
   display: -webkit-box;
@@ -384,6 +413,49 @@
 }
 .mod-card__install.is-installed {
   background: linear-gradient(to bottom, #49566a 0%, #323e53 70%);
+}
+
+/* Card actions row — Install/Update sit side-by-side with Uninstall when
+   the mod is on disk, so the user sees both moves in one glance. The
+   wrapper takes the full width of the card footer; flex:1 on each child
+   keeps the buttons balanced regardless of label length (translation). */
+.mod-card__actions {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+}
+.mod-card__actions .mod-card__install {
+  flex: 1;
+}
+.mod-card__uninstall {
+  flex: 0 0 auto;
+  padding: 10px 12px;
+  background: linear-gradient(to bottom, #8a3f3f 0%, #5c2828 70%);
+  border: 2px solid #181c26;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #f4f4f4;
+  cursor: pointer;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 2px 0 rgba(255, 255, 255, 0.15);
+  transition: filter 100ms ease;
+}
+/* When Uninstall is the only action (mod is installed AND up to date)
+   it takes the whole footer width like the standalone Install button —
+   keeps the card silhouette consistent across states. */
+.mod-card__uninstall--solo {
+  flex: 1;
+}
+.mod-card__uninstall:hover:not(:disabled) {
+  filter: brightness(1.15);
+}
+.mod-card__uninstall:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 /* ── Pagination ──────────────────────────────────────────────────────────── */
@@ -621,7 +693,8 @@
   background: rgba(0, 0, 0, 0.30);
   border-radius: 6px;
   font-family: var(--font-body);
-  font-size: 13px;
+  /* Honours the Settings → Reading text size choice (theme.css). */
+  font-size: calc(13px * var(--reading-scale));
   line-height: 1.55;
   color: #c4c6d0;
   white-space: pre-wrap;
@@ -646,10 +719,10 @@
   letter-spacing: 0.04em;
   line-height: 1.3;
 }
-.browser-detail__desc.rich-text h1 { font-size: 18px; border-bottom: 1px solid #2a2e36; padding-bottom: 6px; }
-.browser-detail__desc.rich-text h2 { font-size: 15px; }
-.browser-detail__desc.rich-text h3 { font-size: 14px; }
-.browser-detail__desc.rich-text h4 { font-size: 13px; color: var(--gold-dim); }
+.browser-detail__desc.rich-text h1 { font-size: calc(18px * var(--reading-scale)); border-bottom: 1px solid #2a2e36; padding-bottom: 6px; }
+.browser-detail__desc.rich-text h2 { font-size: calc(15px * var(--reading-scale)); }
+.browser-detail__desc.rich-text h3 { font-size: calc(14px * var(--reading-scale)); }
+.browser-detail__desc.rich-text h4 { font-size: calc(13px * var(--reading-scale)); color: var(--gold-dim); }
 .browser-detail__desc.rich-text p {
   margin: 8px 0;
 }

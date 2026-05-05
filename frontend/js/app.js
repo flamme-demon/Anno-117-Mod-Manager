@@ -50,6 +50,7 @@ const TRANSLATIONS = {
     'launch.title':            'Launch Anno 117',
     'launch.error':            'Could not launch the game: {err}',
     'mods.openFolder.title':   'Open the mods folder',
+    'mods.notFromManager':     'Not installed via the manager',
     'tab.news':                'News',
     'tab.activation':          'Activation',
     'tab.browser':             'Mod Browser',
@@ -77,6 +78,10 @@ const TRANSLATIONS = {
     'settings.enableNewMods.on':    'Always activate them',
     'settings.enableNewMods.off':   'Never activate them',
     'settings.enableNewMods.keep':  'Keep their previous state',
+    'settings.textScale':           'Reading text size',
+    'settings.textScale.small':     'Small',
+    'settings.textScale.medium':    'Medium',
+    'settings.textScale.large':     'Large',
     'settings.derived.docsMods':    'Documents mods folder',
     'settings.derived.gameMods':    'Game install mods folder',
     'settings.derived.profile':     'active-profile.txt',
@@ -130,6 +135,8 @@ const TRANSLATIONS = {
     'news.cached':                  'cached (10 min)',
     'news.includeReddit':           'Include r/anno posts',
     'news.visitUnion':              'Open Anno Union ↗',
+    'news.back':                    'Back to news',
+    'news.openOnUnion':             'Open on Anno Union ↗',
     'settings.modio.clearKey':      'Clear key',
     'modio.badge.connected':        '● Connected',
     'modio.badge.keyOnly':          '◐ API key only',
@@ -164,6 +171,10 @@ const TRANSLATIONS = {
     'browser.sortRating':           'Top rated',
     'browser.sortAlpha':            'A → Z',
     'browser.sortBy':               'Sort by:',
+    'browser.mySubscriptions':      'My Subscriptions',
+    'browser.myFollows':            'My Follows',
+    'browser.follow':               'Follow this collection',
+    'browser.unfollow':             'Unfollow this collection',
     'browser.tag':                  'Tag:',
     'browser.tagAll':               'All tags',
     'browser.clearSearch':          'Clear search',
@@ -175,6 +186,9 @@ const TRANSLATIONS = {
     'browser.backToCollection':     'Back to collection',
     'browser.installCollection':    'Install collection',
     'browser.updateCollection':     'Update collection',
+    'browser.uninstallMod':         '🗑 Uninstall',
+    'browser.uninstallModConfirm':  'Remove « {name} » from disk?',
+    'browser.uninstallModOk':       '« {name} » uninstalled.',
     'browser.uninstallCollection':  '🗑 Uninstall collection',
     'browser.uninstallConfirm':     'Delete the « {profile} » profile created from « {name} »?',
     'browser.uninstallAlsoMods':    'Also wipe the {count} mod(s) bundled in this collection from disk?',
@@ -263,6 +277,7 @@ const TRANSLATIONS = {
     'launch.title':            'Lancer Anno 117',
     'launch.error':            'Impossible de lancer le jeu : {err}',
     'mods.openFolder.title':   'Ouvrir le dossier des mods',
+    'mods.notFromManager':     'Non installé via le gestionnaire',
     'tab.news':                'Actualités',
     'tab.activation':          'Activation',
     'tab.browser':             'Mod Browser',
@@ -290,6 +305,10 @@ const TRANSLATIONS = {
     'settings.enableNewMods.on':    'Toujours les activer',
     'settings.enableNewMods.off':   'Ne jamais les activer',
     'settings.enableNewMods.keep':  'Conserver leur état précédent',
+    'settings.textScale':           'Taille du texte (lecture)',
+    'settings.textScale.small':     'Petit',
+    'settings.textScale.medium':    'Moyen',
+    'settings.textScale.large':     'Grand',
     'settings.derived.docsMods':    'Dossier mods (Documents)',
     'settings.derived.gameMods':    'Dossier mods (jeu)',
     'settings.derived.profile':     'active-profile.txt',
@@ -343,6 +362,8 @@ const TRANSLATIONS = {
     'news.cached':                  'en cache (10 min)',
     'news.includeReddit':           'Inclure les posts r/anno',
     'news.visitUnion':              'Ouvrir Anno Union ↗',
+    'news.back':                    'Retour aux actualités',
+    'news.openOnUnion':             'Ouvrir sur Anno Union ↗',
     'settings.modio.clearKey':      'Effacer la clé',
     'modio.badge.connected':        '● Connecté',
     'modio.badge.keyOnly':          '◐ Clé API seulement',
@@ -377,6 +398,10 @@ const TRANSLATIONS = {
     'browser.sortRating':           'Mieux notés',
     'browser.sortAlpha':            'A → Z',
     'browser.sortBy':               'Trier par :',
+    'browser.mySubscriptions':      'Mes abonnements',
+    'browser.myFollows':            'Mes follows',
+    'browser.follow':               'Suivre cette collection',
+    'browser.unfollow':             'Ne plus suivre cette collection',
     'browser.tag':                  'Tag :',
     'browser.tagAll':               'Tous les tags',
     'browser.clearSearch':          'Effacer la recherche',
@@ -388,6 +413,9 @@ const TRANSLATIONS = {
     'browser.backToCollection':     'Retour à la collection',
     'browser.installCollection':    'Installer la collection',
     'browser.updateCollection':     'Mettre à jour la collection',
+    'browser.uninstallMod':         '🗑 Désinstaller',
+    'browser.uninstallModConfirm':  'Supprimer « {name} » du disque ?',
+    'browser.uninstallModOk':       '« {name} » désinstallé.',
     'browser.uninstallCollection':  '🗑 Désinstaller la collection',
     'browser.uninstallConfirm':     'Supprimer le profil « {profile} » créé à partir de « {name} » ?',
     'browser.uninstallAlsoMods':    'Supprimer aussi du disque les {count} mod(s) inclus dans cette collection ?',
@@ -2509,6 +2537,7 @@ window.annoApp = function () {
     version: '',
     release: { checked: false, up_to_date: true, latest: '', url: '' },
     currentTab: 'activation',
+    modUpdates: {},             // {mod_id: latest_modfile_id} — refreshed at boot for the Activation row buttons
     mods: [],
     selectedModId: null,
     selectedBannerUrl: '',
@@ -2556,7 +2585,11 @@ window.annoApp = function () {
       drag: null,               // 'sv' | 'hue' while a drag is in flight
       palette: ANNO_PALETTE,    // in-game banner palette (alias for x-for binding)
     },
-    news: { items: [], loading: false, error: '', cached: false, loaded: false },
+    news: { items: [], loading: false, error: '', cached: false, loaded: false,
+            // Lazy-loaded detail state. `cache` keys by wp_id so re-opening the
+            // same post is instant; the open card is tracked in `current`.
+            detail: { open: false, item: null, html: '', loading: false, error: '' },
+            cache: {} },
     _newsTimer: null,           // background poll started on first News open
     browser: {
       // List state
@@ -2569,6 +2602,10 @@ window.annoApp = function () {
       tagFilter: '',            // '' = all, otherwise the exact tag name to filter on
       tagsCatalog: [],          // array of {name, tags: [str, ...]} groups from mod.io
       authorFilter: { id: 0, name: '' }, // {id, name} when filtering by submitter
+      subscribedOnly: false,    // toggle: list /me/subscribed instead of /games/{}/mods
+      followedOnly: false,      // toggle (Collections tab): list /me/following/collections
+      followedColls: {},        // {coll_id: true} cache for the ★/☆ button on collection cards
+      followBusy: {},           // {coll_id: true} while a follow/unfollow call runs
       dependencies: [],         // mods bundled by the currently-open collection
       dependenciesLoading: false,
       // Single-step navigation stack: when the user opens a mod from a
@@ -2588,6 +2625,7 @@ window.annoApp = function () {
       subscribed: {},           // {modId: true} membership cache
       installedFolders: {},     // {folderName: true} — derived from local mods scanner
       installedIds: {},         // {modioId: true} — persisted in settings.json after each install
+      installedMeta: {},        // {modioId: {modfile_id, version}} — drives "Update" vs "Installed" CTA
       installing: {},           // {modId: true} while a download+install is in flight
       subBusy: {},              // {modId: true} while a subscribe/unsubscribe call runs
       endorseBusy: {},          // {modId: true} while a rating call runs
@@ -2657,6 +2695,12 @@ window.annoApp = function () {
       } catch (e) {
         console.error('modio_status init failed:', e);
       }
+      // Hydrate _modio_install.json markers + check for available updates
+      // so the Activation rows can show their per-row Update/Uninstall
+      // buttons from the very first render. Both calls are best-effort —
+      // a missing marker or no auth just hides the relevant icon.
+      await this._refreshInstalledIds();
+      this._refreshModUpdates();  // fire-and-forget, doesn't block boot
       // Restore the previously-selected profile, if any. We persist the
       // user's choice in settings so a relaunch lands on the same preset
       // they were working from. Falls back to Default if the saved name
@@ -2674,6 +2718,18 @@ window.annoApp = function () {
             await this.refreshMods();
           }
         }
+        // Restore the Browser's My Subscriptions filter — kept across
+        // launches so the user doesn't re-tick on every start.
+        if (s && typeof s.browser_subscribed_only === 'boolean') {
+          this.browser.subscribedOnly = s.browser_subscribed_only;
+        }
+        if (s && typeof s.browser_followed_only === 'boolean') {
+          this.browser.followedOnly = s.browser_followed_only;
+        }
+        // Reading text size — apply the saved class to <body> so the news
+        // reader / mod descriptions render at the chosen scale on boot,
+        // not just after the user re-touches the setting.
+        this.applyTextScale(s && s.text_scale);
       } catch (e) {
         console.error('restore active profile failed:', e);
       }
@@ -2723,7 +2779,11 @@ window.annoApp = function () {
       try {
         const res = await window.pywebview.api.fetch_news(!!force);
         if (res && res.ok) {
+          // Preserve detail+cache across reloads — they're orthogonal to the
+          // list itself, and wiping them would close an open detail page on
+          // every background poll.
           this.news = {
+            ...this.news,
             items: res.items || [],
             cached: !!res.cached,
             loading: false,
@@ -2745,6 +2805,73 @@ window.annoApp = function () {
       if (!this._newsTimer) {
         this._newsTimer = setInterval(() => this.refreshNews(true), 5 * 60 * 1000);
       }
+    },
+
+    /** Open the in-app reader for an Anno Union post. Reddit and mod.io
+     *  cards keep their existing behaviour (external link / deep-link) —
+     *  only Anno Union cards get the embedded reader. Lazy-fetches the
+     *  full HTML on first click and caches by wp_id so re-opening the
+     *  same post is instant. */
+    async openNewsDetail(item) {
+      if (!item) return;
+      if (item.source !== 'anno_union' || !item.wp_id) {
+        // Non-WP sources keep the legacy external-link flow.
+        this.openExternalUrl(item.url || '');
+        return;
+      }
+      // Cache stores both the sanitised HTML and the full-resolution hero
+      // URL — the list cold-fetch only carries `medium` thumbnails (cheap
+      // for cards), and we need the `source_url` from the lazy fetch so
+      // the in-app reader's hero isn't upscaled and pixelated.
+      const cached = this.news.cache[item.wp_id];
+      const seedItem = (cached && cached.imgUrl)
+        ? { ...item, img_url: cached.imgUrl }
+        : item;
+      this.news.detail = {
+        open: true, item: seedItem,
+        html: (cached && cached.html) || '',
+        loading: !cached,
+        error: '',
+      };
+      if (cached) return;
+      try {
+        const res = await window.pywebview.api.fetch_anno_union_post(item.wp_id);
+        if (res && res.ok) {
+          this.news.cache = {
+            ...this.news.cache,
+            [item.wp_id]: { html: res.content_html || '', imgUrl: res.img_url || '' },
+          };
+          const mergedItem = res.img_url
+            ? { ...this.news.detail.item, img_url: res.img_url }
+            : this.news.detail.item;
+          this.news.detail = { ...this.news.detail,
+                                item: mergedItem,
+                                html: res.content_html || '',
+                                loading: false, error: '' };
+        } else {
+          this.news.detail = { ...this.news.detail, loading: false,
+                                error: (res && res.error) || 'fetch failed' };
+        }
+      } catch (e) {
+        this.news.detail = { ...this.news.detail, loading: false, error: String(e) };
+      }
+    },
+    closeNewsDetail() {
+      this.news.detail = { open: false, item: null, html: '', loading: false, error: '' };
+    },
+
+    /** Delegate clicks inside the in-app reader's article to openExternalUrl
+     *  whenever the user hits a link — without this, WebKit2GTK navigates
+     *  the webview itself, which (a) breaks the back button, (b) glitches
+     *  on raw .mp4 URLs (the video-link substitute we inject for native
+     *  WP uploads). Walks up to the closest <a>; ignores plain text. */
+    onArticleClick(evt) {
+      const a = evt.target.closest && evt.target.closest('a');
+      if (!a) return;
+      const href = a.getAttribute('href') || '';
+      if (!/^https?:\/\//i.test(href)) return;
+      evt.preventDefault();
+      this.openExternalUrl(href);
     },
 
     _stopLogPolling() {
@@ -2912,25 +3039,18 @@ window.annoApp = function () {
           if (m.folder) this.browser.installedFolders[m.folder] = true;
         }
       } catch (_) {}
-      // Hydrate "already installed" state from settings.json so the
-      // ✓ Installé / Mettre à jour badge survives across launches.
-      try {
-        const r = await window.pywebview.api.modio_installed_ids();
-        if (r && r.ok) {
-          const map = {};
-          for (const id of (r.ids || [])) map[id] = true;
-          this.browser.installedIds = map;
-        }
-      } catch (_) {}
+      // Hydrate "already installed" state from the marker files so the
+      // ✓ Installé / Mettre à jour badge survives across launches. Goes
+      // through _refreshInstalledIds so installedMeta (modfile_id, folder)
+      // also gets populated — without it, browserHasUpdate falls back to
+      // "always show update" and the CTA flickers from "Update" on first
+      // open to "Installed" after the first refresh.
+      await this._refreshInstalledIds();
       // Subscribed list — best-effort.
-      try {
-        const res = await window.pywebview.api.modio_subscribed();
-        if (res && res.ok) {
-          const map = {};
-          for (const m of (res.data || [])) map[m.id] = true;
-          this.browser.subscribed = map;
-        }
-      } catch (_) {}
+      await this._refreshSubscribed();
+      // Followed collections list — drives the ★/☆ on collection cards
+      // and the "Mes follows" filter.
+      this._refreshFollowedCollections();  // fire-and-forget
       // Endorsements the user has already cast — needed to render the
       // gold heart on previously-endorsed mods (the list endpoint doesn't
       // carry user_rating, only /me/ratings does).
@@ -2987,6 +3107,23 @@ window.annoApp = function () {
 
     browserClearAuthor() { this.browserSetAuthor(0, ''); },
 
+    /** Toggle the "My Subscriptions" filter on the Browser tab. Resets
+     *  pagination and re-fetches; the swap to /me/subscribed happens in
+     *  browserFetch based on this flag. The choice is persisted to
+     *  settings.json so a restart preserves the filter — the user
+     *  explicitly opted in and shouldn't have to re-tick on every launch. */
+    browserToggleSubscribed() {
+      this.browser.subscribedOnly = !this.browser.subscribedOnly;
+      this.browser.offset = 0;
+      // Fire-and-forget; failure to persist is non-fatal (next session just
+      // starts with the default again).
+      try {
+        window.pywebview.api.update_setting(
+          'browser_subscribed_only', this.browser.subscribedOnly);
+      } catch (_) {}
+      this.browserFetch();
+    },
+
     browserPrev() {
       if (this.browser.offset <= 0) return;
       this.browser.offset = Math.max(0, this.browser.offset - this.browser.limit);
@@ -3006,18 +3143,40 @@ window.annoApp = function () {
       this.browser.notAuth = false;
       try {
         const isCollections = this.currentTab === 'collections';
-        const res = await window.pywebview.api.modio_browse(
-          this.browser.search,
-          // Tags only apply to the mods taxonomy — drop them on Collections
-          // so a stale Browser tag doesn't filter the collection listing
-          // down to nothing.
-          (!isCollections && this.browser.tagFilter) ? [this.browser.tagFilter] : null,
-          this.browser.limit,
-          this.browser.offset,
-          this.browser.sort,
-          this.browser.authorFilter.id || 0,
-          isCollections,
-        );
+        // Each tab has its own filter that swaps the endpoint:
+        //   Browser     + subscribedOnly → /me/subscribed
+        //   Collections + followedOnly   → /me/following/collections
+        // Filters are mutually exclusive across tabs (each tab only honours
+        // its own flag), and the cross-tab one is ignored to avoid a stale
+        // toggle from one view leaking into the other.
+        const subOnly = !isCollections && this.browser.subscribedOnly;
+        const followOnly = isCollections && this.browser.followedOnly;
+        const res = followOnly
+          ? await window.pywebview.api.modio_followed_collections(
+              this.browser.search,
+              this.browser.limit,
+              this.browser.offset,
+              this.browser.sort,
+            )
+          : subOnly
+          ? await window.pywebview.api.modio_subscribed(
+              this.browser.search,
+              this.browser.limit,
+              this.browser.offset,
+              this.browser.sort,
+            )
+          : await window.pywebview.api.modio_browse(
+              this.browser.search,
+              // Tags only apply to the mods taxonomy — drop them on Collections
+              // so a stale Browser tag doesn't filter the collection listing
+              // down to nothing.
+              (!isCollections && this.browser.tagFilter) ? [this.browser.tagFilter] : null,
+              this.browser.limit,
+              this.browser.offset,
+              this.browser.sort,
+              this.browser.authorFilter.id || 0,
+              isCollections,
+            );
         if (res && res.ok) {
           this.browser.items = res.data || [];
           this.browser.total = res.result_total || 0;
@@ -3142,6 +3301,15 @@ window.annoApp = function () {
           const next = { ...this.browser.subscribed };
           if (wasSubscribed) delete next[modId]; else next[modId] = true;
           this.browser.subscribed = next;
+          // When the "My Subscriptions" filter is on, the list itself comes
+          // from /me/subscribed — unsubscribing means the row no longer
+          // belongs there. Drop it locally instead of waiting for the next
+          // browserFetch (or a tab switch) to re-query.
+          if (wasSubscribed && this.browser.subscribedOnly &&
+              this.currentTab === 'browser') {
+            this.browser.items = this.browser.items.filter((m) => m.id !== modId);
+            this.browser.total = Math.max(0, (this.browser.total || 0) - 1);
+          }
         } else {
           this._browserFlash(this.t('browser.subFail',
             { error: (res && res.error) || 'unknown' }), true);
@@ -3294,8 +3462,12 @@ window.annoApp = function () {
             this.refreshMods();
           }
           // Either way, refresh the persisted markers so the ✓ Installé
-          // badge flips on every newly-installed card.
+          // badge flips on every newly-installed card. Subscribed cache
+          // also gets a refresh because the backend auto-subscribes on
+          // install (api.py:modio_install_mod) and the badge / My
+          // Subscriptions filter both read from this.browser.subscribed.
           this._refreshInstalledIds();
+          this._refreshSubscribed();
         } else {
           this._browserFlash(this.t('browser.installFail',
             { error: (res && res.error) || 'unknown' }), true);
@@ -3306,6 +3478,53 @@ window.annoApp = function () {
         const next = { ...this.browser.installing };
         delete next[modId];
         this.browser.installing = next;
+      }
+    },
+
+    /** Uninstall a mod previously installed through the Browser. The folder
+     *  to delete comes from installedMeta (written by modio_installed_ids
+     *  on every refresh) so we don't need a backend round-trip to look it
+     *  up. Subscribe state is left alone — uninstalling locally shouldn't
+     *  silently unsubscribe the user; they can do that explicitly via the
+     *  ✓ button on the card if they want. */
+    async browserUninstall(modId) {
+      if (!modId) return;
+      const meta = this.browser.installedMeta[modId];
+      const folder = meta && meta.folder;
+      if (!folder) {
+        this._browserFlash(this.t('browser.installFail',
+          { error: 'no folder marker' }), true);
+        return;
+      }
+      const detail = this.browser.detail;
+      const card = (this.browser.items || []).find((m) => m.id === modId);
+      const name = (detail && detail.id === modId && detail.name)
+                   || (card && card.name) || `mod ${modId}`;
+      if (!confirm(this.t('browser.uninstallModConfirm', { name }))) return;
+      try {
+        const res = await window.pywebview.api.uninstall_mod(folder);
+        if (res && res.ok) {
+          this._browserFlash(this.t('browser.uninstallModOk', { name }), false);
+          // Drop the local "installed" markers immediately so the CTA flips
+          // back to "Install" without waiting for the next refresh.
+          const ids = { ...this.browser.installedIds }; delete ids[modId];
+          const m   = { ...this.browser.installedMeta }; delete m[modId];
+          const fld = { ...this.browser.installedFolders }; delete fld[folder];
+          this.browser.installedIds = ids;
+          this.browser.installedMeta = m;
+          this.browser.installedFolders = fld;
+          // Refresh the Activation list (the mod just disappeared from disk).
+          this.refreshMods();
+          // Re-read markers from disk too — covers the case where the user
+          // had multiple folders pointing at the same mod_id (rare but
+          // possible after a manual copy).
+          this._refreshInstalledIds();
+        } else {
+          this._browserFlash(this.t('browser.installFail',
+            { error: (res && res.error) || 'unknown' }), true);
+        }
+      } catch (e) {
+        this._browserFlash(this.t('browser.installFail', { error: String(e) }), true);
       }
     },
 
@@ -3382,6 +3601,21 @@ window.annoApp = function () {
       } catch (e) {
         console.error('update_setting threw:', e);
       }
+    },
+
+    /** Reading text size — only affects long-prose containers (news
+     *  reader, mod descriptions). UI controls (HUD, cards, buttons)
+     *  stay at fixed sizes so layouts don't shift. Driven by a body
+     *  class that flips a CSS variable used inside those containers. */
+    applyTextScale(value) {
+      const v = (value === 'medium' || value === 'large') ? value : 'small';
+      document.body.classList.remove(
+        'text-scale-small', 'text-scale-medium', 'text-scale-large');
+      document.body.classList.add('text-scale-' + v);
+    },
+    async setTextScale(value) {
+      this.applyTextScale(value);
+      await this.setSetting('text_scale', value);
     },
 
     async pickGamePath(asFile) {
@@ -4133,6 +4367,188 @@ window.annoApp = function () {
           const map = {};
           for (const id of (r.ids || [])) map[id] = true;
           this.browser.installedIds = map;
+          this.browser.installedMeta = r.meta || {};
+        }
+      } catch (_) {}
+    },
+
+    /** True when the mod is installed AND the locally recorded modfile_id
+     *  differs from the latest one on mod.io. Used to decide whether the
+     *  CTA should read "Update" or just "Installed". When the marker
+     *  predates the modfile_id field (legacy installs) we fall back to
+     *  "always show update" so the user can refresh; that matches the old
+     *  behaviour and is recoverable in one click. */
+    browserHasUpdate(m) {
+      if (!m || !this.browser.installedIds[m.id]) return false;
+      const local = this.browser.installedMeta[m.id];
+      if (!local || !local.modfile_id) return true;
+      const remote = (m.modfile && Number(m.modfile.id)) || 0;
+      return remote && local.modfile_id !== remote;
+    },
+
+    /** Pull the current latest modfile_id for every mod we have a marker
+     *  for. Drives the Update button on each Activation row (compared
+     *  against the local modfile_id in installedMeta). Best-effort: if the
+     *  user is not authenticated or the call fails, modUpdates stays empty
+     *  and the buttons just don't show — uninstall still works. */
+    async _refreshModUpdates() {
+      try {
+        const meta = this.browser.installedMeta || {};
+        const ids = Object.keys(meta).map(Number).filter(Boolean);
+        if (!ids.length) { this.modUpdates = {}; return; }
+        const res = await window.pywebview.api.modio_check_updates(ids);
+        if (res && res.ok) this.modUpdates = res.updates || {};
+      } catch (_) {}
+    },
+
+    /** True when the local mod folder was installed via the manager — i.e.
+     *  there's a _modio_install.json marker whose folder field matches.
+     *  Used to gate the Update button and to flag manually-installed mods
+     *  with a small "not from the manager" note. */
+    modIsFromManager(m) {
+      if (!m || !m.folder) return false;
+      const meta = this.browser.installedMeta || {};
+      for (const v of Object.values(meta)) {
+        if (v && v.folder === m.folder) return true;
+      }
+      return false;
+    },
+    modManagerModId(m) {
+      if (!m || !m.folder) return 0;
+      const meta = this.browser.installedMeta || {};
+      for (const [mid, v] of Object.entries(meta)) {
+        if (v && v.folder === m.folder) return Number(mid);
+      }
+      return 0;
+    },
+    modUpdateAvailable(m) {
+      const mid = this.modManagerModId(m);
+      if (!mid) return false;
+      const local = (this.browser.installedMeta || {})[mid];
+      const remote = this.modUpdates[mid] || 0;
+      return !!(local && remote && local.modfile_id !== remote);
+    },
+
+    /** Activation-row Uninstall — same trigger as the Browser's row
+     *  Uninstall, but driven from the local mod (we already have the
+     *  folder, no need to look up the marker). Refreshes the mod list and
+     *  marker cache so the row disappears immediately. */
+    async activationUninstall(folder, name) {
+      if (!folder) return;
+      if (!confirm(this.t('detail.uninstallConfirm', { name: name || folder }))) return;
+      try {
+        const res = await window.pywebview.api.uninstall_mod(folder);
+        if (res && res.ok) {
+          await this.refreshMods();
+          await this._refreshInstalledIds();
+        } else {
+          alert((res && res.error) || 'unknown');
+        }
+      } catch (e) {
+        alert(String(e));
+      }
+    },
+
+    /** Activation-row Update — re-runs modio_install_mod which re-downloads
+     *  the latest modfile and overwrites the local copy. After success we
+     *  refresh markers + the update map so the button hides itself. */
+    async activationUpdate(modId) {
+      if (!modId) return;
+      try {
+        const res = await window.pywebview.api.modio_install_mod(modId);
+        if (res && res.ok) {
+          await this.refreshMods();
+          await this._refreshInstalledIds();
+          await this._refreshModUpdates();
+        } else {
+          alert((res && res.error) || 'unknown');
+        }
+      } catch (e) {
+        alert(String(e));
+      }
+    },
+
+    /** Same idea as _refreshSubscribed but for collections. Pulls the user's
+     *  followed-collections list (single host, capped at 100 — well above
+     *  what any sane user would track) and turns it into a {coll_id: true}
+     *  map for the star button on each collection card. */
+    async _refreshFollowedCollections() {
+      try {
+        const res = await window.pywebview.api.modio_followed_collections();
+        if (res && res.ok) {
+          const map = {};
+          for (const c of (res.data || [])) map[c.id] = true;
+          this.browser.followedColls = map;
+        }
+      } catch (_) {}
+    },
+
+    /** Toggle "Mes follows" filter on the Collections tab. Same shape as
+     *  browserToggleSubscribed but routes through modio_followed_collections
+     *  instead of modio_subscribed. Persisted to settings.json so it
+     *  survives restart. */
+    browserToggleFollowed() {
+      this.browser.followedOnly = !this.browser.followedOnly;
+      this.browser.offset = 0;
+      try {
+        window.pywebview.api.update_setting(
+          'browser_followed_only', this.browser.followedOnly);
+      } catch (_) {}
+      this.browserFetch();
+    },
+
+    /** Star/unstar a collection. mod.io auto-subscribes the user to every
+     *  mod in the bundle on follow (and the reverse on unfollow), so we
+     *  refresh the subscribed cache too — otherwise the per-mod ✓ badges
+     *  on Browser cards would lag behind. */
+    async browserToggleFollowCollection(collId, nameId) {
+      if (!collId || !nameId || this.browser.followBusy[collId]) return;
+      this.browser.followBusy = { ...this.browser.followBusy, [collId]: true };
+      const wasFollowed = !!this.browser.followedColls[collId];
+      try {
+        const res = wasFollowed
+          ? await window.pywebview.api.modio_unfollow_collection(nameId)
+          : await window.pywebview.api.modio_follow_collection(nameId);
+        if (res && res.ok) {
+          const next = { ...this.browser.followedColls };
+          if (wasFollowed) delete next[collId]; else next[collId] = true;
+          this.browser.followedColls = next;
+          // Cascade affected the per-mod subscribed state — refresh both
+          // caches so the UI matches mod.io's server side immediately.
+          this._refreshSubscribed();
+          // Same drop-from-list trick as browserToggleSubscribe: when "Mes
+          // follows" is on, the list IS /me/following/collections, so
+          // unfollowing here should remove the card right away.
+          if (wasFollowed && this.browser.followedOnly &&
+              this.currentTab === 'collections') {
+            this.browser.items = this.browser.items.filter((m) => m.id !== collId);
+            this.browser.total = Math.max(0, (this.browser.total || 0) - 1);
+          }
+        } else {
+          this._browserFlash(this.t('browser.installFail',
+            { error: (res && res.error) || 'unknown' }), true);
+        }
+      } catch (e) {
+        this._browserFlash(this.t('browser.installFail', { error: String(e) }), true);
+      } finally {
+        const next = { ...this.browser.followBusy };
+        delete next[collId];
+        this.browser.followBusy = next;
+      }
+    },
+
+    /** Re-fetch /me/subscribed and rebuild the {modId: true} cache used by
+     *  the "✓ Subscribed" badge on cards and the My Subscriptions filter.
+     *  Called on Browser open and after every install (the backend
+     *  auto-subscribes silently, but the frontend cache is what drives the
+     *  UI so it has to be told). */
+    async _refreshSubscribed() {
+      try {
+        const res = await window.pywebview.api.modio_subscribed();
+        if (res && res.ok) {
+          const map = {};
+          for (const m of (res.data || [])) map[m.id] = true;
+          this.browser.subscribed = map;
         }
       } catch (_) {}
     },
@@ -4235,7 +4651,39 @@ window.annoApp = function () {
         </div>`;
 
       let body;
-      if (n.loading && !n.items.length) {
+      // Detail view (in-app reader for Anno Union posts) takes over the
+      // body when open. Reddit/mod.io cards still open externally / via
+      // the existing Browser deep-link.
+      if (n.detail && n.detail.open) {
+        const d = n.detail;
+        const it = d.item || {};
+        const inner = d.loading
+          ? `<div class="news__empty">${escapeHtml(this.t('news.loading'))}</div>`
+          : d.error
+            ? `<div class="news__empty news__empty--error">${escapeHtml(this.t('news.error', { err: d.error }))}</div>`
+            : `<article class="news-detail__article" onclick="annoRoot().onArticleClick(event)">${sanitizeModioHtml(d.html || '')}</article>`;
+        body = `
+          <div class="news-detail">
+            <div class="news-detail__bar">
+              <button class="settings__btn"
+                      onclick="annoRoot().closeNewsDetail()">← ${escapeHtml(this.t('news.back'))}</button>
+              <button class="settings__btn"
+                      onclick="annoRoot().openExternalUrl('${escapeAttr(it.url || '')}')">
+                ${escapeHtml(this.t('news.openOnUnion'))}
+              </button>
+            </div>
+            ${it.img_url
+                ? `<div class="news-detail__hero"><img src="${escapeAttr(it.img_url)}" alt="" /></div>`
+                : ''}
+            <div class="news-detail__head">
+              <span class="news-card__badge"
+                    style="background: ${escapeAttr(it.badge_color || '#444')}">${escapeHtml(it.badge_text || '?')}</span>
+              <span class="news-card__date">${escapeHtml(it.date || '')}</span>
+            </div>
+            <h2 class="news-detail__title">${escapeHtml(it.title || '')}</h2>
+            ${inner}
+          </div>`;
+      } else if (n.loading && !n.items.length) {
         body = `<div class="news__empty">${escapeHtml(this.t('news.loading'))}</div>`;
       } else if (n.error) {
         body = `<div class="news__empty news__empty--error">${escapeHtml(this.t('news.error', { err: n.error }))}</div>`;
@@ -4243,12 +4691,15 @@ window.annoApp = function () {
         body = `<div class="news__empty">${escapeHtml(this.t('news.empty'))}</div>`;
       } else {
         body = `<div class="news__grid">${n.items.map((item) => {
-          // mod.io cards deep-link into the in-app Browser/Collections
-          // detail page (we have the ID); other sources still open in
-          // the user's browser since they're external.
+          // Three click targets per card source:
+          //  - mod.io  → in-app Browser/Collections deep link
+          //  - anno_union → in-app reader (lazy fetches the full HTML)
+          //  - reddit  → external (no clean public content endpoint)
           let click;
           if (item.modio_id && (item.modio_kind === 'mod' || item.modio_kind === 'collection')) {
             click = `annoRoot().openModioFromNews(${Number(item.modio_id)}, '${escapeAttr(item.modio_kind)}')`;
+          } else if (item.source === 'anno_union' && item.wp_id) {
+            click = `annoRoot().openNewsDetail(annoRoot().news.items.find((x) => x.wp_id === ${Number(item.wp_id)}))`;
           } else {
             click = `annoRoot().openExternalUrl('${escapeAttr(item.url || '')}')`;
           }
@@ -4303,7 +4754,13 @@ window.annoApp = function () {
       const sortOptions = [
         ['-date_updated', 'browser.sortNewest'],
         ['-popular',      'browser.sortPopular'],
-        ['-downloads',    'browser.sortDownloads'],
+        // mod.io quirk: the `_sort=downloads` field is inverted vs the rest of
+        // the API — `-downloads` returns the LEAST downloaded mods first,
+        // plain `downloads` returns the MOST. Verified against /games/11358/
+        // mods on 2026-05-05. Don't add the `-` "to be consistent" with the
+        // others or the user-facing label "Most downloaded" stops matching
+        // the result order.
+        ['downloads',     'browser.sortDownloads'],
         ['-rating',       'browser.sortRating'],
         ['name',          'browser.sortAlpha'],
       ];
@@ -4331,6 +4788,18 @@ window.annoApp = function () {
                 ${escapeHtml(this.t(key))}
               </option>`).join('')}
           </select>
+          ${this.currentTab === 'browser' ? `
+            <button class="browser__toggle ${b.subscribedOnly ? 'is-active' : ''}"
+                    title="${escapeAttr(this.t('browser.mySubscriptions'))}"
+                    onclick="annoRoot().browserToggleSubscribed()">
+              ${escapeHtml(this.t('browser.mySubscriptions'))}
+            </button>` : ''}
+          ${this.currentTab === 'collections' ? `
+            <button class="browser__toggle ${b.followedOnly ? 'is-active' : ''}"
+                    title="${escapeAttr(this.t('browser.myFollows'))}"
+                    onclick="annoRoot().browserToggleFollowed()">
+              ${escapeHtml(this.t('browser.myFollows'))}
+            </button>` : ''}
           ${tagGroups.length ? `
             <label class="browser__sort-label">${escapeHtml(this.t('browser.tag'))}</label>
             <select class="browser__sort"
@@ -4387,11 +4856,20 @@ window.annoApp = function () {
         // bottom stops propagation so it doesn't also navigate.
         listBody = `<div class="mod-grid">${b.items.map((m) => {
           const id          = Number(m.id);
-          const isSubd      = !!b.subscribed[m.id];
+          // On the Collections grid the +/✓ button on the card flips role:
+          // it follows/unfollows the collection on mod.io (which auto-subs
+          // every mod inside) instead of subscribing to a single mod —
+          // there's no per-mod subscribe gesture for a collection.
+          const isCardCollection = this.currentTab === 'collections' && !b.parent;
+          const isSubd      = isCardCollection
+                              ? !!b.followedColls[m.id]
+                              : !!b.subscribed[m.id];
           const wasEndorsed = !!b.endorsed[m.id];
           const isInstalling = !!b.installing[m.id];
           const isInstalled  = this.browserIsInstalled(m);
-          const subBusy     = !!b.subBusy[m.id];
+          const subBusy     = isCardCollection
+                              ? !!b.followBusy[m.id]
+                              : !!b.subBusy[m.id];
           const endorseBusy = !!b.endorseBusy[m.id];
           const submittedBy = (m.submitted_by && m.submitted_by.username) || '?';
           const submittedById = (m.submitted_by && Number(m.submitted_by.id)) || 0;
@@ -4409,9 +4887,11 @@ window.annoApp = function () {
           })();
           // Primary CTA at the bottom of the card. This is a manager, not a
           // discovery site, so the install action is the dominant gesture.
+          const hasUpdate = this.browserHasUpdate(m);
           const installLabel = isInstalling ? this.t('browser.installing')
-                              : isInstalled ? this.t('browser.update')
-                              : this.t('browser.install');
+                              : isInstalled
+                                  ? (hasUpdate ? this.t('browser.update') : this.t('browser.installed'))
+                                  : this.t('browser.install');
           return `
             <article class="mod-card"
                      onclick="annoRoot().browserSelect(${id})">
@@ -4425,8 +4905,12 @@ window.annoApp = function () {
                         onclick="event.stopPropagation(); annoRoot().browserEndorse(${id})">♥</button>
                 <button class="mod-card__hover-action mod-card__hover-action--subscribe ${isSubd ? 'is-active' : ''}"
                         ${subBusy ? 'disabled' : ''}
-                        title="${escapeAttr(isSubd ? this.t('browser.unsubscribe') : this.t('browser.subscribe'))}"
-                        onclick="event.stopPropagation(); annoRoot().browserToggleSubscribe(${id})">${isSubd ? '✓' : '+'}</button>
+                        title="${escapeAttr(isSubd
+                          ? this.t(isCardCollection ? 'browser.unfollow' : 'browser.unsubscribe')
+                          : this.t(isCardCollection ? 'browser.follow' : 'browser.subscribe'))}"
+                        onclick="event.stopPropagation(); ${isCardCollection
+                          ? `annoRoot().browserToggleFollowCollection(${id}, '${escapeAttr(m.name_id || '')}')`
+                          : `annoRoot().browserToggleSubscribe(${id})`}">${isSubd ? '✓' : '+'}</button>
               </div>
               <div class="mod-card__body">
                 <h3 class="mod-card__title">${escapeHtml(m.name || '')}</h3>
@@ -4459,11 +4943,21 @@ window.annoApp = function () {
                     })()}
                   <span title="${escapeAttr(this.t('browser.downloads', { n: stats.downloads_total || 0 }))}">⬇ ${escapeHtml(fmtNumber(stats.downloads_total || 0))}</span>
                 </div>
-                <button class="mod-card__install ${isInstalled ? 'is-installed' : ''}"
-                        ${isInstalling ? 'disabled' : ''}
-                        onclick="event.stopPropagation(); annoRoot().browserInstall(${id})">
-                  ${escapeHtml(installLabel)}
-                </button>
+                <div class="mod-card__actions">
+                  ${isInstalled && !hasUpdate ? '' : `
+                    <button class="mod-card__install ${isInstalled ? 'is-installed' : ''}"
+                            ${isInstalling ? 'disabled' : ''}
+                            onclick="event.stopPropagation(); annoRoot().browserInstall(${id})">
+                      ${escapeHtml(installLabel)}
+                    </button>`}
+                  ${isInstalled ? `
+                    <button class="mod-card__uninstall ${hasUpdate ? '' : 'mod-card__uninstall--solo'}"
+                            ${isInstalling ? 'disabled' : ''}
+                            title="${escapeAttr(this.t('browser.uninstallMod'))}"
+                            onclick="event.stopPropagation(); annoRoot().browserUninstall(${id})">
+                      ${escapeHtml(this.t('browser.uninstallMod'))}
+                    </button>` : ''}
+                </div>
               </div>
             </article>`;
         }).join('')}</div>`;
@@ -4572,27 +5066,41 @@ window.annoApp = function () {
         return tot > 0 ? Math.round((pos / tot) * 100) : null;
       })();
       const modfile = d.modfile || {};
-      const isSubscribed = !!b.subscribed[id];
+      const isCollectionTab = (this.currentTab === 'collections') && !b.parent;
+      // Detail-page subscribe button: on Collections it stands for follow,
+      // not subscribe (no per-mod sub gesture for a collection bundle).
+      const isSubscribed = isCollectionTab
+                           ? !!b.followedColls[id]
+                           : !!b.subscribed[id];
       const isInstalling = !!b.installing[id];
       const isInstalled  = this.browserIsInstalled(d);
-      const subBusy      = !!b.subBusy[id];
+      const subBusy      = isCollectionTab
+                           ? !!b.followBusy[id]
+                           : !!b.subBusy[id];
       const endorseBusy  = !!b.endorseBusy[id];
       const wasEndorsed  = !!b.endorsed[id];
 
       // Collection install puts up a different verb — we're not installing
       // one mod, we're installing a bunch of them and creating a profile.
-      const isCollectionTab = (this.currentTab === 'collections') && !b.parent;
+      // For collections we keep the old behaviour (Update/Install always)
+      // because there's no per-mod modfile_id we can reliably compare against
+      // the bundle's contents — only individual mods get the version check.
+      const hasUpdate = this.browserHasUpdate(d);
       const installLabel = isInstalling
         ? this.t('browser.installing')
         : (isCollectionTab
             ? (isInstalled
                 ? this.t('browser.updateCollection')
                 : this.t('browser.installCollection'))
-            : (isInstalled ? this.t('browser.update') : this.t('browser.install')));
+            : (isInstalled
+                ? (hasUpdate ? this.t('browser.update') : this.t('browser.installed'))
+                : this.t('browser.install')));
       const installClass = isInstalled
         ? 'settings__btn'
         : 'settings__btn settings__btn--accent';
-      const subLabel = isSubscribed ? this.t('browser.unsubscribe') : this.t('browser.subscribe');
+      const subLabel = isCollectionTab
+        ? (isSubscribed ? this.t('browser.unfollow') : this.t('browser.follow'))
+        : (isSubscribed ? this.t('browser.unsubscribe') : this.t('browser.subscribe'));
 
       // Description: prefer the rich HTML mod.io serves (with proper headings,
       // lists, emphasis) over the flat plaintext form. mod.io strips dangerous
@@ -4644,8 +5152,12 @@ window.annoApp = function () {
                 </button>
                 <button class="browser-detail__big-btn browser-detail__big-btn--subscribe ${isSubscribed ? 'is-active' : ''}"
                         ${subBusy ? 'disabled' : ''}
-                        onclick="annoRoot().browserToggleSubscribe(${id})">
-                  ${escapeHtml(isSubscribed ? this.t('browser.subscribed') : subLabel)}
+                        onclick="${isCollectionTab
+                          ? `annoRoot().browserToggleFollowCollection(${id}, '${escapeAttr(d.name_id || '')}')`
+                          : `annoRoot().browserToggleSubscribe(${id})`}">
+                  ${escapeHtml(isSubscribed
+                    ? (isCollectionTab ? this.t('browser.unfollow') : this.t('browser.subscribed'))
+                    : subLabel)}
                 </button>
               </div>
             </div>
@@ -4655,11 +5167,18 @@ window.annoApp = function () {
             ${d.date_updated ? `<div class="browser-detail__updated">${escapeHtml(this.t('browser.updated', { date: fmtDate(d.date_updated) }))}</div>` : ''}
 
             <div class="browser-detail__actions">
-              <button class="${installClass}"
-                      ${isInstalling ? 'disabled' : ''}
-                      onclick="annoRoot().browserInstall(${id})">
-                ${isInstalled && !isInstalling ? '✓ ' : ''}${escapeHtml(installLabel)}
-              </button>
+              ${(isInstalled && !hasUpdate && !isCollectionTab) ? '' : `
+                <button class="${installClass}"
+                        ${isInstalling ? 'disabled' : ''}
+                        onclick="annoRoot().browserInstall(${id})">
+                  ${isInstalled && !isInstalling ? '✓ ' : ''}${escapeHtml(installLabel)}
+                </button>`}
+              ${(!isCollectionTab && isInstalled) ? `
+                <button class="settings__btn settings__btn--danger"
+                        ${isInstalling ? 'disabled' : ''}
+                        onclick="annoRoot().browserUninstall(${id})">
+                  ${escapeHtml(this.t('browser.uninstallMod'))}
+                </button>` : ''}
               ${isCollectionTab && isInstalled ? `
                 <button class="settings__btn settings__btn--danger"
                         onclick="annoRoot().browserUninstallCollection(${id})">
@@ -5109,6 +5628,19 @@ window.annoApp = function () {
                   <option value="keep" ${enableNew === 'keep' ? 'selected' : ''}>${escapeHtml(this.t('settings.enableNewMods.keep'))}</option>
                 </select>
               </div>
+
+              <div class="settings__row settings__row--inline">
+                <label class="settings__label">${escapeHtml(this.t('settings.textScale'))}</label>
+                <div class="settings__radio-group">
+                  ${['small','medium','large'].map((sz) => `
+                    <label class="settings__radio">
+                      <input type="radio" name="text_scale" value="${sz}"
+                             ${(this.settings.text_scale || 'small') === sz ? 'checked' : ''}
+                             onchange="annoRoot().setTextScale('${sz}')" />
+                      <span>${escapeHtml(this.t('settings.textScale.' + sz))}</span>
+                    </label>`).join('')}
+                </div>
+              </div>
             </section>
 
             <section class="settings__card" id="settings-modio-card">
@@ -5180,6 +5712,30 @@ window.annoApp = function () {
               ondragover="annoRoot().onDragOver(event)"
               ondrop="annoRoot().onDrop('${escapeAttr(m.id)}', event)"
               ondragend="annoRoot().onDragEnd()"` : '';
+        // Per-row actions: the Update icon only shows up when there's an
+        // actual newer modfile on mod.io for this folder; the Uninstall
+        // icon is always there for top-level mods (sub-mods uninstall with
+        // their parent). Manually-installed mods (no marker) get a small
+        // info bullet so the user knows why no Update is offered.
+        const fromManager = !isSubMod && this.modIsFromManager(m);
+        const showUpdate  = !isSubMod && this.modUpdateAvailable(m);
+        const managerMid  = !isSubMod ? this.modManagerModId(m) : 0;
+        const showInfo    = !isSubMod && !fromManager;
+        const showUninst  = !isSubMod;
+        const actions = (showUpdate || showUninst || showInfo) ? `
+            <div class="mod-row__actions" onclick="event.stopPropagation()">
+              ${showInfo ? `
+                <span class="mod-row__info"
+                      title="${escapeAttr(this.t('mods.notFromManager'))}">ⓘ</span>` : ''}
+              ${showUpdate ? `
+                <button class="mod-row__action mod-row__action--update"
+                        title="${escapeAttr(this.t('browser.update'))}"
+                        onclick="annoRoot().activationUpdate(${managerMid})">↻</button>` : ''}
+              ${showUninst ? `
+                <button class="mod-row__action mod-row__action--uninstall"
+                        title="${escapeAttr(this.t('detail.uninstall'))}"
+                        onclick="annoRoot().activationUninstall('${escapeAttr(m.folder)}', '${escapeAttr(m.name)}')">🗑</button>` : ''}
+            </div>` : '';
         return `
           <li class="mod-row ${selected} ${subClass} ${dragClass}"
               onclick="annoRoot().selectMod('${escapeAttr(m.id)}')"
@@ -5194,6 +5750,7 @@ window.annoApp = function () {
             </div>
             <span class="mod-row__size">${this.formatSize(m.size_bytes)}</span>
             <span class="pill ${m.active ? '' : 'pill--ghost'}">${escapeHtml(m.active ? this.t('pill.active') : this.t('pill.off'))}</span>
+            ${actions}
           </li>`;
       };
 
@@ -5300,6 +5857,7 @@ window.annoApp = function () {
               <span class="mod-row__head">${escapeHtml(this.t('list.head.size'))}</span>
               <span class="mod-row__head ${orderMode ? 'is-disabled' : ''}"
                     ${orderMode ? '' : `onclick="annoRoot().setSort('status')"`}>${escapeHtml(this.t('list.head.status'))} ${orderMode ? '' : this.sortIndicator('status')}</span>
+              <span><!-- actions column --></span>
             </div>
             <ul class="activation__list">
               ${this.topLevelMods.length ? rows : `<li class="mod-detail__empty">${escapeHtml(this.t('list.empty'))}</li>`}
@@ -5338,6 +5896,14 @@ function escapeHtml(s) {
 const _SAFE_HTML_TAGS = new Set([
   'h1','h2','h3','h4','h5','h6','p','ul','ol','li','strong','b','em','i',
   'br','blockquote','code','pre','hr','a','div','span',
+  // Anno Union wraps post images in <figure><img></figure>. URL allowlist
+  // restricts img src to http(s) only — no data: or javascript: schemes.
+  // <video> would be the natural fit for WP's native video shortcode but
+  // WebKit2GTK 2.50 corrupts the GPU-decoded buffer (visible green/purple
+  // glitch on H.264 MP4s) so we don't keep it as <video>; instead it's
+  // rewritten to a thumbnail link that opens externally — see
+  // _sanitizeModioHtmlImpl below.
+  'img','figure','figcaption',
 ]);
 // Memoise sanitiser output. Alpine re-runs renderTab on every reactive
 // tick (e.g. every keystroke in any bound input), and DOMParser + walk
@@ -5393,11 +5959,49 @@ function _sanitizeModioHtmlImpl(html) {
     }
   };
 
-  // Capture hrefs BEFORE we strip attributes — keyed by element identity.
+  // Replace each <video> with a thumbnail-link that opens the MP4
+  // externally — done BEFORE the href/img capture below so the new <a>
+  // and <img> we create get picked up by the standard preservation pass.
+  // The link is tagged `data-external` so the article-level click handler
+  // routes it through openExternalUrl instead of letting the webview try
+  // to navigate to a raw MP4 URL.
+  for (const v of Array.from(root.querySelectorAll('video'))) {
+    const sourceEl = v.querySelector('source');
+    const mp4 = sourceEl ? (sourceEl.getAttribute('src') || '') : '';
+    if (!/^https?:\/\//i.test(mp4)) { v.remove(); continue; }
+    const poster = v.getAttribute('poster') || '';
+    const a = doc.createElement('a');
+    a.setAttribute('href', mp4);
+    a.setAttribute('data-external', '1');
+    a.className = 'news-detail__video-link';
+    if (/^https?:\/\//i.test(poster)) {
+      const im = doc.createElement('img');
+      im.setAttribute('src', poster);
+      a.appendChild(im);
+    }
+    const play = doc.createElement('span');
+    play.className = 'news-detail__video-play';
+    play.textContent = '▶';
+    a.appendChild(play);
+    v.replaceWith(a);
+  }
+
+  // Capture hrefs + img src/alt BEFORE we strip attributes — keyed by element
+  // identity so we can restore them on still-connected nodes after walk().
   const hrefs = new Map();
   for (const a of root.querySelectorAll('a')) {
     const h = a.getAttribute('href') || '';
     if (/^https?:\/\//i.test(h)) hrefs.set(a, h);
+  }
+  // Tagged class on the video links so we can re-apply it after walk()
+  // (the attribute strip in walk would otherwise remove it and the
+  // preservation loop below only restores href).
+  const videoLinks = new Set(root.querySelectorAll('a.news-detail__video-link'));
+  const imgs = new Map();
+  for (const im of root.querySelectorAll('img')) {
+    const src = im.getAttribute('src') || '';
+    const alt = im.getAttribute('alt') || '';
+    if (/^https?:\/\//i.test(src)) imgs.set(im, { src, alt });
   }
   walk(root);
   // Re-apply hrefs + force safe link attributes.
@@ -5406,6 +6010,26 @@ function _sanitizeModioHtmlImpl(html) {
     a.setAttribute('href', href);
     a.setAttribute('target', '_blank');
     a.setAttribute('rel', 'noopener noreferrer');
+  }
+  // Re-apply img src/alt + lazy-load hint. Any img whose original src
+  // wasn't http(s) (data:, javascript:, ...) was not captured above and
+  // is now orphan — drop it so we don't render a broken <img>.
+  for (const im of root.querySelectorAll('img')) {
+    if (imgs.has(im)) {
+      const { src, alt } = imgs.get(im);
+      im.setAttribute('src', src);
+      if (alt) im.setAttribute('alt', alt);
+      im.setAttribute('loading', 'lazy');
+    } else {
+      im.remove();
+    }
+  }
+  // Restore the video-link tag + the data-external marker so the
+  // article-level click handler can route it to the OS browser.
+  for (const a of videoLinks) {
+    if (!a.isConnected) continue;
+    a.setAttribute('class', 'news-detail__video-link');
+    a.setAttribute('data-external', '1');
   }
   return root.innerHTML;
 }

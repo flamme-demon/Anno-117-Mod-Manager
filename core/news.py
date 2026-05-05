@@ -41,8 +41,20 @@ def _fmt_date(ts: float) -> str:
         return ''
 
 
+# Anno Union runs on WordPress + WPBakery, whose page-builder shortcodes
+# ([vc_row], [vc_column_text css="..."], …) are returned verbatim by the
+# WP REST API instead of being rendered. Strip them everywhere — they
+# look like raw markup when displayed and confuse the reader.
+_WP_SHORTCODE_RE = re.compile(r'\[/?vc_[^\]]*\]', re.IGNORECASE)
+
+
+def _strip_wp_shortcodes(raw: str) -> str:
+    return _WP_SHORTCODE_RE.sub('', raw or '')
+
+
 def _strip_html(raw: str, max_len: int = 160) -> str:
-    text = html.unescape(re.sub(r'<[^<]+?>', '', raw or '').strip())
+    cleaned = _strip_wp_shortcodes(raw or '')
+    text = html.unescape(re.sub(r'<[^<]+?>', '', cleaned).strip())
     return (text[:max_len] + '...') if len(text) > max_len else text
 
 
@@ -84,10 +96,56 @@ def fetch_anno_union(timeout: float = 10.0) -> list[dict]:
                 'source':      'anno_union',
                 'badge_text':  'ANNO UNION',
                 'badge_color': '#5f022e',
+                # WP post id — used by fetch_anno_union_post() to pull the
+                # full content lazily when the user clicks the card.
+                'wp_id':       int(post.get('id') or 0),
             })
     except Exception as e:
         print(f'[news] anno_union fetch failed: {e}', file=sys.stderr)
     return items
+
+
+def fetch_anno_union_post(post_id: int, timeout: float = 10.0) -> dict:
+    """Fetch the full HTML content for one Anno Union blog post. Called
+    lazily when the user clicks a news card so we don't pay the cost of
+    pulling 10 full posts at every News tab open. Returns a dict with the
+    rendered content and a few metadata fields the front already had from
+    the list call (kept for caller convenience)."""
+    if not post_id:
+        return {'ok': False, 'error': 'no post_id'}
+    try:
+        url = f'https://www.anno-union.com/wp-json/wp/v2/posts/{int(post_id)}?_embed'
+        res = _SESSION.get(url, headers={'User-Agent': _UA, 'Accept': 'application/json'},
+                           timeout=timeout)
+        res.raise_for_status()
+        post = res.json() or {}
+        # Hero image for the in-app reader — go for the full-resolution
+        # original (`source_url` at the top level of the media object) so
+        # the banner doesn't end up pixelated when shown at ~880px wide.
+        # Fall back to large/medium only if the original is somehow missing.
+        img_url = None
+        try:
+            media = (post.get('_embedded') or {}).get('wp:featuredmedia', [{}])[0]
+            sizes = (media.get('media_details') or {}).get('sizes', {})
+            img_url = (media.get('source_url')
+                       or sizes.get('large', {}).get('source_url')
+                       or sizes.get('medium', {}).get('source_url'))
+        except Exception:
+            pass
+        return {
+            'ok':           True,
+            'wp_id':        int(post.get('id') or 0),
+            'title':        html.unescape((post.get('title') or {}).get('rendered', '')),
+            'url':          post.get('link', ''),
+            # Strip WPBakery shortcodes only — keep real HTML tags so the
+            # in-app reader can format the post (paragraphs, headings,
+            # images, …). The frontend sanitiser still scrubs anything
+            # script-y on top.
+            'content_html': _strip_wp_shortcodes((post.get('content') or {}).get('rendered', '')),
+            'img_url':      img_url,
+        }
+    except Exception as e:
+        return {'ok': False, 'error': str(e)}
 
 
 def fetch_reddit(timeout: float = 10.0) -> list[dict]:

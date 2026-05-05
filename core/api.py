@@ -87,6 +87,8 @@ class Api:
         allowed = {
             'selected_language', 'show_reddit_news', 'enable_new_mods',
             'mod_location_mode', 'modio_api_key', 'active_profile_name',
+            'browser_subscribed_only', 'browser_followed_only',
+            'text_scale',
         }
         if key not in allowed:
             return {'ok': False, 'error': f'setting not writable from UI: {key}'}
@@ -419,13 +421,55 @@ class Api:
         return modio_module.list_dependencies(token, int(mod_id),
                                               collection=bool(collection))
 
-    def modio_subscribed(self) -> dict:
-        """List of subscribed mods (Anno-117-scoped). Used by the browser to
-        flag rows already in the user's library."""
+    # ── collection follow ─────────────────────────────────────────────────
+    def modio_follow_collection(self, name_id: str) -> dict:
         token = self._modio_token()
         if not token:
             return {'ok': False, 'error': 'not authenticated'}
-        return modio_module.list_subscribed(token)
+        return modio_module.follow_collection(token, str(name_id or ''))
+
+    def modio_unfollow_collection(self, name_id: str) -> dict:
+        token = self._modio_token()
+        if not token:
+            return {'ok': False, 'error': 'not authenticated'}
+        return modio_module.unfollow_collection(token, str(name_id or ''))
+
+    def modio_followed_collections(self, search: str = '',
+                                   limit: int = 100, offset: int = 0,
+                                   sort: str = '') -> dict:
+        token = self._modio_token()
+        if not token:
+            return {'ok': False, 'error': 'not authenticated'}
+        return modio_module.list_followed_collections(
+            token, search=search, limit=int(limit),
+            offset=int(offset), sort=sort)
+
+    def modio_check_updates(self, ids: list[int]) -> dict:
+        """Return the current modfile_id for each mod_id passed. The
+        Activation tab calls this once on boot to decide which rows
+        can offer an Update icon (compared against the local
+        _modio_install.json marker)."""
+        token = self._modio_token()
+        if not token:
+            return {'ok': False, 'error': 'not authenticated'}
+        return modio_module.check_updates(token, [int(i) for i in (ids or [])])
+
+    def modio_subscribed(self, search: str = '',
+                         limit: int = 100, offset: int = 0,
+                         sort: str = '') -> dict:
+        """List of subscribed mods (Anno-117-scoped). Default args (no
+        search, _limit=100) match the original "membership cache" use the
+        Browser does on cold start to flag rows in its main listing.
+        With explicit args it doubles as the data source for the
+        "My Subscriptions" filter — same response shape as modio_browse
+        so the frontend can swap endpoints transparently."""
+        token = self._modio_token()
+        if not token:
+            return {'ok': False, 'error': 'not authenticated'}
+        return modio_module.list_subscribed(token, search=search,
+                                            limit=int(limit),
+                                            offset=int(offset),
+                                            sort=sort)
 
     def modio_tags(self) -> dict:
         """List of tag groups defined for Anno 117 — feeds the Browser's
@@ -448,8 +492,14 @@ class Api:
         marker (written by ``modio_install_mod``) to build the live set of
         mod.io IDs currently on disk. Self-healing: a manual rm -rf of the
         folder takes the marker with it, so the Browser instantly stops
-        showing "Installed" for that mod — no stale settings to clean up."""
+        showing "Installed" for that mod — no stale settings to clean up.
+
+        Also returns a ``meta`` dict {mod_id: {modfile_id, version}} the
+        Browser uses to compare the installed modfile against the latest
+        available on mod.io, so the CTA only flips to "Update" when there
+        actually IS a newer modfile (otherwise it stays "Installed")."""
         ids: list[int] = []
+        meta_map: dict[int, dict] = {}
         try:
             for m in self.list_mods():
                 folder = m.get('path') or ''
@@ -466,9 +516,17 @@ class Api:
                 mid = meta.get('mod_id')
                 if isinstance(mid, int) and mid > 0:
                     ids.append(mid)
+                    meta_map[mid] = {
+                        'modfile_id': int(meta.get('modfile_id') or 0),
+                        'version': str(meta.get('version') or ''),
+                        # basename of the mod folder so the Browser's Uninstall
+                        # button can call uninstall_mod(folder) without an
+                        # extra round-trip to look it up.
+                        'folder': os.path.basename(folder),
+                    }
         except Exception as e:
-            return {'ok': False, 'error': str(e), 'ids': []}
-        return {'ok': True, 'ids': ids}
+            return {'ok': False, 'error': str(e), 'ids': [], 'meta': {}}
+        return {'ok': True, 'ids': ids, 'meta': meta_map}
 
     def modio_subscribe(self, mod_id: int) -> dict:
         token = self._modio_token()
@@ -721,6 +779,15 @@ class Api:
                         json.dump(meta, f, indent=2, ensure_ascii=False)
                 except OSError:
                     pass  # not fatal — the install succeeded
+                # Auto-subscribe so the user shows up in the mod's subscribers
+                # and the "My Subscriptions" filter mirrors what's actually
+                # installed. mod.io returns 201 if already subscribed, so
+                # this is idempotent and safe to call unconditionally. We
+                # ignore failures — install succeeded, which is what matters.
+                try:
+                    modio_module.subscribe(token, int(mod_id))
+                except Exception:
+                    pass
             return res
         finally:
             try:
@@ -800,6 +867,12 @@ class Api:
             'key': cache_key,
         }
         return {'ok': True, 'items': items, 'cached': False}
+
+    def fetch_anno_union_post(self, post_id: int) -> dict:
+        """Lazy fetch of a single Anno Union post's full HTML — the News
+        list only carries excerpts to keep the cold load fast, full content
+        is pulled on demand when the user clicks a card."""
+        return news_module.fetch_anno_union_post(int(post_id or 0))
 
     # ── tweaking (mod options) ────────────────────────────────────────────────
     def list_tweakable_mods(self) -> list[dict]:

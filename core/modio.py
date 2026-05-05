@@ -24,7 +24,12 @@ from typing import Any
 import requests
 
 GAME_ID = '11358'
+GAME_NAME_ID = 'anno-117-pax-romana'   # slug used by the user-facing API
 BASE_URL = f'https://g-{GAME_ID}.modapi.io/v1'
+# The collection follow/subscribe endpoints (and /me/following/collections)
+# only live on the user-facing host, addressed by @slug — captured from the
+# mod.io web frontend's HAR. Same Bearer token works.
+USER_API_URL = 'https://mod.io/v1'
 
 # Reuse one HTTP session per process so back-to-back mod.io calls don't
 # pay the TLS handshake every time. requests.Session is thread-safe for
@@ -286,22 +291,76 @@ def list_my_ratings(token: str, timeout: float = 15.0) -> dict:
         return {'ok': False, 'error': str(e)}
 
 
-def list_subscribed(token: str, timeout: float = 15.0) -> dict:
-    """Return the list of mods the user is subscribed to (filtered to
-    Anno 117 by the BASE_URL game scope)."""
+def check_updates(token: str, ids: list[int], timeout: float = 15.0) -> dict:
+    """Batch lookup of the current modfile_id for a set of mod ids — used
+    by the Activation tab to decide which rows can offer an Update button.
+    Compares against the locally recorded modfile_id (in _modio_install.json)
+    and lights up the button only when they differ. One API call covers
+    up to 100 mods, which is well above the typical user library size."""
     if not token:
         return {'ok': False, 'error': 'not authenticated'}
+    cleaned = [int(i) for i in (ids or []) if int(i) > 0]
+    if not cleaned:
+        return {'ok': True, 'updates': {}}
     try:
         res = _SESSION.get(
-            f'{BASE_URL}/me/subscribed',
+            f'{BASE_URL}/games/{GAME_ID}/mods',
             headers=_bearer_headers(token),
-            params={'game_id': GAME_ID, '_limit': 100},
+            params={'id-in': ','.join(str(i) for i in cleaned), '_limit': 100},
             timeout=timeout,
         )
         if res.status_code != 200:
             ref, msg = _decode_error(res)
             return {'ok': False, 'error': msg, 'error_ref': ref, 'status': res.status_code}
-        return {'ok': True, 'data': (res.json() or {}).get('data', []) or []}
+        body = res.json() or {}
+        updates: dict[int, int] = {}
+        for m in (body.get('data') or []):
+            mid = int(m.get('id') or 0)
+            mfid = int(((m.get('modfile') or {}).get('id') or 0))
+            if mid:
+                updates[mid] = mfid
+        return {'ok': True, 'updates': updates}
+    except requests.RequestException as e:
+        return {'ok': False, 'error': str(e)}
+
+
+def list_subscribed(token: str, *, search: str = '',
+                    limit: int = 100, offset: int = 0,
+                    sort: str = '', timeout: float = 15.0) -> dict:
+    """Return the list of mods the user is subscribed to (filtered to
+    Anno 117 via the ``game_id`` query param). Same response shape as
+    list_mods so the browser UI can swap endpoints transparently when the
+    "My Subscriptions" filter is on."""
+    if not token:
+        return {'ok': False, 'error': 'not authenticated'}
+    params: dict[str, Any] = {
+        'game_id': GAME_ID,
+        '_limit': max(1, min(100, int(limit))),
+        '_offset': max(0, int(offset)),
+    }
+    if sort:
+        params['_sort'] = sort
+    if search:
+        params['_q'] = search
+    try:
+        res = _SESSION.get(
+            f'{BASE_URL}/me/subscribed',
+            headers=_bearer_headers(token),
+            params=params,
+            timeout=timeout,
+        )
+        if res.status_code != 200:
+            ref, msg = _decode_error(res)
+            return {'ok': False, 'error': msg, 'error_ref': ref, 'status': res.status_code}
+        body = res.json() or {}
+        return {
+            'ok': True,
+            'data': body.get('data', []) or [],
+            'result_count': int(body.get('result_count') or 0),
+            'result_total': int(body.get('result_total') or 0),
+            'result_offset': int(body.get('result_offset') or 0),
+            'result_limit': int(body.get('result_limit') or 0),
+        }
     except requests.RequestException as e:
         return {'ok': False, 'error': str(e)}
 
@@ -340,6 +399,101 @@ def unsubscribe(token: str, mod_id: int, timeout: float = 10.0) -> dict:
             return {'ok': True}
         ref, msg = _decode_error(res)
         return {'ok': False, 'error': msg, 'error_ref': ref, 'status': res.status_code}
+    except requests.RequestException as e:
+        return {'ok': False, 'error': str(e)}
+
+
+# ── collection follow ───────────────────────────────────────────────────────
+# Follow/unfollow a collection on mod.io. The user-facing API uses @slug
+# addressing (no numeric id endpoint exists). When you follow a collection
+# on mod.io's website it auto-subscribes you to every mod in the bundle —
+# we replicate that by calling /subscriptions right after /followers, just
+# like the web frontend does (captured via HAR). Calling both keeps the
+# server-side state consistent regardless of whether one would cascade to
+# the other on its own.
+
+def follow_collection(token: str, name_id: str, timeout: float = 10.0) -> dict:
+    if not token:
+        return {'ok': False, 'error': 'not authenticated'}
+    if not name_id:
+        return {'ok': False, 'error': 'collection name_id missing'}
+    base = f'{USER_API_URL}/games/@{GAME_NAME_ID}/collections/@{name_id}'
+    try:
+        r1 = _SESSION.post(f'{base}/followers', headers=_bearer_headers_form(token),
+                           data='noop=noop', timeout=timeout)
+        if r1.status_code not in (200, 201):
+            ref, msg = _decode_error(r1)
+            return {'ok': False, 'error': msg, 'error_ref': ref, 'status': r1.status_code}
+        # Best-effort cascade — failures here aren't fatal because mod.io may
+        # already auto-subscribe on follow. We swallow any error so the
+        # follow itself stays the source of truth.
+        try:
+            _SESSION.post(f'{base}/subscriptions', headers=_bearer_headers_form(token),
+                          data='noop=noop', timeout=timeout)
+        except requests.RequestException:
+            pass
+        return {'ok': True}
+    except requests.RequestException as e:
+        return {'ok': False, 'error': str(e)}
+
+
+def unfollow_collection(token: str, name_id: str, timeout: float = 10.0) -> dict:
+    if not token:
+        return {'ok': False, 'error': 'not authenticated'}
+    if not name_id:
+        return {'ok': False, 'error': 'collection name_id missing'}
+    base = f'{USER_API_URL}/games/@{GAME_NAME_ID}/collections/@{name_id}'
+    try:
+        r1 = _SESSION.delete(f'{base}/followers', headers=_bearer_headers_form(token),
+                             timeout=timeout)
+        if r1.status_code not in (200, 204):
+            ref, msg = _decode_error(r1)
+            return {'ok': False, 'error': msg, 'error_ref': ref, 'status': r1.status_code}
+        try:
+            _SESSION.delete(f'{base}/subscriptions',
+                            headers=_bearer_headers_form(token), timeout=timeout)
+        except requests.RequestException:
+            pass
+        return {'ok': True}
+    except requests.RequestException as e:
+        return {'ok': False, 'error': str(e)}
+
+
+def list_followed_collections(token: str, *, search: str = '',
+                              limit: int = 100, offset: int = 0,
+                              sort: str = '', timeout: float = 15.0) -> dict:
+    """Same shape as list_mods/list_subscribed so the Browser Collections
+    tab can swap endpoints transparently when "Mes follows" is toggled."""
+    if not token:
+        return {'ok': False, 'error': 'not authenticated'}
+    params: dict[str, Any] = {
+        'game_id': GAME_ID,
+        '_limit': max(1, min(100, int(limit))),
+        '_offset': max(0, int(offset)),
+    }
+    if sort:
+        params['_sort'] = sort
+    if search:
+        params['_q'] = search
+    try:
+        res = _SESSION.get(
+            f'{USER_API_URL}/me/following/collections',
+            headers=_bearer_headers(token),
+            params=params,
+            timeout=timeout,
+        )
+        if res.status_code != 200:
+            ref, msg = _decode_error(res)
+            return {'ok': False, 'error': msg, 'error_ref': ref, 'status': res.status_code}
+        body = res.json() or {}
+        return {
+            'ok': True,
+            'data': body.get('data', []) or [],
+            'result_count': int(body.get('result_count') or 0),
+            'result_total': int(body.get('result_total') or 0),
+            'result_offset': int(body.get('result_offset') or 0),
+            'result_limit': int(body.get('result_limit') or 0),
+        }
     except requests.RequestException as e:
         return {'ok': False, 'error': str(e)}
 
