@@ -22,15 +22,52 @@ def resource_path(relative_path: str) -> str:
     return os.path.join(base, relative_path)
 
 
+def _screen_size() -> tuple[int, int]:
+    """Best-effort primary screen size for the initial centering — uses
+    Tkinter from the stdlib so we don't have to add a dependency. Falls
+    back to 1920×1080 if Tk can't connect (no display, headless CI)."""
+    try:
+        import tkinter as tk
+        root = tk.Tk()
+        root.withdraw()
+        sw, sh = root.winfo_screenwidth(), root.winfo_screenheight()
+        root.destroy()
+        return sw, sh
+    except Exception:
+        return 1920, 1080
+
+
+def _initial_window_geometry(api: 'Api') -> dict:
+    """Returns {width, height, x, y} for create_window. Reads the saved
+    geometry from settings.json if it's there (last session's state),
+    otherwise centers the default 1440×900 on the primary screen."""
+    saved = api.settings.get('window_geometry') or {}
+    w = int(saved.get('width') or 1440)
+    h = int(saved.get('height') or 900)
+    if 'x' in saved and 'y' in saved:
+        x, y = int(saved['x']), int(saved['y'])
+    else:
+        sw, sh = _screen_size()
+        # Account for Windows taskbar (~40px at the bottom usually). On
+        # multi-monitor we just center on the primary; pywebview does not
+        # expose the active monitor at create_window time.
+        x = max(0, (sw - w) // 2)
+        y = max(0, (sh - h) // 2)
+    return {'width': w, 'height': h, 'x': x, 'y': y}
+
+
 def main() -> None:
     api = Api()
     index = resource_path('frontend/index.html')
+    geom = _initial_window_geometry(api)
     window = webview.create_window(
         title=f'Anno 117 Mod Manager v{_version.__VERSION__}',
         url=index,
         js_api=api,
-        width=1440,
-        height=900,
+        width=geom['width'],
+        height=geom['height'],
+        x=geom['x'],
+        y=geom['y'],
         min_size=(1100, 720),
         background_color='#0e1b2e',
     )
@@ -95,6 +132,16 @@ def main() -> None:
         if _bound['done']:
             return
         _bound['done'] = True
+        # PyInstaller splash close — `pyi_splash` is injected by the
+        # bootloader only in frozen --splash builds, so the import fails
+        # silently in dev. Closes the splash window the moment our
+        # webview's DOM is loaded, hiding the bootloader extraction +
+        # WebView2 init delay behind the artwork.
+        try:
+            import pyi_splash  # type: ignore[import-not-found]
+            pyi_splash.close()
+        except (ImportError, RuntimeError):
+            pass
         # 1. Standard pywebview DOM hook — works on Windows (WebView2) and
         #    macOS (Cocoa) where dataTransfer.files is preserved.
         try:
@@ -114,6 +161,59 @@ def main() -> None:
             _wire_gtk_dnd_bridge(window)
 
     window.events.loaded += _bind_dom
+
+    # Persist window geometry across sessions. The pywebview Window
+    # object's x/y/width/height aren't live on every backend, so we
+    # capture the latest values from the resized + moved event payloads
+    # themselves and save them debounced (1s after the last move/resize).
+    # Final flush on `closed` covers shutdown after the debounce window.
+    _live_geom = {'x': geom['x'], 'y': geom['y'],
+                  'width': geom['width'], 'height': geom['height']}
+    _save_timer = {'t': None}
+
+    def _save_geometry(*_args, **_kwargs):
+        try:
+            api.settings['window_geometry'] = dict(_live_geom)
+            api._save_settings()
+        except Exception as exc:
+            print(f'[geometry] save failed: {exc!r}')
+        return True
+
+    def _schedule_save():
+        if _save_timer['t']:
+            _save_timer['t'].cancel()
+        t = threading.Timer(1.0, _save_geometry)
+        t.daemon = True
+        _save_timer['t'] = t
+        t.start()
+
+    def _on_resized(w, h):
+        _live_geom['width'] = int(w)
+        _live_geom['height'] = int(h)
+        _schedule_save()
+
+    def _on_moved(x, y):
+        _live_geom['x'] = int(x)
+        _live_geom['y'] = int(y)
+        _schedule_save()
+
+    for evt_name, handler in (('resized', _on_resized), ('moved', _on_moved)):
+        evt = getattr(window.events, evt_name, None)
+        if evt is not None:
+            try:
+                evt += handler
+            except Exception:
+                pass
+    # `closed` runs after teardown — safe to flush there without risking
+    # the close getting vetoed (which `closing` could do if the handler
+    # ever returned a falsy value).
+    closed = getattr(window.events, 'closed', None)
+    if closed is not None:
+        try:
+            closed += _save_geometry
+        except Exception:
+            pass
+
     webview.start(debug=os.environ.get('ANNO117_DEBUG') == '1')
 
 

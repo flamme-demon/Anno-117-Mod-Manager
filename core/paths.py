@@ -53,9 +53,17 @@ def find_anno_exe() -> str:
     possible_roots: list[str] = []
 
     if IS_WINDOWS:
+        # Ubisoft assigns Anno 117 the launcher ID 921 (the "117" of the
+        # original key path was a guess based on the game name and never
+        # matched a real install). We also probe the dedicated per-game
+        # key and the Uplay uninstall record — both confirmed by users
+        # running the Ubisoft Connect edition. Steam's UninstallString
+        # pattern stays in case the Steam edition publishes one.
         reg_paths = [
-            (winreg.HKEY_LOCAL_MACHINE, r'SOFTWARE\WOW6432Node\Ubisoft\Launcher\Installs\117'),
-            (winreg.HKEY_CURRENT_USER, r'SOFTWARE\Ubisoft\Launcher\Installs\117'),
+            (winreg.HKEY_LOCAL_MACHINE, r'SOFTWARE\WOW6432Node\Ubisoft\Launcher\Installs\921'),
+            (winreg.HKEY_CURRENT_USER,  r'SOFTWARE\Ubisoft\Launcher\Installs\921'),
+            (winreg.HKEY_LOCAL_MACHINE, r'SOFTWARE\WOW6432Node\Ubisoft\Anno 117 - Pax Romana'),
+            (winreg.HKEY_LOCAL_MACHINE, r'SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Uplay Install 921'),
             (winreg.HKEY_LOCAL_MACHINE, r'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 3274580'),
         ]
         for hive, key_path in reg_paths:
@@ -72,8 +80,11 @@ def find_anno_exe() -> str:
                 continue
 
         program_files = os.environ.get('ProgramFiles(x86)', r'C:\Program Files (x86)')
-        possible_roots.append(os.path.join(program_files, 'Ubisoft', 'Ubisoft Game Launcher', 'games', 'Anno 117 - Pax Romana', 'Anno 117'))
-        possible_roots.append(os.path.join(program_files, 'Steam', 'steamapps', 'common', 'Anno 117 - Pax Romana', 'Anno 117'))
+        # Ubisoft Connect installs straight into "...\games\Anno 117 - Pax Romana"
+        # — the previous code added an extra "\Anno 117" subfolder that
+        # doesn't exist on disk, so the fallback never resolved.
+        possible_roots.append(os.path.join(program_files, 'Ubisoft', 'Ubisoft Game Launcher', 'games', 'Anno 117 - Pax Romana'))
+        possible_roots.append(os.path.join(program_files, 'Steam', 'steamapps', 'common', 'Anno 117 - Pax Romana'))
     else:
         home = os.path.expanduser('~')
         for steam_root in (

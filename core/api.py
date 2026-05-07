@@ -201,7 +201,7 @@ class Api:
     def get_languages(self) -> list[dict]:
         """Return all supported languages with their key, native name, flag."""
         return [
-            {'key': l.key, 'name': l.name, 'flag': l.flag}
+            {'key': l.key, 'name': l.name, 'flag': l.flag, 'flag_code': l.flag_code}
             for l in i18n_module.LANGUAGES
         ]
 
@@ -780,6 +780,75 @@ class Api:
         except Exception:
             pass
         return {'ok': True, 'name': mod.get('name') or ''}
+
+    def modio_auto_link_unmarked(self) -> dict:
+        """Walk every local mod folder that has no _modio_install.json
+        marker, read modinfo.json's ModID, batch-look up matching mod.io
+        records by name_id, and write a marker for each STRICT match
+        (mod.io.name_id == modinfo.ModID, case-insensitive). Mods whose
+        author-chosen ModID slug doesn't match the mod.io slug are left
+        untouched — the user can still link them manually via the 🔗
+        button. Auto-subscribes each linked mod, like a regular install.
+
+        Returns {ok, linked: int, candidates: int} so the frontend can
+        flash a "X mods reliés" toast and refresh installedMeta."""
+        token = self._modio_token()
+        if not token:
+            return {'ok': True, 'linked': 0, 'candidates': 0}
+        candidates: list[tuple[str, str]] = []
+        for m in self.list_mods():
+            folder = m.get('path') or ''
+            if not folder:
+                continue
+            if os.path.isfile(os.path.join(folder, '_modio_install.json')):
+                continue
+            modinfo_path = os.path.join(folder, 'modinfo.json')
+            if not os.path.isfile(modinfo_path):
+                continue
+            try:
+                with open(modinfo_path, 'r', encoding='utf-8') as f:
+                    modinfo = json.load(f) or {}
+            except (OSError, ValueError):
+                continue
+            slug = (modinfo.get('ModID') or '').strip().lower()
+            if slug:
+                candidates.append((folder, slug))
+        if not candidates:
+            return {'ok': True, 'linked': 0, 'candidates': 0}
+        slugs_csv = ','.join(slug for _, slug in candidates)
+        res = modio_module.list_mods_by_name_ids(token, slugs_csv)
+        if not res.get('ok'):
+            return {'ok': False,
+                    'error': res.get('error', 'mod.io fetch failed'),
+                    'linked': 0, 'candidates': len(candidates)}
+        by_name_id = {(r.get('name_id') or '').lower(): r for r in (res.get('data') or [])}
+        linked = 0
+        for folder, slug in candidates:
+            match = by_name_id.get(slug)
+            if not match:
+                continue
+            modfile = match.get('modfile') or {}
+            meta = {
+                'mod_id': int(match.get('id') or 0),
+                'name_id': match.get('name_id') or '',
+                'name': match.get('name') or '',
+                'modfile_id': int(modfile.get('id') or 0),
+                'version': str(modfile.get('version') or ''),
+                'installed_at': int(__import__('time').time()),
+                'linked': True,
+            }
+            try:
+                with open(os.path.join(folder, '_modio_install.json'),
+                          'w', encoding='utf-8') as f:
+                    json.dump(meta, f, indent=2, ensure_ascii=False)
+                linked += 1
+                try:
+                    modio_module.subscribe(token, int(match['id']))
+                except Exception:
+                    pass
+            except OSError:
+                continue
+        return {'ok': True, 'linked': linked, 'candidates': len(candidates)}
 
     def modio_install_mod(self, mod_id: int) -> dict:
         """Download the latest modfile of ``mod_id`` and install it. Always

@@ -13,23 +13,27 @@ from dataclasses import dataclass
 class Language:
     key: str        # internal key matching texts_<key>.xml
     name: str       # native display name
-    flag: str       # Unicode regional-indicator pair (renders as a flag glyph)
+    flag: str       # Unicode regional-indicator pair (kept as a fallback)
+    flag_code: str  # ISO 3166-1 alpha-2 code → frontend/icons/flags/<code>.svg
 
 
 # Order roughly matches in-game language picker / mod.io's footer.
+# flag_code maps to a bundled SVG (lipis/flag-icons CC-BY) — Windows
+# Segoe UI Emoji deliberately doesn't ship country flags so we render
+# them as <img> instead of relying on the regional-indicator emoji.
 LANGUAGES: tuple[Language, ...] = (
-    Language('english',             'English',              '🇬🇧'),
-    Language('german',              'Deutsch',              '🇩🇪'),
-    Language('french',              'Français',             '🇫🇷'),
-    Language('spanish',             'Español',              '🇪🇸'),
-    Language('italian',             'Italiano',             '🇮🇹'),
-    Language('polish',              'Polski',               '🇵🇱'),
-    Language('russian',             'Русский',              '🇷🇺'),
-    Language('brazilian',           'Português (Brasil)',   '🇧🇷'),
-    Language('japanese',            '日本語',                '🇯🇵'),
-    Language('korean',              '한국어',                '🇰🇷'),
-    Language('simplified_chinese',  '简体中文',              '🇨🇳'),
-    Language('traditional_chinese', '繁體中文',              '🇹🇼'),
+    Language('english',             'English',              '🇬🇧', 'gb'),
+    Language('german',              'Deutsch',              '🇩🇪', 'de'),
+    Language('french',              'Français',             '🇫🇷', 'fr'),
+    Language('spanish',             'Español',              '🇪🇸', 'es'),
+    Language('italian',             'Italiano',             '🇮🇹', 'it'),
+    Language('polish',              'Polski',               '🇵🇱', 'pl'),
+    Language('russian',             'Русский',              '🇷🇺', 'ru'),
+    Language('brazilian',           'Português (Brasil)',   '🇧🇷', 'br'),
+    Language('japanese',            '日本語',                '🇯🇵', 'jp'),
+    Language('korean',              '한국어',                '🇰🇷', 'kr'),
+    Language('simplified_chinese',  '简体中文',              '🇨🇳', 'cn'),
+    Language('traditional_chinese', '繁體中文',              '🇹🇼', 'tw'),
 )
 
 # locale prefix → key mapping. Full locale (e.g. zh_TW) is tried first, then

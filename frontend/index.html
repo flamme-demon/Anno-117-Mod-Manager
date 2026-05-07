@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="css/theme.css" />
   <link rel="stylesheet" href="css/parchment.css" />
   <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/loader.css" />
   <link rel="stylesheet" href="css/tabs/activation.css" />
   <link rel="stylesheet" href="css/tabs/settings.css" />
   <link rel="stylesheet" href="css/tabs/log.css" />
@@ -65,14 +66,25 @@
       <button class="lang-picker__btn"
               @click="langOpen = !langOpen"
               :title="currentLanguage ? currentLanguage.name : t('hud.language')">
-        <span class="lang-picker__flag" x-text="currentLanguage ? currentLanguage.flag : '🌐'"></span>
+        <!-- Bundled SVG flag (lipis/flag-icons CC-BY) instead of the
+             regional-indicator emoji: Windows' Segoe UI Emoji ships
+             without country flags by design, so emojis render as plain
+             "FR"/"DE" letters on Win10/11. <img> is reliable across all
+             OSes; falls back to a globe glyph while loading. -->
+        <img class="lang-picker__flag"
+             x-show="currentLanguage"
+             :src="currentLanguage ? `icons/flags/${currentLanguage.flag_code}.svg` : ''"
+             :alt="currentLanguage ? currentLanguage.flag_code.toUpperCase() : ''" />
+        <span class="lang-picker__flag" x-show="!currentLanguage">🌐</span>
       </button>
       <div class="lang-picker__menu" x-show="langOpen" x-cloak>
         <template x-for="l in languages" :key="l.key">
           <button class="lang-picker__item"
                   :class="{ 'is-active': l.key === currentLang }"
                   @click="selectLanguage(l.key)">
-            <span class="lang-picker__item-flag" x-text="l.flag"></span>
+            <img class="lang-picker__item-flag"
+                 :src="`icons/flags/${l.flag_code}.svg`"
+                 :alt="l.flag_code.toUpperCase()" />
             <span class="lang-picker__item-name" x-text="l.name"></span>
           </button>
         </template>
@@ -196,6 +208,29 @@
 
       </div>
     </footer>
+
+    <!-- App-styled confirmation dialog. Replaces window.confirm() (which
+         on WebKit2GTK / WebView2 spawns a system-themed popup that
+         clashes with the annolayouts aesthetic). Used by the various
+         "are you sure?" prompts: reset tweak, uninstall mod, delete
+         preset, disconnect mod.io, overwrite on install, etc. -->
+    <div class="confirm-modal"
+         x-show="confirmModal.open"
+         x-cloak
+         @keydown.escape.window="confirmModal.open && _confirmModalAnswer(false)"
+         @click.self="_confirmModalAnswer(false)">
+      <div class="confirm-modal__panel">
+        <p class="confirm-modal__message" x-text="confirmModal.message"></p>
+        <div class="confirm-modal__actions">
+          <button class="confirm-modal__btn"
+                  @click="_confirmModalAnswer(false)"
+                  x-text="t('common.cancel')"></button>
+          <button class="confirm-modal__btn confirm-modal__btn--primary"
+                  @click="_confirmModalAnswer(true)"
+                  x-text="t('common.confirm')"></button>
+        </div>
+      </div>
+    </div>
 
     <!-- "Link to mod.io" picker for hand-installed mods on the Activation
          tab. Modal overlay (full screen, scrim) — the user has to confirm

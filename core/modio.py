@@ -291,6 +291,31 @@ def list_my_ratings(token: str, timeout: float = 15.0) -> dict:
         return {'ok': False, 'error': str(e)}
 
 
+def list_mods_by_name_ids(token: str, slugs: str, timeout: float = 15.0) -> dict:
+    """Batch fetch of mods whose name_id matches any of the comma-separated
+    slugs in ``slugs``. Used by the Activation tab's auto-link to wire
+    hand-installed mods to their mod.io record when modinfo.ModID happens
+    to match the mod.io slug."""
+    if not token:
+        return {'ok': False, 'error': 'not authenticated'}
+    if not slugs:
+        return {'ok': True, 'data': []}
+    try:
+        res = _SESSION.get(
+            f'{BASE_URL}/games/{GAME_ID}/mods',
+            headers=_bearer_headers(token),
+            params={'name_id-in': slugs, '_limit': 100},
+            timeout=timeout,
+        )
+        if res.status_code != 200:
+            ref, msg = _decode_error(res)
+            return {'ok': False, 'error': msg, 'error_ref': ref, 'status': res.status_code}
+        body = res.json() or {}
+        return {'ok': True, 'data': body.get('data', []) or []}
+    except requests.RequestException as e:
+        return {'ok': False, 'error': str(e)}
+
+
 def check_updates(token: str, ids: list[int], timeout: float = 15.0) -> dict:
     """Batch lookup of the current modfile_id for a set of mod ids — used
     by the Activation tab to decide which rows can offer an Update button.

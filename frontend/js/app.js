@@ -160,6 +160,8 @@ const TRANSLATIONS = {
     'modio.termsAgree':             'I agree to the mod.io',
     'modio.termsLink':              'Terms of Use',
     'modio.cancel':                 'Cancel',
+    'common.cancel':                'Cancel',
+    'common.confirm':               'Confirm',
     'modio.sendCode':               'Send code',
     'modio.sending':                'Sending…',
     'modio.code':                   'Security code',
@@ -394,6 +396,8 @@ const TRANSLATIONS = {
     'modio.termsAgree':             'J’accepte les',
     'modio.termsLink':              'Conditions d’utilisation mod.io',
     'modio.cancel':                 'Annuler',
+    'common.cancel':                'Annuler',
+    'common.confirm':               'Confirmer',
     'modio.sendCode':               'Envoyer le code',
     'modio.sending':                'Envoi…',
     'modio.code':                   'Code de sécurité',
@@ -519,6 +523,12 @@ const TRANSLATIONS = {
     'launch.error':            'Spiel konnte nicht gestartet werden: {err}',
     'mods.openFolder.title':   'Mods-Ordner öffnen',
     'mods.notFromManager':             'Nicht über den Manager installiert',
+    'mods.link.cta':                   '🔗 Mit mod.io verknüpfen',
+    'mods.link.title':                 '« {name} » mit einem mod.io-Eintrag verknüpfen',
+    'mods.link.searchPlaceholder':     'Auf mod.io suchen…',
+    'mods.link.confirm':               'Verknüpfen',
+    'mods.link.empty':                 'Keine Treffer — versuche es mit einem anderen Namen.',
+    'mods.link.cancel':                'Abbrechen',
     'tab.news':                'Neuigkeiten',
     'tab.activation':          'Aktivierung',
     'tab.browser':             'Mod-Browser',
@@ -590,6 +600,7 @@ const TRANSLATIONS = {
     'tweak.resetAll':               'Alle zurücksetzen',
     'tweak.resetModConfirm':        'Alle Optionen dieses Mods auf die Standardwerte zurücksetzen?',
     'tweak.resetAllConfirm':        'Optionen aller Mods zurücksetzen? Die Datei active-options.jsonc wird gelöscht.',
+    'tweak.defaultsSection':           '— Standardwerte —',
     'tweak.colorPicker.open':          'Farbwähler öffnen',
     'tweak.colorPicker.title':         'Farbwähler',
     'tweak.colorPicker.before':        'Vorher',
@@ -621,6 +632,8 @@ const TRANSLATIONS = {
     'modio.termsAgree':             'Ich akzeptiere die mod.io',
     'modio.termsLink':              'Nutzungsbedingungen',
     'modio.cancel':                 'Abbrechen',
+    'common.cancel':                   'Abbrechen',
+    'common.confirm':                  'Bestätigen',
     'modio.sendCode':               'Code senden',
     'modio.sending':                'Wird gesendet…',
     'modio.code':                   'Sicherheitscode',
@@ -746,6 +759,12 @@ const TRANSLATIONS = {
     'launch.error':            'No se pudo iniciar el juego: {err}',
     'mods.openFolder.title':   'Abrir la carpeta de mods',
     'mods.notFromManager':             'No instalado mediante el gestor',
+    'mods.link.cta':                   '🔗 Asociar con mod.io',
+    'mods.link.title':                 'Asociar « {name} » a una ficha mod.io',
+    'mods.link.searchPlaceholder':     'Buscar en mod.io…',
+    'mods.link.confirm':               'Asociar',
+    'mods.link.empty':                 'Sin resultados — prueba otro nombre.',
+    'mods.link.cancel':                'Cancelar',
     'tab.news':                'Noticias',
     'tab.activation':          'Activación',
     'tab.browser':             'Catálogo de mods',
@@ -817,6 +836,7 @@ const TRANSLATIONS = {
     'tweak.resetAll':               'Restablecer todo',
     'tweak.resetModConfirm':        '¿Restablecer todas las opciones de este mod a sus valores por defecto?',
     'tweak.resetAllConfirm':        '¿Restablecer las opciones de todos los mods? Se eliminará el archivo active-options.jsonc.',
+    'tweak.defaultsSection':           '— Valores predeterminados —',
     'tweak.colorPicker.open':          'Abrir el selector de color',
     'tweak.colorPicker.title':         'Selector de color',
     'tweak.colorPicker.before':        'Antes',
@@ -848,6 +868,8 @@ const TRANSLATIONS = {
     'modio.termsAgree':             'Acepto los',
     'modio.termsLink':              'Términos de uso de mod.io',
     'modio.cancel':                 'Cancelar',
+    'common.cancel':                   'Cancelar',
+    'common.confirm':                  'Confirmar',
     'modio.sendCode':               'Enviar código',
     'modio.sending':                'Enviando…',
     'modio.code':                   'Código de seguridad',
@@ -973,6 +995,12 @@ const TRANSLATIONS = {
     'launch.error':            'Impossibile avviare il gioco: {err}',
     'mods.openFolder.title':   'Apri la cartella dei mod',
     'mods.notFromManager':             'Non installato tramite il gestore',
+    'mods.link.cta':                   '🔗 Collega a mod.io',
+    'mods.link.title':                 'Collega « {name} » a una scheda mod.io',
+    'mods.link.searchPlaceholder':     'Cerca su mod.io…',
+    'mods.link.confirm':               'Collega',
+    'mods.link.empty':                 'Nessun risultato — prova un altro nome.',
+    'mods.link.cancel':                'Annulla',
     'tab.news':                'Notizie',
     'tab.activation':          'Attivazione',
     'tab.browser':             'Catalogo mod',
@@ -1044,6 +1072,7 @@ const TRANSLATIONS = {
     'tweak.resetAll':               'Reimposta tutto',
     'tweak.resetModConfirm':        'Reimpostare tutte le opzioni di questo mod ai valori predefiniti?',
     'tweak.resetAllConfirm':        'Reimpostare le opzioni di tutti i mod? Il file active-options.jsonc sarà eliminato.',
+    'tweak.defaultsSection':           '— Valori predefiniti —',
     'tweak.colorPicker.open':          'Apri il selettore colore',
     'tweak.colorPicker.title':         'Selettore colore',
     'tweak.colorPicker.before':        'Prima',
@@ -1075,6 +1104,8 @@ const TRANSLATIONS = {
     'modio.termsAgree':             'Accetto i',
     'modio.termsLink':              'Termini d’uso di mod.io',
     'modio.cancel':                 'Annulla',
+    'common.cancel':                   'Annulla',
+    'common.confirm':                  'Conferma',
     'modio.sendCode':               'Invia codice',
     'modio.sending':                'Invio…',
     'modio.code':                   'Codice di sicurezza',
@@ -1200,6 +1231,12 @@ const TRANSLATIONS = {
     'launch.error':            'Nie udało się uruchomić gry: {err}',
     'mods.openFolder.title':   'Otwórz folder modów',
     'mods.notFromManager':             'Niezainstalowane przez menedżera',
+    'mods.link.cta':                   '🔗 Połącz z mod.io',
+    'mods.link.title':                 'Połącz « {name} » z wpisem mod.io',
+    'mods.link.searchPlaceholder':     'Szukaj w mod.io…',
+    'mods.link.confirm':               'Połącz',
+    'mods.link.empty':                 'Brak wyników — spróbuj innej nazwy.',
+    'mods.link.cancel':                'Anuluj',
     'tab.news':                'Aktualności',
     'tab.activation':          'Aktywacja',
     'tab.browser':             'Przeglądarka modów',
@@ -1271,6 +1308,7 @@ const TRANSLATIONS = {
     'tweak.resetAll':               'Zresetuj wszystkie',
     'tweak.resetModConfirm':        'Zresetować wszystkie opcje tego moda do wartości domyślnych?',
     'tweak.resetAllConfirm':        'Zresetować opcje wszystkich modów? Plik active-options.jsonc zostanie usunięty.',
+    'tweak.defaultsSection':           '— Wartości domyślne —',
     'tweak.colorPicker.open':          'Otwórz selektor koloru',
     'tweak.colorPicker.title':         'Selektor koloru',
     'tweak.colorPicker.before':        'Przed',
@@ -1302,6 +1340,8 @@ const TRANSLATIONS = {
     'modio.termsAgree':             'Akceptuję',
     'modio.termsLink':              'Warunki korzystania mod.io',
     'modio.cancel':                 'Anuluj',
+    'common.cancel':                   'Anuluj',
+    'common.confirm':                  'Potwierdź',
     'modio.sendCode':               'Wyślij kod',
     'modio.sending':                'Wysyłanie…',
     'modio.code':                   'Kod bezpieczeństwa',
@@ -1427,6 +1467,12 @@ const TRANSLATIONS = {
     'launch.error':            'Не удалось запустить игру: {err}',
     'mods.openFolder.title':   'Открыть папку модов',
     'mods.notFromManager':             'Установлено не через менеджер',
+    'mods.link.cta':                   '🔗 Связать с mod.io',
+    'mods.link.title':                 'Связать « {name} » с записью mod.io',
+    'mods.link.searchPlaceholder':     'Поиск в mod.io…',
+    'mods.link.confirm':               'Связать',
+    'mods.link.empty':                 'Нет совпадений — попробуйте другое имя.',
+    'mods.link.cancel':                'Отмена',
     'tab.news':                'Новости',
     'tab.activation':          'Активация',
     'tab.browser':             'Каталог модов',
@@ -1498,6 +1544,7 @@ const TRANSLATIONS = {
     'tweak.resetAll':               'Сбросить всё',
     'tweak.resetModConfirm':        'Сбросить все опции этого мода к значениям по умолчанию?',
     'tweak.resetAllConfirm':        'Сбросить опции всех модов? Файл active-options.jsonc будет удалён.',
+    'tweak.defaultsSection':           '— Значения по умолчанию —',
     'tweak.colorPicker.open':          'Открыть выбор цвета',
     'tweak.colorPicker.title':         'Выбор цвета',
     'tweak.colorPicker.before':        'До',
@@ -1529,6 +1576,8 @@ const TRANSLATIONS = {
     'modio.termsAgree':             'Я принимаю',
     'modio.termsLink':              'Условия использования mod.io',
     'modio.cancel':                 'Отмена',
+    'common.cancel':                   'Отмена',
+    'common.confirm':                  'Подтвердить',
     'modio.sendCode':               'Отправить код',
     'modio.sending':                'Отправка…',
     'modio.code':                   'Код безопасности',
@@ -1654,6 +1703,12 @@ const TRANSLATIONS = {
     'launch.error':            'Não foi possível iniciar o jogo: {err}',
     'mods.openFolder.title':   'Abrir a pasta de mods',
     'mods.notFromManager':             'Não instalado pelo gerenciador',
+    'mods.link.cta':                   '🔗 Associar ao mod.io',
+    'mods.link.title':                 'Associar « {name} » a um registro mod.io',
+    'mods.link.searchPlaceholder':     'Pesquisar no mod.io…',
+    'mods.link.confirm':               'Associar',
+    'mods.link.empty':                 'Sem resultados — tente outro nome.',
+    'mods.link.cancel':                'Cancelar',
     'tab.news':                'Notícias',
     'tab.activation':          'Ativação',
     'tab.browser':             'Catálogo de mods',
@@ -1725,6 +1780,7 @@ const TRANSLATIONS = {
     'tweak.resetAll':               'Redefinir tudo',
     'tweak.resetModConfirm':        'Redefinir todas as opções deste mod aos valores padrão?',
     'tweak.resetAllConfirm':        'Redefinir as opções de todos os mods? O arquivo active-options.jsonc será excluído.',
+    'tweak.defaultsSection':           '— Valores padrão —',
     'tweak.colorPicker.open':          'Abrir seletor de cor',
     'tweak.colorPicker.title':         'Seletor de cor',
     'tweak.colorPicker.before':        'Antes',
@@ -1756,6 +1812,8 @@ const TRANSLATIONS = {
     'modio.termsAgree':             'Aceito os',
     'modio.termsLink':              'Termos de Uso do mod.io',
     'modio.cancel':                 'Cancelar',
+    'common.cancel':                   'Cancelar',
+    'common.confirm':                  'Confirmar',
     'modio.sendCode':               'Enviar código',
     'modio.sending':                'Enviando…',
     'modio.code':                   'Código de segurança',
@@ -1881,6 +1939,12 @@ const TRANSLATIONS = {
     'launch.error':            'ゲームを起動できませんでした: {err}',
     'mods.openFolder.title':   'MODフォルダを開く',
     'mods.notFromManager':             'マネージャー経由でインストールされていません',
+    'mods.link.cta':                   '🔗 mod.ioに関連付け',
+    'mods.link.title':                 '« {name} » を mod.io のレコードに関連付け',
+    'mods.link.searchPlaceholder':     'mod.io で検索…',
+    'mods.link.confirm':               '関連付け',
+    'mods.link.empty':                 '一致なし — 別の名前で試してください。',
+    'mods.link.cancel':                'キャンセル',
     'tab.news':                'ニュース',
     'tab.activation':          '有効化',
     'tab.browser':             'MODブラウザ',
@@ -1952,6 +2016,7 @@ const TRANSLATIONS = {
     'tweak.resetAll':               'すべてリセット',
     'tweak.resetModConfirm':        'このMODのすべてのオプションをデフォルトに戻しますか？',
     'tweak.resetAllConfirm':        'すべてのMODのオプションをリセットしますか？ active-options.jsonc ファイルが削除されます。',
+    'tweak.defaultsSection':           '— デフォルト値 —',
     'tweak.colorPicker.open':          'カラーピッカーを開く',
     'tweak.colorPicker.title':         'カラーピッカー',
     'tweak.colorPicker.before':        '変更前',
@@ -1983,6 +2048,8 @@ const TRANSLATIONS = {
     'modio.termsAgree':             '次に同意します:',
     'modio.termsLink':              'mod.io 利用規約',
     'modio.cancel':                 'キャンセル',
+    'common.cancel':                   'キャンセル',
+    'common.confirm':                  '確認',
     'modio.sendCode':               'コードを送信',
     'modio.sending':                '送信中…',
     'modio.code':                   'セキュリティコード',
@@ -2108,6 +2175,12 @@ const TRANSLATIONS = {
     'launch.error':            '게임을 실행할 수 없습니다: {err}',
     'mods.openFolder.title':   '모드 폴더 열기',
     'mods.notFromManager':             '관리자를 통해 설치되지 않음',
+    'mods.link.cta':                   '🔗 mod.io에 연결',
+    'mods.link.title':                 '« {name} »을(를) mod.io 기록에 연결',
+    'mods.link.searchPlaceholder':     'mod.io 검색…',
+    'mods.link.confirm':               '연결',
+    'mods.link.empty':                 '일치 항목 없음 — 다른 이름으로 시도해 보세요.',
+    'mods.link.cancel':                '취소',
     'tab.news':                '뉴스',
     'tab.activation':          '활성화',
     'tab.browser':             '모드 브라우저',
@@ -2179,6 +2252,7 @@ const TRANSLATIONS = {
     'tweak.resetAll':               '모두 재설정',
     'tweak.resetModConfirm':        '이 모드의 모든 옵션을 기본값으로 재설정하시겠습니까?',
     'tweak.resetAllConfirm':        '모든 모드의 옵션을 재설정하시겠습니까? active-options.jsonc 파일이 삭제됩니다.',
+    'tweak.defaultsSection':           '— 기본값 —',
     'tweak.colorPicker.open':          '색상 선택기 열기',
     'tweak.colorPicker.title':         '색상 선택기',
     'tweak.colorPicker.before':        '이전',
@@ -2210,6 +2284,8 @@ const TRANSLATIONS = {
     'modio.termsAgree':             '동의합니다:',
     'modio.termsLink':              'mod.io 이용 약관',
     'modio.cancel':                 '취소',
+    'common.cancel':                   '취소',
+    'common.confirm':                  '확인',
     'modio.sendCode':               '코드 전송',
     'modio.sending':                '전송 중…',
     'modio.code':                   '보안 코드',
@@ -2335,6 +2411,12 @@ const TRANSLATIONS = {
     'launch.error':            '无法启动游戏：{err}',
     'mods.openFolder.title':   '打开模组文件夹',
     'mods.notFromManager':             '未通过管理器安装',
+    'mods.link.cta':                   '🔗 关联到 mod.io',
+    'mods.link.title':                 '将 « {name} » 关联到 mod.io 记录',
+    'mods.link.searchPlaceholder':     '搜索 mod.io…',
+    'mods.link.confirm':               '关联',
+    'mods.link.empty':                 '无匹配 — 请尝试其他名称。',
+    'mods.link.cancel':                '取消',
     'tab.news':                '新闻',
     'tab.activation':          '激活',
     'tab.browser':             '模组浏览器',
@@ -2406,6 +2488,7 @@ const TRANSLATIONS = {
     'tweak.resetAll':               '全部重置',
     'tweak.resetModConfirm':        '将此模组的所有选项重置为默认值？',
     'tweak.resetAllConfirm':        '重置所有模组的选项？active-options.jsonc 文件将被删除。',
+    'tweak.defaultsSection':           '— 默认值 —',
     'tweak.colorPicker.open':          '打开颜色选择器',
     'tweak.colorPicker.title':         '颜色选择器',
     'tweak.colorPicker.before':        '之前',
@@ -2437,6 +2520,8 @@ const TRANSLATIONS = {
     'modio.termsAgree':             '我同意 mod.io 的',
     'modio.termsLink':              '使用条款',
     'modio.cancel':                 '取消',
+    'common.cancel':                   '取消',
+    'common.confirm':                  '确认',
     'modio.sendCode':               '发送验证码',
     'modio.sending':                '发送中…',
     'modio.code':                   '安全码',
@@ -2562,6 +2647,12 @@ const TRANSLATIONS = {
     'launch.error':            '無法啟動遊戲：{err}',
     'mods.openFolder.title':   '開啟模組資料夾',
     'mods.notFromManager':             '未透過管理員安裝',
+    'mods.link.cta':                   '🔗 關聯到 mod.io',
+    'mods.link.title':                 '將 « {name} » 關聯到 mod.io 記錄',
+    'mods.link.searchPlaceholder':     '搜尋 mod.io…',
+    'mods.link.confirm':               '關聯',
+    'mods.link.empty':                 '無相符 — 請嘗試其他名稱。',
+    'mods.link.cancel':                '取消',
     'tab.news':                '新聞',
     'tab.activation':          '啟用',
     'tab.browser':             '模組瀏覽器',
@@ -2633,6 +2724,7 @@ const TRANSLATIONS = {
     'tweak.resetAll':               '全部重設',
     'tweak.resetModConfirm':        '將此模組的所有選項重設為預設值？',
     'tweak.resetAllConfirm':        '重設所有模組的選項？active-options.jsonc 檔案將被刪除。',
+    'tweak.defaultsSection':           '— 預設值 —',
     'tweak.colorPicker.open':          '打開顏色選擇器',
     'tweak.colorPicker.title':         '顏色選擇器',
     'tweak.colorPicker.before':        '之前',
@@ -2664,6 +2756,8 @@ const TRANSLATIONS = {
     'modio.termsAgree':             '我同意 mod.io 的',
     'modio.termsLink':              '使用條款',
     'modio.cancel':                 '取消',
+    'common.cancel':                   '取消',
+    'common.confirm':                  '確認',
     'modio.sendCode':               '傳送驗證碼',
     'modio.sending':                '傳送中…',
     'modio.code':                   '安全碼',
@@ -2756,6 +2850,10 @@ window.annoApp = function () {
     // Opens with the local mod's name pre-filled in the search; the user
     // confirms the match by clicking a result. Never picks anything
     // automatically.
+    // App-styled replacement for window.confirm() — see confirmDialog()
+    // method below. Resolves via _confirmModalAnswer() to keep the
+    // promise-based call site (await this.confirmDialog(msg)) ergonomic.
+    confirmModal: { open: false, message: '', resolve: null },
     linkPicker: {
       open: false,
       folder: '',          // basename of the local mod folder being linked
@@ -2928,6 +3026,18 @@ window.annoApp = function () {
       // buttons from the very first render. Both calls are best-effort —
       // a missing marker or no auth just hides the relevant icon.
       await this._refreshInstalledIds();
+      // Auto-link hand-installed mods whose modinfo.ModID strictly
+      // matches a mod.io name_id — same idea as the "check the marker
+      // file" pass above, but extending it to mods that don't have a
+      // marker yet. Linked mods get the version-aware Update / Uninstall
+      // affordances on the very first boot. Non-matches keep the
+      // manual 🔗 button.
+      try {
+        const r = await window.pywebview.api.modio_auto_link_unmarked();
+        if (r && r.ok && r.linked > 0) {
+          await this._refreshInstalledIds();  // pick up the new markers
+        }
+      } catch (_) { /* silent */ }
       this._refreshModUpdates();  // fire-and-forget, doesn't block boot
       // Restore the previously-selected profile, if any. We persist the
       // user's choice in settings so a relaunch lands on the same preset
@@ -2961,6 +3071,18 @@ window.annoApp = function () {
       } catch (e) {
         console.error('restore active profile failed:', e);
       }
+      // Auto-detect the game executable on first launch so the user can
+      // jump straight in without having to click the "Auto-detect" button
+      // in Settings. We only run it when no valid game_path is configured
+      // (covers fresh installs AND cases where the user moved/uninstalled
+      // the game since last run). Best-effort: a failure just leaves the
+      // setting empty, the user can fall back to the manual button.
+      try {
+        const info = await window.pywebview.api.get_paths_info();
+        if (info && (!info.game_path || !info.game_path_exists)) {
+          await window.pywebview.api.detect_game_path();
+        }
+      } catch (_) { /* silent */ }
       // Refresh contextual data each time the user opens a tab that needs it.
       // For the log we also kick off a 2-second poll so the user sees new
       // entries land while the game is running, and stop the poll the moment
@@ -3244,7 +3366,7 @@ window.annoApp = function () {
     },
 
     async modioDisconnect() {
-      if (!confirm(this.t('modio.disconnectConfirm'))) return;
+      if (!await this.confirmDialog(this.t('modio.disconnectConfirm'))) return;
       try {
         await window.pywebview.api.modio_disconnect();
         await this.refreshSettings();
@@ -3612,9 +3734,9 @@ window.annoApp = function () {
       const presetName = this._collectionPresetName(name, collectionId);
       // total = bundled mods we currently know about (live load is server-side)
       const total = (this.browser.dependencies || []).length;
-      if (!confirm(this.t('browser.uninstallConfirm',
+      if (!await this.confirmDialog(this.t('browser.uninstallConfirm',
             { name, profile: presetName }))) return;
-      const alsoMods = total > 0 && confirm(this.t('browser.uninstallAlsoMods',
+      const alsoMods = total > 0 && await this.confirmDialog(this.t('browser.uninstallAlsoMods',
             { count: total }));
       try {
         const res = await window.pywebview.api.modio_uninstall_collection(
@@ -3728,7 +3850,7 @@ window.annoApp = function () {
       const card = (this.browser.items || []).find((m) => m.id === modId);
       const name = (detail && detail.id === modId && detail.name)
                    || (card && card.name) || `mod ${modId}`;
-      if (!confirm(this.t('browser.uninstallModConfirm', { name }))) return;
+      if (!await this.confirmDialog(this.t('browser.uninstallModConfirm', { name }))) return;
       try {
         const res = await window.pywebview.api.uninstall_mod(folder);
         if (res && res.ok) {
@@ -3841,6 +3963,39 @@ window.annoApp = function () {
         'text-scale-small', 'text-scale-medium', 'text-scale-large');
       document.body.classList.add('text-scale-' + v);
     },
+    /** Drop-in replacement for window.confirm() that uses the in-app
+     *  modal instead of the browser-native dialog (which doesn't follow
+     *  the annolayouts theme on WebKit2GTK / WebView2). Returns a promise
+     *  resolved with `true` on confirm, `false` on cancel/escape/backdrop. */
+    confirmDialog(message) {
+      return new Promise((resolve) => {
+        this.confirmModal = { open: true, message: String(message || ''), resolve };
+      });
+    },
+    _confirmModalAnswer(value) {
+      const r = this.confirmModal.resolve;
+      this.confirmModal = { open: false, message: '', resolve: null };
+      if (r) r(!!value);
+    },
+
+    /** Inline loader markup (wreath + logo + breath/fill animation).
+     *  Used in place of plain "Chargement…" text on the long-fetch states
+     *  (News list, News detail, Browser list). The label sits below the
+     *  wreath in small caps gold so it still reads as the original copy. */
+    renderLoader(label) {
+      return `
+        <div class="loader">
+          <div class="loader__stage">
+            <div class="loader__wreath">
+              <img class="loader__wreath-base"  src="icons/loader/wreath.svg" alt="" />
+              <img class="loader__wreath-light" src="icons/loader/wreath.svg" alt="" />
+            </div>
+            <img class="loader__logo" src="icons/loader/logo.png" alt="" />
+          </div>
+          ${label ? `<div class="loader__label">${escapeHtml(label)}</div>` : ''}
+        </div>`;
+    },
+
     async setTextScale(value) {
       this.applyTextScale(value);
       await this.setSetting('text_scale', value);
@@ -3916,7 +4071,7 @@ window.annoApp = function () {
     },
 
     async clearModioKey() {
-      if (!confirm(this.t('settings.modio.disconnectConfirm'))) return;
+      if (!await this.confirmDialog(this.t('settings.modio.disconnectConfirm'))) return;
       await this.setSetting('modio_api_key', '');
       await this.refreshSettings();
     },
@@ -3979,7 +4134,7 @@ window.annoApp = function () {
       const display = (path || '').split(/[\\/]/).pop() || '';
       if (res && !res.ok && res.exists_already) {
         this.install.busy = false;
-        if (!confirm(this.t('install.overwriteConfirm', { name: res.folder || display }))) {
+        if (!await this.confirmDialog(this.t('install.overwriteConfirm', { name: res.folder || display }))) {
           this._setInstallStatus(this.t('install.cancelled'), true);
           return;
         }
@@ -4009,7 +4164,7 @@ window.annoApp = function () {
         let res = await callFactory(false);
         if (res && !res.ok && res.exists_already) {
           this.install.busy = false;
-          if (!confirm(this.t('install.overwriteConfirm', { name: res.folder || displayName }))) {
+          if (!await this.confirmDialog(this.t('install.overwriteConfirm', { name: res.folder || displayName }))) {
             this._setInstallStatus(this.t('install.cancelled'), true);
             return;
           }
@@ -4216,7 +4371,7 @@ window.annoApp = function () {
     async resetTweakMod() {
       const id = this.tweak.selectedId;
       if (!id) return;
-      if (!confirm(this.t('tweak.resetModConfirm'))) return;
+      if (!await this.confirmDialog(this.t('tweak.resetModConfirm'))) return;
       try {
         await window.pywebview.api.reset_mod_options(id);
         await this.selectTweakMod(id);  // re-fetch defaults
@@ -4226,7 +4381,7 @@ window.annoApp = function () {
     },
 
     async resetAllTweaks() {
-      if (!confirm(this.t('tweak.resetAllConfirm'))) return;
+      if (!await this.confirmDialog(this.t('tweak.resetAllConfirm'))) return;
       try {
         await window.pywebview.api.reset_all_options();
         if (this.tweak.selectedId) await this.selectTweakMod(this.tweak.selectedId);
@@ -4310,7 +4465,7 @@ window.annoApp = function () {
         alert(this.t('profile.cantDeleteReserved'));
         return;
       }
-      if (!confirm(this.t('profile.deleteConfirm', { name }))) return;
+      if (!await this.confirmDialog(this.t('profile.deleteConfirm', { name }))) return;
       try {
         const res = await window.pywebview.api.delete_preset(name);
         if (!res || !res.ok) {
@@ -4565,7 +4720,7 @@ window.annoApp = function () {
 
     async uninstallMod(folder, name) {
       if (!folder) return;
-      if (!confirm(this.t('detail.uninstallConfirm', { name }))) return;
+      if (!await this.confirmDialog(this.t('detail.uninstallConfirm', { name }))) return;
       try {
         const res = await window.pywebview.api.uninstall_mod(folder);
         if (!res || !res.ok) {
@@ -4663,7 +4818,7 @@ window.annoApp = function () {
      *  marker cache so the row disappears immediately. */
     async activationUninstall(folder, name) {
       if (!folder) return;
-      if (!confirm(this.t('detail.uninstallConfirm', { name: name || folder }))) return;
+      if (!await this.confirmDialog(this.t('detail.uninstallConfirm', { name: name || folder }))) return;
       try {
         const res = await window.pywebview.api.uninstall_mod(folder);
         if (res && res.ok) {
@@ -4958,7 +5113,7 @@ window.annoApp = function () {
         const d = n.detail;
         const it = d.item || {};
         const inner = d.loading
-          ? `<div class="news__empty">${escapeHtml(this.t('news.loading'))}</div>`
+          ? this.renderLoader(this.t('news.loading'))
           : d.error
             ? `<div class="news__empty news__empty--error">${escapeHtml(this.t('news.error', { err: d.error }))}</div>`
             : `<article class="news-detail__article" onclick="annoRoot().onArticleClick(event)">${sanitizeModioHtml(d.html || '')}</article>`;
@@ -4984,7 +5139,7 @@ window.annoApp = function () {
             ${inner}
           </div>`;
       } else if (n.loading && !n.items.length) {
-        body = `<div class="news__empty">${escapeHtml(this.t('news.loading'))}</div>`;
+        body = this.renderLoader(this.t('news.loading'));
       } else if (n.error) {
         body = `<div class="news__empty news__empty--error">${escapeHtml(this.t('news.error', { err: n.error }))}</div>`;
       } else if (!n.items.length) {
@@ -5145,7 +5300,7 @@ window.annoApp = function () {
             </button>
           </div>`;
       } else if (b.loading && !b.items.length) {
-        listBody = `<div class="browser__empty">${escapeHtml(this.t('browser.loading'))}</div>`;
+        listBody = this.renderLoader(this.t('browser.loading'));
       } else if (b.error) {
         listBody = `<div class="browser__empty browser__empty--error">${escapeHtml(this.t('browser.error', { error: b.error }))}</div>`;
       } else if (!b.items.length) {

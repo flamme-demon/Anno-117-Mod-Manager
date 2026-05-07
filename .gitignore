@@ -25,6 +25,11 @@ __pycache__/
 *.spec
 build/
 dist/
+build-win/
+dist-win/
+
+# Local source assets staged before being copied into frontend/
+chargement/
 
 # PyCharm
 .idea/

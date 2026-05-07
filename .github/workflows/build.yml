@@ -30,6 +30,9 @@ jobs:
       - name: Build with PyInstaller
         # --onefile + --windowed: portable single .exe with no console
         # window. --add-data uses ';' on Windows (':' on Linux/macOS).
+        # --splash hides the 1-3s bootloader extraction + WebView2 init
+        # behind a static PNG; pyi_splash.close() in app.py dismisses it
+        # as soon as the webview's DOM is loaded.
         run: |
           pyinstaller --onefile --windowed `
             --add-data "data;data" `
@@ -37,6 +40,7 @@ jobs:
             --add-data "_version.py;." `
             --icon "app_icon.ico" `
             --version-file "file_version_info.txt" `
+            --splash "data\splash.png" `
             --name "Anno 117 Mod Manager" `
             app.py
 
