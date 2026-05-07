@@ -291,12 +291,159 @@
 .mod-row__action--uninstall {
   background: linear-gradient(to bottom, #8a3f3f 0%, #5c2828 70%);
 }
-.mod-row__info {
-  font-size: 14px;
-  color: var(--gold-dim);
-  cursor: help;
-  user-select: none;
+/* "Link to mod.io" — gold-tinted to read as informational/action rather
+   than destructive (uninstall) or version-related (update). Replaces the
+   old static ⓘ badge: clicking opens the link picker. */
+.mod-row__action--link {
+  background: linear-gradient(to bottom, #8a6e2c 0%, #5a4717 70%);
 }
+
+/* ── Link picker modal ──────────────────────────────────────────────── */
+.link-picker {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  font-family: var(--font-body);
+  color: var(--cream);
+}
+.link-picker__panel {
+  width: min(560px, 92vw);
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #2c3850 0%, #1f2734 100%);
+  border: 1px solid var(--gold-faint);
+  border-radius: 8px;
+  box-shadow:
+    inset 0 1px 0 rgba(148, 178, 236, 0.08),
+    inset 0 0 1px 0 rgba(200, 169, 77, 0.3),
+    0 12px 32px rgba(0, 0, 0, 0.7);
+}
+.link-picker__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(200, 169, 77, 0.2);
+}
+.link-picker__title {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  color: var(--gold);
+}
+.link-picker__close {
+  background: transparent;
+  border: none;
+  color: var(--cream-dim);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 6px;
+}
+.link-picker__close:hover { color: var(--cream); }
+.link-picker__search {
+  padding: 12px 14px;
+  border-bottom: 1px solid #2a2e36;
+}
+.link-picker__search input {
+  width: 100%;
+  box-sizing: border-box;
+  background: #1a1d24;
+  border: 1px solid #3a4150;
+  border-radius: 4px;
+  padding: 7px 10px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--cream);
+}
+.link-picker__search input:focus {
+  outline: 1px solid var(--gold);
+  outline-offset: -1px;
+}
+.link-picker__results {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 14px;
+}
+.link-picker__empty {
+  padding: 28px 12px;
+  text-align: center;
+  color: var(--cream-dim);
+  font-style: italic;
+}
+.link-picker__empty--error { color: #d97070; }
+.link-picker__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 6px;
+  border-bottom: 1px solid #2a2e36;
+}
+.link-picker__row:last-child { border-bottom: none; }
+.link-picker__logo {
+  width: 56px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 3px;
+  background: #1a1d24;
+  flex-shrink: 0;
+}
+.link-picker__meta {
+  flex: 1;
+  min-width: 0;
+}
+.link-picker__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cream);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.link-picker__author {
+  font-size: 11px;
+  color: var(--cream-dim);
+  font-style: italic;
+}
+.link-picker__confirm {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border: 1px solid #181c26;
+  border-radius: 4px;
+  background: linear-gradient(to bottom, #6b8a52 0%, #3d5a30 70%);
+  color: #f4f4f4;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  box-shadow: inset 0 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+.link-picker__confirm:hover:not(:disabled) { filter: brightness(1.15); }
+.link-picker__confirm:disabled { opacity: 0.55; cursor: not-allowed; }
+.link-picker__foot {
+  padding: 10px 14px;
+  border-top: 1px solid #2a2e36;
+  display: flex;
+  justify-content: flex-end;
+}
+.link-picker__cancel {
+  padding: 6px 16px;
+  border: 1px solid #181c26;
+  border-radius: 4px;
+  background: linear-gradient(to bottom, #49566a 0%, #323e53 70%);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+.link-picker__cancel:hover { filter: brightness(1.15); }
 .mod-row__category-cell {
   font-family: var(--font-title);
   font-size: 10px;

@@ -727,6 +727,60 @@ class Api:
             'failed': failed,
         }
 
+    def modio_link_mod(self, folder: str, mod_id: int) -> dict:
+        """Manually associate an existing local mod folder with a mod.io
+        record by writing the same _modio_install.json marker that an
+        install through the manager would have produced. Used by the
+        Activation tab's link picker for mods the user dropped in by
+        hand: from there on they get version-aware Update / Uninstall /
+        auto-subscribe like any managed mod. Doesn't touch the mod's own
+        files — only adds the marker. Auto-subscribes too so the
+        association mirrors an in-app install."""
+        if not folder or '/' in folder or '\\' in folder or folder.startswith('.'):
+            return {'ok': False, 'error': 'invalid folder name'}
+        if not mod_id:
+            return {'ok': False, 'error': 'mod_id required'}
+        token = self._modio_token()
+        if not token:
+            return {'ok': False, 'error': 'not authenticated'}
+        roots = self._mod_roots()
+        target_path = None
+        for root in roots:
+            candidate = os.path.join(root, folder)
+            if os.path.isdir(candidate):
+                target_path = candidate
+                break
+        if not target_path:
+            return {'ok': False, 'error': f'folder not found: {folder}'}
+        res = modio_module.get_mod(token, int(mod_id))
+        if not res.get('ok'):
+            return res
+        mod = res.get('mod') or {}
+        modfile = mod.get('modfile') or {}
+        meta = {
+            'mod_id': int(mod_id),
+            'name_id': (mod.get('name_id') or ''),
+            'name': (mod.get('name') or ''),
+            'modfile_id': int(modfile.get('id') or 0),
+            'version': str(modfile.get('version') or ''),
+            'installed_at': int(__import__('time').time()),
+            # Distinguishes a marker written by a manual link from one
+            # written by an actual install — purely informational, the
+            # rest of the app treats them identically.
+            'linked': True,
+        }
+        meta_path = os.path.join(target_path, '_modio_install.json')
+        try:
+            with open(meta_path, 'w', encoding='utf-8') as f:
+                json.dump(meta, f, indent=2, ensure_ascii=False)
+        except OSError as e:
+            return {'ok': False, 'error': str(e)}
+        try:
+            modio_module.subscribe(token, int(mod_id))
+        except Exception:
+            pass
+        return {'ok': True, 'name': mod.get('name') or ''}
+
     def modio_install_mod(self, mod_id: int) -> dict:
         """Download the latest modfile of ``mod_id`` and install it. Always
         allow_overwrite=True so updates from mod.io replace the previous

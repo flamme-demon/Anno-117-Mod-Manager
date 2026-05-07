@@ -51,6 +51,12 @@ const TRANSLATIONS = {
     'launch.error':            'Could not launch the game: {err}',
     'mods.openFolder.title':   'Open the mods folder',
     'mods.notFromManager':     'Not installed via the manager',
+    'mods.link.cta':           '🔗 Link to mod.io',
+    'mods.link.title':         'Link « {name} » to a mod.io record',
+    'mods.link.searchPlaceholder': 'Search mod.io…',
+    'mods.link.confirm':       'Link',
+    'mods.link.empty':         'No matches — try another name.',
+    'mods.link.cancel':        'Cancel',
     'tab.news':                'News',
     'tab.activation':          'Activation',
     'tab.browser':             'Mod Browser',
@@ -122,6 +128,7 @@ const TRANSLATIONS = {
     'tweak.resetAll':               'Reset all',
     'tweak.resetModConfirm':        'Reset all options for this mod to their defaults?',
     'tweak.resetAllConfirm':        'Reset every mod’s options? The active-options.jsonc file will be deleted.',
+    'tweak.defaultsSection':        '— Default values —',
     'tweak.colorPicker.open':       'Open colour picker',
     'tweak.colorPicker.title':      'Colour picker',
     'tweak.colorPicker.before':     'Before',
@@ -278,6 +285,12 @@ const TRANSLATIONS = {
     'launch.error':            'Impossible de lancer le jeu : {err}',
     'mods.openFolder.title':   'Ouvrir le dossier des mods',
     'mods.notFromManager':     'Non installé via le gestionnaire',
+    'mods.link.cta':           '🔗 Associer à mod.io',
+    'mods.link.title':         'Associer « {name} » à une fiche mod.io',
+    'mods.link.searchPlaceholder': 'Rechercher sur mod.io…',
+    'mods.link.confirm':       'Associer',
+    'mods.link.empty':         'Aucun résultat — essayez un autre nom.',
+    'mods.link.cancel':        'Annuler',
     'tab.news':                'Actualités',
     'tab.activation':          'Activation',
     'tab.browser':             'Mod Browser',
@@ -349,6 +362,7 @@ const TRANSLATIONS = {
     'tweak.resetAll':               'Tout réinitialiser',
     'tweak.resetModConfirm':        'Réinitialiser toutes les options de ce mod aux valeurs par défaut ?',
     'tweak.resetAllConfirm':        'Réinitialiser les options de tous les mods ? Le fichier active-options.jsonc sera supprimé.',
+    'tweak.defaultsSection':        '— Valeurs par défaut —',
     'tweak.colorPicker.open':       'Ouvrir le sélecteur de couleur',
     'tweak.colorPicker.title':      'Sélecteur de couleur',
     'tweak.colorPicker.before':     'Avant',
@@ -2738,6 +2752,20 @@ window.annoApp = function () {
     release: { checked: false, up_to_date: true, latest: '', url: '' },
     currentTab: 'activation',
     modUpdates: {},             // {mod_id: latest_modfile_id} — refreshed at boot for the Activation row buttons
+    // Activation → "link to mod.io" picker for hand-installed mods.
+    // Opens with the local mod's name pre-filled in the search; the user
+    // confirms the match by clicking a result. Never picks anything
+    // automatically.
+    linkPicker: {
+      open: false,
+      folder: '',          // basename of the local mod folder being linked
+      localName: '',       // pretty name shown in the picker header
+      search: '',          // editable search query (seeded from localName)
+      results: [],
+      loading: false,
+      error: '',
+      busyId: 0,           // mod_id being linked while the call is in flight
+    },
     mods: [],
     selectedModId: null,
     selectedBannerUrl: '',
@@ -4668,6 +4696,78 @@ window.annoApp = function () {
       }
     },
 
+    /** Open the "link to mod.io" picker for a hand-installed mod row.
+     *  Pre-fills the search with the local mod name to give a head start;
+     *  the user always picks the match manually from the result list. */
+    async openLinkPicker(folder, localName) {
+      this.linkPicker = {
+        open: true,
+        folder: folder || '',
+        localName: localName || folder || '',
+        search: localName || '',
+        results: [],
+        loading: false,
+        error: '',
+        busyId: 0,
+      };
+      await this.linkPickerSearch();
+    },
+    closeLinkPicker() {
+      this.linkPicker = {
+        open: false, folder: '', localName: '', search: '',
+        results: [], loading: false, error: '', busyId: 0,
+      };
+    },
+    /** Re-run the mod.io browse query with the current search string.
+     *  Bound to @input on the search field so the list refreshes as the
+     *  user types — debounced lightly via a per-call cancel token. */
+    async linkPickerSearch() {
+      const token = ++this._linkPickerToken;
+      this.linkPicker.loading = true;
+      this.linkPicker.error = '';
+      try {
+        const res = await window.pywebview.api.modio_browse(
+          this.linkPicker.search || '', null, 10, 0, '-popular', 0, false);
+        if (token !== this._linkPickerToken) return;  // stale
+        if (res && res.ok) {
+          this.linkPicker.results = res.data || [];
+          this.linkPicker.loading = false;
+        } else {
+          this.linkPicker.results = [];
+          this.linkPicker.loading = false;
+          this.linkPicker.error = (res && res.error) || 'fetch failed';
+        }
+      } catch (e) {
+        if (token !== this._linkPickerToken) return;
+        this.linkPicker.loading = false;
+        this.linkPicker.error = String(e);
+      }
+    },
+    _linkPickerToken: 0,
+    /** Confirm an association: writes the marker, refreshes installed
+     *  state + update map, then closes the picker. The mod gains the
+     *  Update / Uninstall icons immediately. */
+    async confirmLinkMod(modId) {
+      if (!modId || this.linkPicker.busyId) return;
+      this.linkPicker.busyId = modId;
+      try {
+        const res = await window.pywebview.api.modio_link_mod(
+          this.linkPicker.folder, modId);
+        if (res && res.ok) {
+          await this._refreshInstalledIds();
+          await this._refreshModUpdates();
+          await this._refreshSubscribed();
+          this.closeLinkPicker();
+        } else {
+          this.linkPicker.error = (res && res.error) || 'unknown';
+          this.linkPicker.busyId = 0;
+        }
+      } catch (e) {
+        this.linkPicker.error = String(e);
+        this.linkPicker.busyId = 0;
+      }
+    },
+
     /** Same idea as _refreshSubscribed but for collections. Pulls the user's
      *  followed-collections list (single host, capped at 100 — well above
      *  what any sane user would track) and turns it into a {coll_id: true}
@@ -5435,13 +5535,21 @@ window.annoApp = function () {
       } else if (!Object.keys(t.schema).length) {
         form = `<div class="tweak-form__empty">${escapeHtml(this.t('tweak.noOptions'))}</div>`;
       } else {
-        const rows = Object.entries(t.schema).map(([key, spec]) => {
-          if (!spec || typeof spec !== 'object') return '';
+        // Build {key, html, isModified} per option then split into a
+        // "modified" block on top and a "defaults" block below, with a
+        // gold separator between when both groups exist. Each modified
+        // row also gets a `is-modified` class for the gold left rail —
+        // double cue (regrouped + marked) is what the visual brief asked
+        // for. Original schema order is preserved within each block.
+        const items = Object.entries(t.schema).map(([key, spec]) => {
+          if (!spec || typeof spec !== 'object') return null;
           const label = spec.label || key;
           const type = (spec.type || 'text').toLowerCase();
           const labels = Array.isArray(spec.labels) ? spec.labels : [];
           const values = Array.isArray(spec.values) ? spec.values : [];
-          const current = t.values[key] !== undefined ? String(t.values[key]) : String(spec.default ?? '');
+          const defaultStr = String(spec.default ?? '');
+          const current = t.values[key] !== undefined ? String(t.values[key]) : defaultStr;
+          const isModified = current !== defaultStr;
           const savingCls = t.saving === key ? 'is-saving' : '';
           let control = '';
           let hint = '';
@@ -5522,13 +5630,22 @@ window.annoApp = function () {
             if (labels.length) hint = String(labels[0]);
           }
 
-          return `
-            <div class="tweak-row ${savingCls}">
+          const html = `
+            <div class="tweak-row ${savingCls} ${isModified ? 'is-modified' : ''}">
               <div class="tweak-row__label">${escapeHtml(label)}</div>
               ${control}
               ${hint ? `<div class="tweak-row__hint">${escapeHtml(hint)}</div>` : ''}
             </div>`;
-        }).join('');
+          return { html, isModified };
+        }).filter(Boolean);
+
+        const modifiedHtml = items.filter((x) => x.isModified).map((x) => x.html).join('');
+        const defaultHtml  = items.filter((x) => !x.isModified).map((x) => x.html).join('');
+        const separator = (modifiedHtml && defaultHtml) ? `
+          <div class="tweak-form__separator">
+            <span>${escapeHtml(this.t('tweak.defaultsSection'))}</span>
+          </div>` : '';
+        const rows = modifiedHtml + separator + defaultHtml;
 
         form = `
           <div class="tweak-form__header">
@@ -5925,8 +6042,9 @@ window.annoApp = function () {
         const actions = (showUpdate || showUninst || showInfo) ? `
             <div class="mod-row__actions" onclick="event.stopPropagation()">
               ${showInfo ? `
-                <span class="mod-row__info"
-                      title="${escapeAttr(this.t('mods.notFromManager'))}">ⓘ</span>` : ''}
+                <button class="mod-row__action mod-row__action--link"
+                        title="${escapeAttr(this.t('mods.notFromManager') + ' — ' + this.t('mods.link.cta'))}"
+                        onclick="annoRoot().openLinkPicker('${escapeAttr(m.folder)}', '${escapeAttr(m.name)}')">🔗</button>` : ''}
               ${showUpdate ? `
                 <button class="mod-row__action mod-row__action--update"
                         title="${escapeAttr(this.t('browser.update'))}"

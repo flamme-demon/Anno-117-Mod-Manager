@@ -154,6 +154,43 @@
   border-color: var(--gold);
   box-shadow: 0 0 0 1px var(--gold), 0 0 8px rgba(200, 169, 77, 0.25);
 }
+/* Gold left rail on options whose current value differs from the
+   schema default — pairs with the "Default values" separator that
+   splits modified options (top) from defaults (bottom). inset
+   box-shadow instead of border-left so the row's content doesn't
+   shift sideways relative to its unmodified siblings. */
+.tweak-row.is-modified {
+  box-shadow: inset 3px 0 0 var(--gold);
+}
+.tweak-row.is-saving.is-modified {
+  /* Saving flash takes precedence — stack the gold rail under it. */
+  box-shadow:
+    inset 3px 0 0 var(--gold),
+    0 0 0 1px var(--gold),
+    0 0 8px rgba(200, 169, 77, 0.25);
+}
+
+/* Carved separator between "modified" and "defaults" groups: thin
+   gold-fade rules on either side of an uppercase Playfair label,
+   matching the rest of the app's section dividers. */
+.tweak-form__separator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 4px;
+  font-family: var(--font-title);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+}
+.tweak-form__separator::before,
+.tweak-form__separator::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold-faint), transparent);
+}
 
 .tweak-row__label {
   font-family: var(--font-body);
@@ -186,6 +223,37 @@
 }
 .tweak-control:focus {
   outline: 1px solid var(--gold);
+}
+
+/* Enum dropdowns get the in-game HUD styling: radial-navy disc with a
+   pale-blue inset highlight and a custom gold chevron. Mirrors the
+   .browser__sort dropdown but keeps the 6px rounded corners of the
+   Tweak form controls (the Browser uses a pill 18px instead). */
+select.tweak-control {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 2px solid #181c26;
+  padding: 6px 28px 6px 12px;
+  background:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.16) 0%, transparent 55%),
+    radial-gradient(circle, #49566a 0%, #323e53 70%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c8a94d' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center, center, right 8px center;
+  background-size: auto, auto, 12px;
+  box-shadow: inset 0 0 2px 0 #94b2ec;
+  color: #e6e8ee;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+select.tweak-control:hover { filter: brightness(1.15); }
+select.tweak-control:focus {
+  outline: none;
+  box-shadow: inset 0 0 2px 0 #94b2ec, 0 0 0 2px var(--gold-dim);
+}
+select.tweak-control option {
+  background: #262f40;
+  color: #e6e8ee;
 }
 
 /* Slider with value label and bounds */

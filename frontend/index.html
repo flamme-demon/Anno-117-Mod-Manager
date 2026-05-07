@@ -197,6 +197,63 @@
       </div>
     </footer>
 
+    <!-- "Link to mod.io" picker for hand-installed mods on the Activation
+         tab. Modal overlay (full screen, scrim) — the user has to confirm
+         a match explicitly before any marker is written. -->
+    <div class="link-picker"
+         x-show="linkPicker.open"
+         x-cloak
+         @keydown.escape.window="closeLinkPicker()"
+         @click.self="closeLinkPicker()">
+      <div class="link-picker__panel">
+        <div class="link-picker__head">
+          <h3 class="link-picker__title"
+              x-text="t('mods.link.title', { name: linkPicker.localName })"></h3>
+          <button class="link-picker__close"
+                  @click="closeLinkPicker()">✕</button>
+        </div>
+        <div class="link-picker__search">
+          <input type="text"
+                 :placeholder="t('mods.link.searchPlaceholder')"
+                 :value="linkPicker.search"
+                 @input.debounce.250ms="linkPicker.search = $event.target.value; linkPickerSearch()" />
+        </div>
+        <div class="link-picker__results">
+          <template x-if="linkPicker.loading">
+            <div class="link-picker__empty" x-text="t('browser.loading')"></div>
+          </template>
+          <template x-if="!linkPicker.loading && linkPicker.error">
+            <div class="link-picker__empty link-picker__empty--error"
+                 x-text="t('browser.error', { error: linkPicker.error })"></div>
+          </template>
+          <template x-if="!linkPicker.loading && !linkPicker.error && !linkPicker.results.length">
+            <div class="link-picker__empty" x-text="t('mods.link.empty')"></div>
+          </template>
+          <template x-for="m in linkPicker.results" :key="m.id">
+            <div class="link-picker__row">
+              <img class="link-picker__logo"
+                   :src="(m.logo && (m.logo.thumb_320x180 || m.logo.original)) || ''"
+                   alt="" loading="lazy" />
+              <div class="link-picker__meta">
+                <div class="link-picker__name" x-text="m.name"></div>
+                <div class="link-picker__author"
+                     x-text="(m.submitted_by && m.submitted_by.username) || '?'"></div>
+              </div>
+              <button class="link-picker__confirm"
+                      :disabled="linkPicker.busyId === m.id"
+                      @click="confirmLinkMod(m.id)"
+                      x-text="t('mods.link.confirm')"></button>
+            </div>
+          </template>
+        </div>
+        <div class="link-picker__foot">
+          <button class="link-picker__cancel"
+                  @click="closeLinkPicker()"
+                  x-text="t('mods.link.cancel')"></button>
+        </div>
+      </div>
+    </div>
+
     <!-- Custom in-app colour picker popover. Lives at root so it can hover
          over the tweak rows (which are themselves rendered via x-html and
          would otherwise destroy any picker DOM on every value change).
