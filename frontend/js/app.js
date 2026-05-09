@@ -51,6 +51,23 @@ const TRANSLATIONS = {
     'launch.error':            'Could not launch the game: {err}',
     'mods.openFolder.title':   'Open the mods folder',
     'mods.notFromManager':     'Not installed via the manager',
+    'deps.conflict':           'Conflict with: {names}\n\nThis mod is incompatible with one or more active mods.',
+    'deps.missingInstalled':   'Missing dependency (not installed): {names}\n\nRequired mods are not present in the mods folder.',
+    'deps.missingActive':      'Missing dependency (disabled): {names}\n\nRequired mods are installed but not active.',
+    'deps.deprecated':         'Deprecated by: {names}\n\nThis mod is replaced by an active mod. Consider disabling it.',
+    'deps.dialog.conflict':    '"{mod}" conflicts with the following active mods:',
+    'deps.dialog.missingInstalled': '"{mod}" requires the following mods which are not installed:',
+    'deps.dialog.missingActive': '"{mod}" requires the following mods which are installed but disabled:',
+    'deps.dialog.deprecated':  '"{mod}" is deprecated by the following active mods:',
+    'deps.dialog.enable':      'Enable',
+    'deps.dialog.disable':     'Disable',
+    'deps.dialog.disableThis': 'Disable this mod',
+    'deps.dialog.install':     'Install',
+    'deps.dialog.installing':  'Installing…',
+    'deps.dialog.close':       'Close',
+    'mods.versionMismatch':        'Installed: v{lv} → Available: v{rv}\n\nThere is a mismatch in version numbers between the currently installed local version of the mod and the newest version available on mod.io! Click to directly update the mod with the newest version from mod.io.',
+    'mods.versionMismatchInfo':    'Installed: v{lv} · mod.io: v{rv}\n\nThe local version appears newer than what is published on mod.io.',
+    'mods.versionMismatchSameFile': 'Installed: v{lv} · mod.io: v{rv}\n\nThe version labels differ but the installed file is up to date. This is likely an authoring inconsistency (modinfo.json not updated by the mod author).',
     'mods.link.cta':           '🔗 Link to mod.io',
     'mods.link.title':         'Link « {name} » to a mod.io record',
     'mods.link.searchPlaceholder': 'Search mod.io…',
@@ -287,6 +304,23 @@ const TRANSLATIONS = {
     'launch.error':            'Impossible de lancer le jeu : {err}',
     'mods.openFolder.title':   'Ouvrir le dossier des mods',
     'mods.notFromManager':     'Non installé via le gestionnaire',
+    'deps.conflict':           'Conflit avec : {names}\n\nCe mod est incompatible avec un ou plusieurs mods actifs.',
+    'deps.missingInstalled':   'Dépendance manquante (non installée) : {names}\n\nDes mods requis ne sont pas présents dans le dossier.',
+    'deps.missingActive':      'Dépendance manquante (désactivée) : {names}\n\nDes mods requis sont installés mais non actifs.',
+    'deps.deprecated':         'Remplacé par : {names}\n\nCe mod est déprécié par un mod actif. Pensez à le désactiver.',
+    'deps.dialog.conflict':    '« {mod} » est incompatible avec les mods actifs suivants :',
+    'deps.dialog.missingInstalled': '« {mod} » requiert les mods suivants qui ne sont pas installés :',
+    'deps.dialog.missingActive': '« {mod} » requiert les mods suivants qui sont installés mais désactivés :',
+    'deps.dialog.deprecated':  '« {mod} » est remplacé par les mods actifs suivants :',
+    'deps.dialog.enable':      'Activer',
+    'deps.dialog.disable':     'Désactiver',
+    'deps.dialog.disableThis': 'Désactiver ce mod',
+    'deps.dialog.install':     'Installer',
+    'deps.dialog.installing':  'Installation…',
+    'deps.dialog.close':       'Fermer',
+    'mods.versionMismatch':        'Installé : v{lv} → Disponible : v{rv}\n\nLes numéros de version ne correspondent pas entre la version locale installée et la dernière version disponible sur mod.io ! Cliquez pour mettre à jour le mod directement depuis mod.io.',
+    'mods.versionMismatchInfo':    'Installé : v{lv} · mod.io : v{rv}\n\nLa version locale semble plus récente que celle publiée sur mod.io.',
+    'mods.versionMismatchSameFile': 'Installé : v{lv} · mod.io : v{rv}\n\nLes libellés de version diffèrent mais le fichier installé est à jour. Probable incohérence du créateur : modinfo.json non mis à jour.',
     'mods.link.cta':           '🔗 Associer à mod.io',
     'mods.link.title':         'Associer « {name} » à une fiche mod.io',
     'mods.link.searchPlaceholder': 'Rechercher sur mod.io…',
@@ -523,6 +557,23 @@ const TRANSLATIONS = {
     'launch.error':            'Spiel konnte nicht gestartet werden: {err}',
     'mods.openFolder.title':   'Mods-Ordner öffnen',
     'mods.notFromManager':             'Nicht über den Manager installiert',
+    'deps.conflict':           'Konflikt mit: {names}\n\nDieses Mod ist inkompatibel mit einem oder mehreren aktiven Mods.',
+    'deps.missingInstalled':   'Fehlende Abhängigkeit (nicht installiert): {names}\n\nErforderliche Mods sind nicht im Mods-Ordner vorhanden.',
+    'deps.missingActive':      'Fehlende Abhängigkeit (deaktiviert): {names}\n\nErforderliche Mods sind installiert, aber nicht aktiv.',
+    'deps.deprecated':         'Ersetzt durch: {names}\n\nDieses Mod wird durch ein aktives Mod ersetzt. Erwäge, es zu deaktivieren.',
+    'deps.dialog.conflict':    '„{mod}" ist inkompatibel mit folgenden aktiven Mods:',
+    'deps.dialog.missingInstalled': '„{mod}" benötigt folgende Mods, die nicht installiert sind:',
+    'deps.dialog.missingActive': '„{mod}" benötigt folgende Mods, die installiert, aber deaktiviert sind:',
+    'deps.dialog.deprecated':  '„{mod}" wird durch folgende aktive Mods ersetzt:',
+    'deps.dialog.enable':      'Aktivieren',
+    'deps.dialog.disable':     'Deaktivieren',
+    'deps.dialog.disableThis': 'Dieses Mod deaktivieren',
+    'deps.dialog.install':     'Installieren',
+    'deps.dialog.installing':  'Installiere…',
+    'deps.dialog.close':       'Schließen',
+    'mods.versionMismatch':        'Installiert: v{lv} → Verfügbar: v{rv}\n\nDie Versionsnummern stimmen nicht überein. Klicke, um das Mod direkt auf die neueste Version von mod.io zu aktualisieren.',
+    'mods.versionMismatchInfo':    'Installiert: v{lv} · mod.io: v{rv}\n\nDie lokale Version scheint neuer zu sein als die auf mod.io veröffentlichte.',
+    'mods.versionMismatchSameFile': 'Installiert: v{lv} · mod.io: v{rv}\n\nDie Versionsbezeichnungen unterscheiden sich, aber die installierte Datei ist aktuell. Dies ist wahrscheinlich eine Inkonsistenz des Erstellers (modinfo.json nicht aktualisiert).',
     'mods.link.cta':                   '🔗 Mit mod.io verknüpfen',
     'mods.link.title':                 '« {name} » mit einem mod.io-Eintrag verknüpfen',
     'mods.link.searchPlaceholder':     'Auf mod.io suchen…',
@@ -759,6 +810,23 @@ const TRANSLATIONS = {
     'launch.error':            'No se pudo iniciar el juego: {err}',
     'mods.openFolder.title':   'Abrir la carpeta de mods',
     'mods.notFromManager':             'No instalado mediante el gestor',
+    'deps.conflict':           'Conflicto con: {names}\n\nEste mod es incompatible con uno o más mods activos.',
+    'deps.missingInstalled':   'Dependencia faltante (no instalada): {names}\n\nLos mods requeridos no están presentes en la carpeta de mods.',
+    'deps.missingActive':      'Dependencia faltante (desactivada): {names}\n\nLos mods requeridos están instalados pero no activos.',
+    'deps.deprecated':         'Reemplazado por: {names}\n\nEste mod ha sido reemplazado por un mod activo. Considera desactivarlo.',
+    'deps.dialog.conflict':    '"{mod}" es incompatible con los siguientes mods activos:',
+    'deps.dialog.missingInstalled': '"{mod}" requiere los siguientes mods que no están instalados:',
+    'deps.dialog.missingActive': '"{mod}" requiere los siguientes mods que están instalados pero desactivados:',
+    'deps.dialog.deprecated':  '"{mod}" ha sido reemplazado por los siguientes mods activos:',
+    'deps.dialog.enable':      'Activar',
+    'deps.dialog.disable':     'Desactivar',
+    'deps.dialog.disableThis': 'Desactivar este mod',
+    'deps.dialog.install':     'Instalar',
+    'deps.dialog.installing':  'Instalando…',
+    'deps.dialog.close':       'Cerrar',
+    'mods.versionMismatch':        'Instalado: v{lv} → Disponible: v{rv}\n\nHay una discrepancia en los números de versión. Haz clic para actualizar el mod directamente desde mod.io.',
+    'mods.versionMismatchInfo':    'Instalado: v{lv} · mod.io: v{rv}\n\nLa versión local parece más reciente que la publicada en mod.io.',
+    'mods.versionMismatchSameFile': 'Instalado: v{lv} · mod.io: v{rv}\n\nLas etiquetas de versión difieren pero el archivo instalado está actualizado. Es probable una inconsistencia del autor (modinfo.json no actualizado).',
     'mods.link.cta':                   '🔗 Asociar con mod.io',
     'mods.link.title':                 'Asociar « {name} » a una ficha mod.io',
     'mods.link.searchPlaceholder':     'Buscar en mod.io…',
@@ -995,6 +1063,23 @@ const TRANSLATIONS = {
     'launch.error':            'Impossibile avviare il gioco: {err}',
     'mods.openFolder.title':   'Apri la cartella dei mod',
     'mods.notFromManager':             'Non installato tramite il gestore',
+    'deps.conflict':           'Conflitto con: {names}\n\nQuesto mod è incompatibile con uno o più mod attivi.',
+    'deps.missingInstalled':   'Dipendenza mancante (non installata): {names}\n\nI mod richiesti non sono presenti nella cartella dei mod.',
+    'deps.missingActive':      'Dipendenza mancante (disattivata): {names}\n\nI mod richiesti sono installati ma non attivi.',
+    'deps.deprecated':         'Sostituito da: {names}\n\nQuesto mod è stato sostituito da un mod attivo. Valuta di disattivarlo.',
+    'deps.dialog.conflict':    '"{mod}" è incompatibile con i seguenti mod attivi:',
+    'deps.dialog.missingInstalled': '"{mod}" richiede i seguenti mod che non sono installati:',
+    'deps.dialog.missingActive': '"{mod}" richiede i seguenti mod che sono installati ma disattivati:',
+    'deps.dialog.deprecated':  '"{mod}" è sostituito dai seguenti mod attivi:',
+    'deps.dialog.enable':      'Attiva',
+    'deps.dialog.disable':     'Disattiva',
+    'deps.dialog.disableThis': 'Disattiva questo mod',
+    'deps.dialog.install':     'Installa',
+    'deps.dialog.installing':  'Installazione…',
+    'deps.dialog.close':       'Chiudi',
+    'mods.versionMismatch':        'Installato: v{lv} → Disponibile: v{rv}\n\nC’è una discrepanza nei numeri di versione. Clicca per aggiornare il mod direttamente da mod.io.',
+    'mods.versionMismatchInfo':    'Installato: v{lv} · mod.io: v{rv}\n\nLa versione locale sembra più recente di quella pubblicata su mod.io.',
+    'mods.versionMismatchSameFile': 'Installato: v{lv} · mod.io: v{rv}\n\nLe etichette di versione differiscono ma il file installato è aggiornato. Probabilmente un’incongruenza dell’autore (modinfo.json non aggiornato).',
     'mods.link.cta':                   '🔗 Collega a mod.io',
     'mods.link.title':                 'Collega « {name} » a una scheda mod.io',
     'mods.link.searchPlaceholder':     'Cerca su mod.io…',
@@ -1231,6 +1316,23 @@ const TRANSLATIONS = {
     'launch.error':            'Nie udało się uruchomić gry: {err}',
     'mods.openFolder.title':   'Otwórz folder modów',
     'mods.notFromManager':             'Niezainstalowane przez menedżera',
+    'deps.conflict':           'Konflikt z: {names}\n\nTen mod jest niezgodny z jednym lub więcej aktywnymi modami.',
+    'deps.missingInstalled':   'Brakująca zależność (niezainstalowana): {names}\n\nWymagane mody nie są obecne w folderze modów.',
+    'deps.missingActive':      'Brakująca zależność (wyłączona): {names}\n\nWymagane mody są zainstalowane, ale nie aktywne.',
+    'deps.deprecated':         'Zastąpiony przez: {names}\n\nTen mod jest zastąpiony przez aktywny mod. Rozważ jego wyłączenie.',
+    'deps.dialog.conflict':    '„{mod}" jest niezgodny z następującymi aktywnymi modami:',
+    'deps.dialog.missingInstalled': '„{mod}" wymaga następujących modów, które nie są zainstalowane:',
+    'deps.dialog.missingActive': '„{mod}" wymaga następujących modów, które są zainstalowane, ale wyłączone:',
+    'deps.dialog.deprecated':  '„{mod}" jest zastąpiony przez następujące aktywne mody:',
+    'deps.dialog.enable':      'Włącz',
+    'deps.dialog.disable':     'Wyłącz',
+    'deps.dialog.disableThis': 'Wyłącz ten mod',
+    'deps.dialog.install':     'Zainstaluj',
+    'deps.dialog.installing':  'Instalowanie…',
+    'deps.dialog.close':       'Zamknij',
+    'mods.versionMismatch':        'Zainstalowany: v{lv} → Dostępny: v{rv}\n\nNiezgodność numerów wersji. Kliknij, aby zaktualizować mod bezpośrednio z mod.io.',
+    'mods.versionMismatchInfo':    'Zainstalowany: v{lv} · mod.io: v{rv}\n\nLokalna wersja wydaje się nowsza niż opublikowana na mod.io.',
+    'mods.versionMismatchSameFile': 'Zainstalowany: v{lv} · mod.io: v{rv}\n\nEtykiety wersji różnią się, ale zainstalowany plik jest aktualny. To prawdopodobnie niespójność autora (modinfo.json nie zaktualizowany).',
     'mods.link.cta':                   '🔗 Połącz z mod.io',
     'mods.link.title':                 'Połącz « {name} » z wpisem mod.io',
     'mods.link.searchPlaceholder':     'Szukaj w mod.io…',
@@ -1467,6 +1569,23 @@ const TRANSLATIONS = {
     'launch.error':            'Не удалось запустить игру: {err}',
     'mods.openFolder.title':   'Открыть папку модов',
     'mods.notFromManager':             'Установлено не через менеджер',
+    'deps.conflict':           'Конфликт с: {names}\n\nЭтот мод несовместим с одним или несколькими активными модами.',
+    'deps.missingInstalled':   'Отсутствующая зависимость (не установлена): {names}\n\nНеобходимые моды отсутствуют в папке модов.',
+    'deps.missingActive':      'Отсутствующая зависимость (отключена): {names}\n\nНеобходимые моды установлены, но не активны.',
+    'deps.deprecated':         'Заменён: {names}\n\nЭтот мод заменён активным модом. Рекомендуется отключить его.',
+    'deps.dialog.conflict':    '«{mod}» несовместим со следующими активными модами:',
+    'deps.dialog.missingInstalled': '«{mod}» требует следующие моды, которые не установлены:',
+    'deps.dialog.missingActive': '«{mod}» требует следующие моды, которые установлены, но отключены:',
+    'deps.dialog.deprecated':  '«{mod}» заменён следующими активными модами:',
+    'deps.dialog.enable':      'Включить',
+    'deps.dialog.disable':     'Отключить',
+    'deps.dialog.disableThis': 'Отключить этот мод',
+    'deps.dialog.install':     'Установить',
+    'deps.dialog.installing':  'Установка…',
+    'deps.dialog.close':       'Закрыть',
+    'mods.versionMismatch':        'Установлено: v{lv} → Доступно: v{rv}\n\nНесоответствие номеров версий. Нажмите, чтобы обновить мод напрямую с mod.io.',
+    'mods.versionMismatchInfo':    'Установлено: v{lv} · mod.io: v{rv}\n\nЛокальная версия, по всей видимости, новее опубликованной на mod.io.',
+    'mods.versionMismatchSameFile': 'Установлено: v{lv} · mod.io: v{rv}\n\nМетки версий отличаются, но установленный файл актуален. Вероятно, непоследовательность автора (modinfo.json не обновлён).',
     'mods.link.cta':                   '🔗 Связать с mod.io',
     'mods.link.title':                 'Связать « {name} » с записью mod.io',
     'mods.link.searchPlaceholder':     'Поиск в mod.io…',
@@ -1703,6 +1822,23 @@ const TRANSLATIONS = {
     'launch.error':            'Não foi possível iniciar o jogo: {err}',
     'mods.openFolder.title':   'Abrir a pasta de mods',
     'mods.notFromManager':             'Não instalado pelo gerenciador',
+    'deps.conflict':           'Conflito com: {names}\n\nEste mod é incompatível com um ou mais mods ativos.',
+    'deps.missingInstalled':   'Dependência ausente (não instalada): {names}\n\nOs mods necessários não estão presentes na pasta de mods.',
+    'deps.missingActive':      'Dependência ausente (desativada): {names}\n\nOs mods necessários estão instalados mas não ativos.',
+    'deps.deprecated':         'Substituído por: {names}\n\nEste mod foi substituído por um mod ativo. Considere desativá-lo.',
+    'deps.dialog.conflict':    '"{mod}" é incompatível com os seguintes mods ativos:',
+    'deps.dialog.missingInstalled': '"{mod}" requer os seguintes mods que não estão instalados:',
+    'deps.dialog.missingActive': '"{mod}" requer os seguintes mods que estão instalados mas desativados:',
+    'deps.dialog.deprecated':  '"{mod}" foi substituído pelos seguintes mods ativos:',
+    'deps.dialog.enable':      'Ativar',
+    'deps.dialog.disable':     'Desativar',
+    'deps.dialog.disableThis': 'Desativar este mod',
+    'deps.dialog.install':     'Instalar',
+    'deps.dialog.installing':  'Instalando…',
+    'deps.dialog.close':       'Fechar',
+    'mods.versionMismatch':        'Instalado: v{lv} → Disponível: v{rv}\n\nHá uma incompatibilidade nos números de versão. Clique para atualizar o mod diretamente do mod.io.',
+    'mods.versionMismatchInfo':    'Instalado: v{lv} · mod.io: v{rv}\n\nA versão local parece mais recente do que a publicada no mod.io.',
+    'mods.versionMismatchSameFile': 'Instalado: v{lv} · mod.io: v{rv}\n\nOs rótulos de versão diferem mas o arquivo instalado está atualizado. Provavelmente uma inconsistência do autor (modinfo.json não atualizado).',
     'mods.link.cta':                   '🔗 Associar ao mod.io',
     'mods.link.title':                 'Associar « {name} » a um registro mod.io',
     'mods.link.searchPlaceholder':     'Pesquisar no mod.io…',
@@ -1939,6 +2075,23 @@ const TRANSLATIONS = {
     'launch.error':            'ゲームを起動できませんでした: {err}',
     'mods.openFolder.title':   'MODフォルダを開く',
     'mods.notFromManager':             'マネージャー経由でインストールされていません',
+    'deps.conflict':           '競合: {names}\n\nこのModは1つ以上の有効なModと非互換です。',
+    'deps.missingInstalled':   '依存関係なし（未インストール）: {names}\n\n必要なModがModsフォルダに存在しません。',
+    'deps.missingActive':      '依存関係なし（無効化）: {names}\n\n必要なModはインストール済みですが有効化されていません。',
+    'deps.deprecated':         '廃止（置き換え）: {names}\n\nこのModは有効なModに置き換えられました。無効化を検討してください。',
+    'deps.dialog.conflict':    '「{mod}」は以下の有効なModと競合しています:',
+    'deps.dialog.missingInstalled': '「{mod}」は以下の未インストールのModを必要とします:',
+    'deps.dialog.missingActive': '「{mod}」は以下のModを必要としますが、インストール済みで無効化されています:',
+    'deps.dialog.deprecated':  '「{mod}」は以下の有効なModによって置き換えられています:',
+    'deps.dialog.enable':      '有効化',
+    'deps.dialog.disable':     '無効化',
+    'deps.dialog.disableThis': 'このModを無効化',
+    'deps.dialog.install':     'インストール',
+    'deps.dialog.installing':  'インストール中…',
+    'deps.dialog.close':       '閉じる',
+    'mods.versionMismatch':        'インストール済み: v{lv} → 利用可能: v{rv}\n\nバージョン番号が一致しません。クリックしてmod.ioから最新バージョンに更新してください。',
+    'mods.versionMismatchInfo':    'インストール済み: v{lv} · mod.io: v{rv}\n\nローカルバージョンはmod.ioで公開されているものより新しいようです。',
+    'mods.versionMismatchSameFile': 'インストール済み: v{lv} · mod.io: v{rv}\n\nバージョンラベルは異なりますが、インストール済みファイルは最新です。作者の不整合（modinfo.jsonが未更新）の可能性があります。',
     'mods.link.cta':                   '🔗 mod.ioに関連付け',
     'mods.link.title':                 '« {name} » を mod.io のレコードに関連付け',
     'mods.link.searchPlaceholder':     'mod.io で検索…',
@@ -2175,6 +2328,23 @@ const TRANSLATIONS = {
     'launch.error':            '게임을 실행할 수 없습니다: {err}',
     'mods.openFolder.title':   '모드 폴더 열기',
     'mods.notFromManager':             '관리자를 통해 설치되지 않음',
+    'deps.conflict':           '충돌: {names}\n\n이 모드는 하나 이상의 활성 모드와 호환되지 않습니다.',
+    'deps.missingInstalled':   '누락된 종속성 (미설치): {names}\n\n필요한 모드가 모드 폴더에 없습니다.',
+    'deps.missingActive':      '누락된 종속성 (비활성): {names}\n\n필요한 모드가 설치되어 있지만 활성화되지 않았습니다.',
+    'deps.deprecated':         '대체됨: {names}\n\n이 모드는 활성 모드로 대체되었습니다. 비활성화를 고려하세요.',
+    'deps.dialog.conflict':    '"{mod}"이(가) 다음 활성 모드와 충돌합니다:',
+    'deps.dialog.missingInstalled': '"{mod}"은(는) 다음 미설치 모드를 필요로 합니다:',
+    'deps.dialog.missingActive': '"{mod}"은(는) 다음 모드를 필요로 하지만 설치되어 있으나 비활성 상태입니다:',
+    'deps.dialog.deprecated':  '"{mod}"은(는) 다음 활성 모드로 대체되었습니다:',
+    'deps.dialog.enable':      '활성화',
+    'deps.dialog.disable':     '비활성화',
+    'deps.dialog.disableThis': '이 모드 비활성화',
+    'deps.dialog.install':     '설치',
+    'deps.dialog.installing':  '설치 중…',
+    'deps.dialog.close':       '닫기',
+    'mods.versionMismatch':        '설치됨: v{lv} → 사용 가능: v{rv}\n\n버전 번호가 일치하지 않습니다. 클릭하여 mod.io에서 최신 버전으로 업데이트하세요.',
+    'mods.versionMismatchInfo':    '설치됨: v{lv} · mod.io: v{rv}\n\n로컬 버전이 mod.io에 게시된 것보다 최신인 것 같습니다.',
+    'mods.versionMismatchSameFile': '설치됨: v{lv} · mod.io: v{rv}\n\n버전 레이블이 다르지만 설치된 파일은 최신입니다. 작성자의 불일치(modinfo.json 미업데이트)일 가능성이 있습니다.',
     'mods.link.cta':                   '🔗 mod.io에 연결',
     'mods.link.title':                 '« {name} »을(를) mod.io 기록에 연결',
     'mods.link.searchPlaceholder':     'mod.io 검색…',
@@ -2411,6 +2581,23 @@ const TRANSLATIONS = {
     'launch.error':            '无法启动游戏：{err}',
     'mods.openFolder.title':   '打开模组文件夹',
     'mods.notFromManager':             '未通过管理器安装',
+    'deps.conflict':           '冲突：{names}\n\n此模组与一个或多个已激活的模组不兼容。',
+    'deps.missingInstalled':   '缺少依赖（未安装）：{names}\n\n所需模组不在模组文件夹中。',
+    'deps.missingActive':      '缺少依赖（已禁用）：{names}\n\n所需模组已安装但未激活。',
+    'deps.deprecated':         '已被替代：{names}\n\n此模组已被激活的模组替代，建议禁用。',
+    'deps.dialog.conflict':    '"{mod}"与以下已激活的模组冲突：',
+    'deps.dialog.missingInstalled': '"{mod}"需要以下未安装的模组：',
+    'deps.dialog.missingActive': '"{mod}"需要以下已安装但已禁用的模组：',
+    'deps.dialog.deprecated':  '"{mod}"已被以下激活的模组替代：',
+    'deps.dialog.enable':      '启用',
+    'deps.dialog.disable':     '禁用',
+    'deps.dialog.disableThis': '禁用此模组',
+    'deps.dialog.install':     '安装',
+    'deps.dialog.installing':  '安装中…',
+    'deps.dialog.close':       '关闭',
+    'mods.versionMismatch':        '已安装：v{lv} → 可用：v{rv}\n\n版本号不匹配。点击直接从 mod.io 更新模组。',
+    'mods.versionMismatchInfo':    '已安装：v{lv} · mod.io：v{rv}\n\n本地版本似乎比 mod.io 上发布的更新。',
+    'mods.versionMismatchSameFile': '已安装：v{lv} · mod.io：v{rv}\n\n版本标签不同，但已安装的文件是最新的。这可能是作者的不一致（modinfo.json 未更新）。',
     'mods.link.cta':                   '🔗 关联到 mod.io',
     'mods.link.title':                 '将 « {name} » 关联到 mod.io 记录',
     'mods.link.searchPlaceholder':     '搜索 mod.io…',
@@ -2647,6 +2834,23 @@ const TRANSLATIONS = {
     'launch.error':            '無法啟動遊戲：{err}',
     'mods.openFolder.title':   '開啟模組資料夾',
     'mods.notFromManager':             '未透過管理員安裝',
+    'deps.conflict':           '衝突：{names}\n\n此模組與一個或多個已啟用的模組不相容。',
+    'deps.missingInstalled':   '缺少依賴（未安裝）：{names}\n\n所需模組不在模組資料夾中。',
+    'deps.missingActive':      '缺少依賴（已停用）：{names}\n\n所需模組已安裝但未啟用。',
+    'deps.deprecated':         '已被取代：{names}\n\n此模組已被啟用的模組取代，建議停用。',
+    'deps.dialog.conflict':    '「{mod}」與以下已啟用的模組衝突：',
+    'deps.dialog.missingInstalled': '「{mod}」需要以下未安裝的模組：',
+    'deps.dialog.missingActive': '「{mod}」需要以下已安裝但已停用的模組：',
+    'deps.dialog.deprecated':  '「{mod}」已被以下啟用的模組取代：',
+    'deps.dialog.enable':      '啟用',
+    'deps.dialog.disable':     '停用',
+    'deps.dialog.disableThis': '停用此模組',
+    'deps.dialog.install':     '安裝',
+    'deps.dialog.installing':  '安裝中…',
+    'deps.dialog.close':       '關閉',
+    'mods.versionMismatch':        '已安裝：v{lv} → 可用：v{rv}\n\n版本號不符。點擊直接從 mod.io 更新模組。',
+    'mods.versionMismatchInfo':    '已安裝：v{lv} · mod.io：v{rv}\n\n本地版本似乎比 mod.io 上發布的更新。',
+    'mods.versionMismatchSameFile': '已安裝：v{lv} · mod.io：v{rv}\n\n版本標籤不同，但已安裝的檔案是最新的。這可能是作者的不一致（modinfo.json 未更新）。',
     'mods.link.cta':                   '🔗 關聯到 mod.io',
     'mods.link.title':                 '將 « {name} » 關聯到 mod.io 記錄',
     'mods.link.searchPlaceholder':     '搜尋 mod.io…',
@@ -2863,6 +3067,15 @@ window.annoApp = function () {
       loading: false,
       error: '',
       busyId: 0,           // mod_id being linked while the call is in flight
+    },
+    depDialog: {
+      open: false,
+      type: '',       // 'conflict' | 'missingInstalled' | 'missingActive' | 'deprecated'
+      modId: '',      // local id of the mod that has the issue
+      modName: '',
+      items: [],      // [{id, name}] — concerned mods (conflicting / missing / deprecating)
+      busyId: '',     // name_id currently being installed
+      error: '',
     },
     mods: [],
     selectedModId: null,
@@ -3816,7 +4029,9 @@ window.annoApp = function () {
           // also gets a refresh because the backend auto-subscribes on
           // install (api.py:modio_install_mod) and the badge / My
           // Subscriptions filter both read from this.browser.subscribed.
-          this._refreshInstalledIds();
+          // Chain: wait for markers before checking version updates so
+          // _refreshModUpdates sees the new mod in installedMeta.
+          this._refreshInstalledIds().then(() => this._refreshModUpdates());
           this._refreshSubscribed();
         } else {
           this._browserFlash(this.t('browser.installFail',
@@ -4152,6 +4367,7 @@ window.annoApp = function () {
       }
       this._setInstallStatus(this.t('install.success', { name: res.folder || display }), false);
       await this.refreshMods();
+      this._autoLinkAndRefresh();
     },
 
     /** ``callFactory`` is invoked with a boolean ``allow_overwrite`` so we can
@@ -4177,10 +4393,67 @@ window.annoApp = function () {
         }
         this._setInstallStatus(this.t('install.success', { name: res.folder || displayName }), false);
         await this.refreshMods();
+        this._autoLinkAndRefresh();
       } catch (e) {
         this._setInstallStatus(String(e), true);
       } finally {
         this.install.busy = false;
+      }
+    },
+
+    /** After any ZIP install: auto-link the new mod to mod.io (if its ModID
+     *  slug matches), refresh the marker cache, then re-check for version
+     *  updates so the warning badge appears without a full app restart. */
+    async _autoLinkAndRefresh() {
+      try {
+        const r = await window.pywebview.api.modio_auto_link_unmarked();
+        if (r && r.ok && r.linked > 0) await this._refreshInstalledIds();
+      } catch (_) {}
+      this._refreshModUpdates();
+    },
+
+    /** Open the dependency-issue dialog for mod m.
+     *  Reads the pre-computed dep arrays from renderRow context, so callers
+     *  pass the resolved data directly rather than re-computing it. */
+    openDepDialog(modId, modName, type, items) {
+      this.depDialog = { open: true, type, modId, modName, items };
+    },
+    closeDepDialog() {
+      this.depDialog = { ...this.depDialog, open: false };
+    },
+    /** Enable a required-but-inactive dep, then close dialog. */
+    async depDialogEnable(depId) {
+      this.closeDepDialog();
+      await this.toggleMod(depId, true);
+    },
+    /** Disable a conflicting mod, then close dialog. */
+    async depDialogDisable(depId) {
+      this.closeDepDialog();
+      await this.toggleMod(depId, false);
+    },
+    /** Disable the mod that has the issue (deprecated case). */
+    async depDialogDisableSelf() {
+      const id = this.depDialog.modId;
+      this.closeDepDialog();
+      await this.toggleMod(id, false);
+    },
+    /** Install a missing dep directly by its name_id (mod.io slug). */
+    async depDialogInstall(nameId) {
+      this.depDialog.busyId = nameId;
+      this.depDialog.error = '';
+      try {
+        const res = await window.pywebview.api.modio_install_by_name_id(nameId);
+        if (res && res.ok) {
+          this.closeDepDialog();
+          await this.refreshMods();
+          this._refreshInstalledIds().then(() => this._refreshModUpdates());
+        } else {
+          this.depDialog.error = (res && res.error) || 'unknown error';
+        }
+      } catch (e) {
+        this.depDialog.error = String(e);
+      } finally {
+        this.depDialog.busyId = '';
       }
     },
 
@@ -4804,12 +5077,40 @@ window.annoApp = function () {
       }
       return 0;
     },
+    _normVer(v) {
+      return (v || '').trim().replace(/^[vV]/, '');
+    },
+    _versionCmp(a, b) {
+      const pa = this._normVer(a).split('.');
+      const pb = this._normVer(b).split('.');
+      const len = Math.max(pa.length, pb.length);
+      for (let i = 0; i < len; i++) {
+        const na = parseInt(pa[i] || '0', 10);
+        const nb = parseInt(pb[i] || '0', 10);
+        // Segment non-numérique (ex. "1.3.a") → ordre indéterminé, on ne supprime pas l'update
+        if (isNaN(na) || isNaN(nb)) return 0;
+        if (na > nb) return 1;
+        if (na < nb) return -1;
+      }
+      return 0;
+    },
+    modVersionMismatch(m) {
+      const mid = this.modManagerModId(m);
+      if (!mid) return false;
+      const remote = this.modUpdates[mid];
+      if (!remote || !remote.version) return false;
+      return this._normVer(m.version) !== this._normVer(remote.version);
+    },
     modUpdateAvailable(m) {
       const mid = this.modManagerModId(m);
       if (!mid) return false;
       const local = (this.browser.installedMeta || {})[mid];
-      const remote = this.modUpdates[mid] || 0;
-      return !!(local && remote && local.modfile_id !== remote);
+      const remote = this.modUpdates[mid];
+      if (!local || !remote) return false;
+      if (local.modfile_id === remote.modfile_id) return false;
+      // Ne pas proposer la mise à jour si la version locale est déjà plus haute (évite une rétrogradation)
+      if (remote.version && m.version && this._versionCmp(m.version, remote.version) > 0) return false;
+      return true;
     },
 
     /** Activation-row Uninstall — same trigger as the Browser's row
@@ -6171,6 +6472,20 @@ window.annoApp = function () {
       // stays in one file. Phase 2 will split this into Alpine components or
       // a small templating helper; for now it keeps the structure obvious.
       const orderMode = this.mode === 'order';
+
+      // Build once per render so renderRow lookups are O(1)
+      const modById = {};
+      for (const m of this.mods) modById[m.id] = m;
+      // Map: mod_id → names of active mods that declare it incompatible (deprecated-by)
+      const deprecatedByMap = {};
+      for (const o of this.mods) {
+        if (!o.active) continue;
+        for (const depId of (o.deps_incompatible || [])) {
+          if (!deprecatedByMap[depId]) deprecatedByMap[depId] = [];
+          deprecatedByMap[depId].push(o.name || o.id);
+        }
+      }
+
       const renderRow = (m, isSubMod = false) => {
         const active = m.active ? 'is-on' : '';
         const selected = m.id === this.selectedModId ? 'is-selected' : '';
@@ -6184,23 +6499,101 @@ window.annoApp = function () {
               ondragover="annoRoot().onDragOver(event)"
               ondrop="annoRoot().onDrop('${escapeAttr(m.id)}', event)"
               ondragend="annoRoot().onDragEnd()"` : '';
+        // ── Dependency checks (top-level active mods only) ──────────────
+        const depConflictNames    = (!isSubMod && m.active)
+          ? (m.deps_incompatible || []).filter(id => modById[id] && modById[id].active)
+              .map(id => modById[id].name || id)
+          : [];
+        const depMissingInstNames = (!isSubMod && m.active)
+          ? (m.deps_require || []).filter(id => !modById[id])
+          : [];
+        const depMissingActNames  = (!isSubMod && m.active)
+          ? (m.deps_require || []).filter(id => modById[id] && !modById[id].active)
+              .map(id => modById[id].name || id)
+          : [];
+        const depDeprecatedBy     = (!isSubMod && m.active)
+          ? (deprecatedByMap[m.id] || [])
+          : [];
+        const hasConflict   = depConflictNames.length > 0;
+        const hasMissingDep = depMissingInstNames.length > 0 || depMissingActNames.length > 0;
+        const isDeprecated  = !hasConflict && !hasMissingDep && depDeprecatedBy.length > 0;
+        const hasDepWarn    = hasConflict || hasMissingDep || isDeprecated;
+
         // Per-row actions: the Update icon only shows up when there's an
         // actual newer modfile on mod.io for this folder; the Uninstall
         // icon is always there for top-level mods (sub-mods uninstall with
         // their parent). Manually-installed mods (no marker) get a small
         // info bullet so the user knows why no Update is offered.
-        const fromManager = !isSubMod && this.modIsFromManager(m);
-        const showUpdate  = !isSubMod && this.modUpdateAvailable(m);
-        const managerMid  = !isSubMod ? this.modManagerModId(m) : 0;
-        const showInfo    = !isSubMod && !fromManager;
-        const showUninst  = !isSubMod;
-        const actions = (showUpdate || showUninst || showInfo) ? `
+        const fromManager    = !isSubMod && this.modIsFromManager(m);
+        const showUpdate     = !isSubMod && this.modUpdateAvailable(m);
+        const managerMid     = !isSubMod ? this.modManagerModId(m) : 0;
+        const showInfo       = !isSubMod && !fromManager;
+        const showUninst     = !isSubMod;
+        const showVerWarn    = !isSubMod && this.modVersionMismatch(m);
+        const remoteVer      = showVerWarn ? (() => {
+          const r = this.modUpdates[this.modManagerModId(m)];
+          return r ? this._normVer(r.version) : '';
+        })() : '';
+        // Warn badge is clickable to update when remote > local; info-only otherwise
+        const warnClickable  = showVerWarn && showUpdate;
+        // Distinguish: same modfile (author label inconsistency) vs local is newer
+        const warnSameFile   = showVerWarn && !showUpdate && (() => {
+          const mid2 = this.modManagerModId(m);
+          const loc2 = (this.browser.installedMeta || {})[mid2];
+          const rem2 = this.modUpdates[mid2];
+          return !!(loc2 && rem2 && loc2.modfile_id === rem2.modfile_id);
+        })();
+        const warnTitle      = showVerWarn
+          ? warnClickable
+            ? this.t('mods.versionMismatch',         { lv: this._normVer(m.version), rv: remoteVer })
+            : warnSameFile
+              ? this.t('mods.versionMismatchSameFile', { lv: this._normVer(m.version), rv: remoteVer })
+              : this.t('mods.versionMismatchInfo',     { lv: this._normVer(m.version), rv: remoteVer })
+          : '';
+        // ↻ only shown when modfile is newer but no version-string mismatch detected
+        const showUpdateBtn  = showUpdate && !showVerWarn;
+
+        // Dep badge tooltip text
+        const depBadgeTitle = hasConflict
+          ? this.t('deps.conflict',          { names: depConflictNames.join(', ') })
+          : hasMissingDep
+            ? (depMissingInstNames.length
+                ? this.t('deps.missingInstalled', { names: depMissingInstNames.join(', ') })
+                : this.t('deps.missingActive',    { names: depMissingActNames.join(', ') }))
+            : isDeprecated
+              ? this.t('deps.deprecated',        { names: depDeprecatedBy.join(', ') })
+              : '';
+        const depBadgeLabel = hasConflict ? '✘' : isDeprecated ? '↓' : '!';
+
+        const actions = (hasDepWarn || showVerWarn || showUpdateBtn || showUninst || showInfo) ? `
             <div class="mod-row__actions" onclick="event.stopPropagation()">
               ${showInfo ? `
                 <button class="mod-row__action mod-row__action--link"
                         title="${escapeAttr(this.t('mods.notFromManager') + ' — ' + this.t('mods.link.cta'))}"
                         onclick="annoRoot().openLinkPicker('${escapeAttr(m.folder)}', '${escapeAttr(m.name)}')">🔗</button>` : ''}
-              ${showUpdate ? `
+              ${hasDepWarn ? (() => {
+                const dtype = hasConflict ? 'conflict'
+                            : hasMissingDep
+                              ? (depMissingInstNames.length ? 'missingInstalled' : 'missingActive')
+                              : 'deprecated';
+                const ditems = hasConflict
+                  ? depConflictNames.map((n, i) => ({ id: (m.deps_incompatible||[])[i], name: n }))
+                  : hasMissingDep
+                    ? (depMissingInstNames.length
+                        ? depMissingInstNames.map(id => ({ id, name: id }))
+                        : depMissingActNames.map((n, i) => ({ id: (m.deps_require||[])[i], name: n })))
+                    : depDeprecatedBy.map(n => ({ id: '', name: n }));
+                const ditemsJson = escapeAttr(JSON.stringify(ditems));
+                return `<button class="mod-row__action ${hasConflict ? 'mod-row__action--conflict' : 'mod-row__action--dep-warn'}"
+                        title="${escapeAttr(depBadgeTitle)}"
+                        onclick="event.stopPropagation(); annoRoot().openDepDialog('${escapeAttr(m.id)}','${escapeAttr(m.name)}','${dtype}',JSON.parse(this.dataset.items))"
+                        data-items="${ditemsJson}">${depBadgeLabel}</button>`;
+              })() : ''}
+              ${showVerWarn ? `
+                <button class="mod-row__action mod-row__action--version-warn${warnClickable ? '' : ' mod-row__action--version-warn-info'}"
+                        title="${escapeAttr(warnTitle)}"
+                        ${warnClickable ? `onclick="annoRoot().activationUpdate(${managerMid})"` : 'style="cursor:default"'}>!</button>` : ''}
+              ${showUpdateBtn ? `
                 <button class="mod-row__action mod-row__action--update"
                         title="${escapeAttr(this.t('browser.update'))}"
                         onclick="annoRoot().activationUpdate(${managerMid})">↻</button>` : ''}
@@ -6209,6 +6602,10 @@ window.annoApp = function () {
                         title="${escapeAttr(this.t('detail.uninstall'))}"
                         onclick="annoRoot().activationUninstall('${escapeAttr(m.folder)}', '${escapeAttr(m.name)}')">🗑</button>` : ''}
             </div>` : '';
+        // Name colour: red for conflict, orange for dep issues, default otherwise
+        const nameClass = hasConflict ? 'mod-row__name--conflict'
+                        : hasDepWarn  ? 'mod-row__name--dep-warn'
+                        : '';
         return `
           <li class="mod-row ${selected} ${subClass} ${dragClass}"
               onclick="annoRoot().selectMod('${escapeAttr(m.id)}')"
@@ -6218,7 +6615,7 @@ window.annoApp = function () {
             <span class="mod-row__medallion">${orderMode && !isSubMod ? '⋮⋮' : initials}</span>
             <span class="mod-row__category-cell">${escapeHtml(category)}</span>
             <div class="mod-row__text">
-              <div class="mod-row__name">${escapeHtml(m.name)}</div>
+              <div class="mod-row__name ${nameClass}">${escapeHtml(m.name)}</div>
               <div class="mod-row__version">v${escapeHtml(m.version)}</div>
             </div>
             <span class="mod-row__size">${this.formatSize(m.size_bytes)}</span>
