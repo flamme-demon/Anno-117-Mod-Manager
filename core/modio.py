@@ -338,12 +338,14 @@ def check_updates(token: str, ids: list[int], timeout: float = 15.0) -> dict:
             ref, msg = _decode_error(res)
             return {'ok': False, 'error': msg, 'error_ref': ref, 'status': res.status_code}
         body = res.json() or {}
-        updates: dict[int, int] = {}
+        updates: dict[int, dict] = {}
         for m in (body.get('data') or []):
             mid = int(m.get('id') or 0)
-            mfid = int(((m.get('modfile') or {}).get('id') or 0))
+            modfile = m.get('modfile') or {}
+            mfid = int(modfile.get('id') or 0)
+            mver = str(modfile.get('version') or '')
             if mid:
-                updates[mid] = mfid
+                updates[mid] = {'modfile_id': mfid, 'version': mver}
         return {'ok': True, 'updates': updates}
     except requests.RequestException as e:
         return {'ok': False, 'error': str(e)}

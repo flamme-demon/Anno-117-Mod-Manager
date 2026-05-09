@@ -366,6 +366,66 @@
       </div>
     </div>
 
+  <!-- Dependency-issue dialog — explains the conflict/missing dep and
+       offers contextual fix buttons (enable dep, disable conflict, etc.) -->
+  <div class="dep-dialog"
+       x-show="depDialog.open"
+       x-cloak
+       @keydown.escape.window="depDialog.open && closeDepDialog()"
+       @click.self="closeDepDialog()">
+    <div class="dep-dialog__panel">
+      <div class="dep-dialog__head">
+        <h3 class="dep-dialog__title"
+            x-text="depDialog.type === 'conflict'          ? t('deps.dialog.conflict',         { mod: depDialog.modName })
+                   : depDialog.type === 'missingInstalled'  ? t('deps.dialog.missingInstalled',  { mod: depDialog.modName })
+                   : depDialog.type === 'missingActive'     ? t('deps.dialog.missingActive',     { mod: depDialog.modName })
+                   :                                          t('deps.dialog.deprecated',         { mod: depDialog.modName })">
+        </h3>
+      </div>
+      <ul class="dep-dialog__list">
+        <template x-for="item in depDialog.items" :key="item.id + item.name">
+          <li class="dep-dialog__item">
+            <span class="dep-dialog__item-name" x-text="item.name || item.id"></span>
+            <div class="dep-dialog__item-actions">
+              <!-- conflict: disable the conflicting mod -->
+              <template x-if="depDialog.type === 'conflict'">
+                <button class="dep-dialog__btn dep-dialog__btn--danger"
+                        @click="depDialogDisable(item.id)"
+                        x-text="t('deps.dialog.disable')"></button>
+              </template>
+              <!-- missingInstalled: install directly from mod.io -->
+              <template x-if="depDialog.type === 'missingInstalled'">
+                <button class="dep-dialog__btn dep-dialog__btn--primary"
+                        :disabled="depDialog.busyId === item.id"
+                        @click="depDialogInstall(item.id)"
+                        x-text="depDialog.busyId === item.id ? t('deps.dialog.installing') : t('deps.dialog.install')">
+                </button>
+              </template>
+              <!-- missingActive: enable the dep -->
+              <template x-if="depDialog.type === 'missingActive'">
+                <button class="dep-dialog__btn dep-dialog__btn--primary"
+                        @click="depDialogEnable(item.id)"
+                        x-text="t('deps.dialog.enable')"></button>
+              </template>
+            </div>
+          </li>
+        </template>
+      </ul>
+      <div class="dep-dialog__error" x-show="depDialog.error" x-text="depDialog.error"></div>
+      <div class="dep-dialog__footer">
+        <!-- deprecated: offer to disable self -->
+        <template x-if="depDialog.type === 'deprecated'">
+          <button class="dep-dialog__btn dep-dialog__btn--danger"
+                  @click="depDialogDisableSelf()"
+                  x-text="t('deps.dialog.disableThis')"></button>
+        </template>
+        <button class="dep-dialog__btn dep-dialog__btn--ghost"
+                @click="closeDepDialog()"
+                x-text="t('deps.dialog.close')"></button>
+      </div>
+    </div>
+  </div>
+
   </div>
 
 </body>

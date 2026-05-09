@@ -850,6 +850,24 @@ class Api:
                 continue
         return {'ok': True, 'linked': linked, 'candidates': len(candidates)}
 
+    def modio_install_by_name_id(self, name_id: str) -> dict:
+        """Resolve a mod.io name_id (slug) to a numeric mod_id, then install it.
+        Used by the dependency dialog to install a missing dep in one click."""
+        token = self._modio_token()
+        if not token:
+            return {'ok': False, 'error': 'not authenticated'}
+        name_id = (name_id or '').strip().lower()
+        if not name_id:
+            return {'ok': False, 'error': 'name_id required'}
+        res = modio_module.list_mods_by_name_ids(token, name_id)
+        if not res.get('ok'):
+            return res
+        mods = res.get('data') or []
+        match = next((m for m in mods if (m.get('name_id') or '').lower() == name_id), None)
+        if not match:
+            return {'ok': False, 'error': f'mod not found on mod.io: {name_id}'}
+        return self.modio_install_mod(int(match['id']))
+
     def modio_install_mod(self, mod_id: int) -> dict:
         """Download the latest modfile of ``mod_id`` and install it. Always
         allow_overwrite=True so updates from mod.io replace the previous
